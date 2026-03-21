@@ -1,0 +1,9 @@
+corpus/
+.venv/
+__pycache__/
+*.pyc
+.git/
+*.pdf
+extracted_data/
+.DS_Store
+brainsci-14-00942.pdf

@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.db_password
+.env
+corpus/papers/
+*.pdf
