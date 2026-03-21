@@ -1,0 +1,11 @@
+corpus/
+.venv/
+__pycache__/
+*.pyc
+.git/
+*.pdf
+extracted_data/
+database/seed_*.sql
+.DS_Store
+*.md
+!pyproject.toml
