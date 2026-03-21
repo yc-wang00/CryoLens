@@ -32,6 +32,10 @@ def _needs_ssl(url: str) -> ssl_module.SSLContext | bool:
     if host in ("localhost", "127.0.0.1", "::1", ""):
         return False
     ctx = ssl_module.create_default_context()
+    # Supabase pooler (Supavisor) uses its own CA — skip verification
+    if "supabase" in host:
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl_module.CERT_NONE
     return ctx
 
 
