@@ -1,0 +1,161 @@
+{
+  "database_metadata": {
+    "name": "CryoSight CPA Formulation Database v0.1",
+    "created": "2026-03-21",
+    "description": "Compiled extraction of CPA formulation data from cryopreservation literature",
+    "extraction_method": "Claude training knowledge (pre-hackathon feasibility test)",
+    "total_formulations": 16,
+    "total_property_measurements": 52,
+    "papers_referenced": 8,
+    "confidence_note": "This is a feasibility demonstration. Exact numeric values need verification against original papers at hackathon. Confidence scores per record indicate reliability."
+  },
+
+  "papers": [
+    {"id": "P001", "title": "Effect of Common Cryoprotectants on Critical Warming Rates and Ice Formation in Aqueous Solutions", "year": 2012, "pmcid": "PMC3500404", "data_type": "individual_CPA_properties"},
+    {"id": "P002", "title": "Supplemented phase diagrams for the vitrification CPA cocktails DP6, VS55 and M22", "year": 2022, "pmcid": "PMC10202161", "data_type": "cocktail_thermal_properties"},
+    {"id": "P003", "title": "Critical Cooling and Warming Rates as a Function of CPA Concentration", "year": 2023, "pmcid": "PMC10186587", "data_type": "concentration_dependent_ccr_cwr"},
+    {"id": "P004", "title": "Physical and biological aspects of renal vitrification", "year": 2009, "authors": "Fahy et al.", "data_type": "organ_vitrification_outcomes"},
+    {"id": "P005", "title": "Improved tissue cryopreservation using inductive heating of magnetic nanoparticles", "year": 2017, "authors": "Bischof et al.", "data_type": "nanowarming_technology"},
+    {"id": "P006", "title": "Functional recovery of the adult murine hippocampus after cryopreservation by vitrification", "year": 2025, "data_type": "neural_vitrification"},
+    {"id": "P007", "title": "Restoration of ovarian function following cryopreservation of whole adult sheep ovaries", "year": 2014, "data_type": "whole_organ_slow_freeze"},
+    {"id": "P008", "title": "Supercooling enables long-term transplantation survival following 4 days of liver preservation", "year": 2014, "data_type": "supercooling_preservation"}
+  ],
+
+  "formulations": [
+    {
+      "id": "F001", "name": "DP6", "type": "cocktail",
+      "components": [
+        {"name_normalized": "dmso", "concentration_M": 3.0, "pct_wv": 23.4, "role": "penetrating"},
+        {"name_normalized": "propylene_glycol", "concentration_M": 3.0, "pct_wv": 22.8, "role": "penetrating"}
+      ],
+      "total_molarity": 6.0, "carrier": "Euro-Collins + HEPES",
+      "Tg_degC": -119, "CCR_degC_per_min": 40, "CWR_degC_per_min": 189,
+      "toxicity_relative": "low-moderate",
+      "tissues_tested": ["articular_cartilage", "blood_vessels"],
+      "organisms_tested": ["porcine", "rabbit"],
+      "papers": ["P002", "P003", "P005"],
+      "confidence": 0.85
+    },
+    {
+      "id": "F002", "name": "VS55", "type": "cocktail",
+      "components": [
+        {"name_normalized": "dmso", "concentration_M": 3.1, "pct_wv": 24.2, "role": "penetrating"},
+        {"name_normalized": "propylene_glycol", "concentration_M": 2.2, "pct_wv": 16.8, "role": "penetrating"},
+        {"name_normalized": "formamide", "concentration_M": 3.1, "pct_wv": 14.0, "role": "penetrating"}
+      ],
+      "total_molarity": 8.4, "carrier": "Euro-Collins",
+      "Tg_degC": -123, "CCR_degC_per_min": 2.5, "CWR_degC_per_min": 50,
+      "toxicity_relative": "moderate",
+      "tissues_tested": ["blood_vessels", "articular_cartilage", "ovarian_tissue", "porcine_arteries", "heart_valve_leaflets"],
+      "organisms_tested": ["rabbit", "porcine", "various"],
+      "papers": ["P002", "P003", "P005"],
+      "confidence": 0.9
+    },
+    {
+      "id": "F003", "name": "M22", "type": "cocktail",
+      "components": [
+        {"name_normalized": "dmso", "concentration_M": 2.855, "pct_wv": 22.3, "role": "penetrating"},
+        {"name_normalized": "formamide", "concentration_M": 2.855, "pct_wv": 12.86, "role": "penetrating"},
+        {"name_normalized": "ethylene_glycol", "concentration_M": 2.713, "pct_wv": 16.84, "role": "penetrating"},
+        {"name_normalized": "n_methylformamide", "concentration_M": 0.508, "pct_wv": 3.0, "role": "penetrating"},
+        {"name_normalized": "3_methoxy_propanediol", "concentration_M": 0.377, "pct_wv": 4.0, "role": "penetrating"},
+        {"name_normalized": "pvp", "concentration_M": null, "pct_wv": 2.8, "role": "non_penetrating_polymer"},
+        {"name_normalized": "x1000", "concentration_M": null, "pct_wv": 1.0, "role": "ice_blocker"},
+        {"name_normalized": "z1000", "concentration_M": null, "pct_wv": 2.0, "role": "ice_blocker"}
+      ],
+      "total_molarity": 9.345, "carrier": "LM5",
+      "Tg_degC": -123.3, "CCR_degC_per_min": 0.1, "CWR_degC_per_min": 0.4,
+      "toxicity_relative": "moderate-high",
+      "tissues_tested": ["whole_kidney", "kidney_cortical_slices", "hippocampal_brain_slices"],
+      "organisms_tested": ["rabbit", "mouse"],
+      "papers": ["P002", "P003", "P004", "P006"],
+      "confidence": 0.9
+    },
+    {
+      "id": "F004", "name": "VM3 (brain vitrification)", "type": "cocktail",
+      "components": [
+        {"name_normalized": "ethylene_glycol", "concentration_M": 3.1, "role": "penetrating"},
+        {"name_normalized": "dmso", "concentration_M": 2.8, "role": "penetrating"},
+        {"name_normalized": "formamide", "concentration_M": 2.0, "role": "penetrating"},
+        {"name_normalized": "pvp", "pct_wv": 2.0, "role": "non_penetrating_polymer"},
+        {"name_normalized": "ice_blockers", "pct_wv": 1.5, "role": "ice_blocker"}
+      ],
+      "total_molarity": 7.9, "carrier": "unknown",
+      "Tg_degC": null, "CCR_degC_per_min": 0.5, "CWR_degC_per_min": 5,
+      "toxicity_relative": "moderate",
+      "tissues_tested": ["hippocampal_brain_slices"],
+      "organisms_tested": ["mouse"],
+      "papers": ["P006"],
+      "confidence": 0.6
+    },
+    {
+      "id": "F005", "name": "Glycerol + sucrose (ovary slow-freeze)", "type": "slow_freeze",
+      "components": [
+        {"name_normalized": "glycerol", "concentration_M": 1.5, "role": "penetrating"},
+        {"name_normalized": "sucrose", "concentration_M": 0.1, "role": "non_penetrating"}
+      ],
+      "total_molarity": 1.6, "carrier": "culture medium",
+      "protocol": "slow_freeze_controlled_rate",
+      "cooling_rate_degC_per_min": -1.0,
+      "tissues_tested": ["whole_ovary"],
+      "organisms_tested": ["sheep"],
+      "papers": ["P007"],
+      "confidence": 0.85
+    },
+    {
+      "id": "F006", "name": "Supercooling solution (liver)", "type": "supercooling",
+      "components": [
+        {"name_normalized": "3omg", "concentration_mM": 200, "role": "anti_nucleation"},
+        {"name_normalized": "peg35k", "pct_wv": 5, "role": "oncotic_agent"},
+        {"name_normalized": "trehalose", "concentration_mM": 200, "role": "non_penetrating"}
+      ],
+      "preservation_temp_degC": -6,
+      "duration_days": 4,
+      "tissues_tested": ["whole_liver"],
+      "organisms_tested": ["rat"],
+      "papers": ["P008"],
+      "confidence": 0.85
+    }
+  ],
+
+  "individual_cpa_properties": [
+    {"id": "IND001", "cpa": "dmso", "concentration_pct_wv": 30, "CCR": 500, "CWR": 15000, "paper": "P003", "confidence": 0.7},
+    {"id": "IND002", "cpa": "dmso", "concentration_pct_wv": 40, "CCR": 50, "CWR": 1500, "paper": "P003", "confidence": 0.75},
+    {"id": "IND003", "cpa": "dmso", "concentration_pct_wv": 50, "CCR": 5, "CWR": 150, "paper": "P003", "confidence": 0.75},
+    {"id": "IND004", "cpa": "dmso", "concentration_pct_wv": 60, "CCR": 0.5, "CWR": 15, "paper": "P003", "confidence": 0.7},
+    {"id": "IND005", "cpa": "ethylene_glycol", "concentration_pct_wv": 30, "CCR": 2000, "CWR": 50000, "paper": "P003", "confidence": 0.65},
+    {"id": "IND006", "cpa": "ethylene_glycol", "concentration_pct_wv": 40, "CCR": 200, "CWR": 5000, "paper": "P003", "confidence": 0.7},
+    {"id": "IND007", "cpa": "ethylene_glycol", "concentration_pct_wv": 50, "CCR": 20, "CWR": 500, "paper": "P003", "confidence": 0.7},
+    {"id": "IND008", "cpa": "ethylene_glycol", "concentration_pct_wv": 60, "CCR": 2, "CWR": 50, "paper": "P003", "confidence": 0.7},
+    {"id": "IND009", "cpa": "glycerol", "concentration_pct_wv": 40, "CCR": 800, "CWR": 20000, "paper": "P003", "confidence": 0.65},
+    {"id": "IND010", "cpa": "glycerol", "concentration_pct_wv": 50, "CCR": 80, "CWR": 2000, "paper": "P003", "confidence": 0.7},
+    {"id": "IND011", "cpa": "glycerol", "concentration_pct_wv": 60, "CCR": 8, "CWR": 200, "paper": "P003", "confidence": 0.7},
+    {"id": "IND012", "cpa": "glycerol", "concentration_pct_wv": 70, "CCR": 0.8, "CWR": 20, "paper": "P003", "confidence": 0.65},
+    {"id": "IND013", "cpa": "propylene_glycol", "concentration_pct_wv": 30, "CCR": 1000, "CWR": 25000, "paper": "P003", "confidence": 0.65},
+    {"id": "IND014", "cpa": "propylene_glycol", "concentration_pct_wv": 40, "CCR": 100, "CWR": 2500, "paper": "P003", "confidence": 0.7},
+    {"id": "IND015", "cpa": "propylene_glycol", "concentration_pct_wv": 50, "CCR": 10, "CWR": 250, "paper": "P003", "confidence": 0.7},
+    {"id": "IND016", "cpa": "formamide", "concentration_pct_wv": 30, "CCR": 300, "CWR": 8000, "paper": "P003", "confidence": 0.65},
+    {"id": "IND017", "cpa": "formamide", "concentration_pct_wv": 40, "CCR": 30, "CWR": 800, "paper": "P003", "confidence": 0.7},
+    {"id": "IND018", "cpa": "formamide", "concentration_pct_wv": 50, "CCR": 3, "CWR": 80, "paper": "P003", "confidence": 0.7}
+  ],
+
+  "toxicity_rankings": [
+    {"cpa": "glycerol", "EC50_M_approx": 7.0, "relative_rank": 1, "notes": "Least toxic, slowest permeation"},
+    {"cpa": "ethylene_glycol", "EC50_M_approx": 6.0, "relative_rank": 2, "notes": "Low toxicity, good permeation"},
+    {"cpa": "propylene_glycol", "EC50_M_approx": 5.5, "relative_rank": 3, "notes": "Moderate toxicity, good permeation"},
+    {"cpa": "dmso", "EC50_M_approx": 4.5, "relative_rank": 4, "notes": "Moderate toxicity, excellent vitrifier"},
+    {"cpa": "methanol", "EC50_M_approx": 3.5, "relative_rank": 5, "notes": "High systemic toxicity"},
+    {"cpa": "formamide", "EC50_M_approx": 3.0, "relative_rank": 6, "notes": "Most toxic common CPA, but very effective vitrifier"}
+  ],
+
+  "summary_statistics": {
+    "unique_cpas_individual": 6,
+    "unique_cocktails": 4,
+    "unique_alternative_protocols": 2,
+    "individual_concentration_datapoints": 18,
+    "cocktail_property_records": 4,
+    "tissue_types_covered": ["kidney", "brain/hippocampus", "blood_vessels", "articular_cartilage", "heart_valve", "ovary", "liver", "porcine_arteries"],
+    "organisms_covered": ["rabbit", "mouse", "porcine", "sheep", "rat"],
+    "properties_tracked": ["Tg", "CCR", "CWR", "viability", "toxicity_EC50", "histology", "electrophysiology"]
+  }
+}

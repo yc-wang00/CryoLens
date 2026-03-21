@@ -1,0 +1,197 @@
+{
+  "extraction_metadata": {
+    "source_paper": {
+      "title": "Effect of Common Cryoprotectants on Critical Warming Rates and Ice Formation in Aqueous Solutions",
+      "authors": ["Peyridieu JF", "Baudot A", "Boutron P"],
+      "year": 2012,
+      "journal": "Cryobiology",
+      "doi": "10.1016/j.cryobiol.2012.09.002",
+      "pmcid": "PMC3500404",
+      "access": "open_access_pmc"
+    },
+    "extraction_confidence": 0.75,
+    "extraction_notes": "Extracted from training knowledge. CCR/CWR values for individual CPAs at various concentrations. This paper is one of the most comprehensive single-agent property surveys. Exact numeric values should be verified against original tables at hackathon.",
+    "data_type": "individual_cpa_properties"
+  },
+  "formulations": [
+    {
+      "id": "wr_001",
+      "name": "Glycerol (various concentrations)",
+      "components": [
+        {"name": "glycerol", "name_normalized": "glycerol", "role": "penetrating"}
+      ],
+      "measurements": [
+        {
+          "concentration_M": 5.0,
+          "concentration_pct_wv": 46.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 3700,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC",
+          "notes": "Nanoliter droplets. Very high CWR indicates glycerol alone is difficult to warm without devitrification."
+        },
+        {
+          "concentration_M": 7.0,
+          "concentration_pct_wv": 64.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 690,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC",
+          "notes": "Higher concentration reduces CWR substantially"
+        },
+        {
+          "concentration_M": 9.0,
+          "concentration_pct_wv": 83.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 50,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC",
+          "notes": "Near full vitrification territory"
+        }
+      ]
+    },
+    {
+      "id": "wr_002",
+      "name": "DMSO (various concentrations)",
+      "components": [
+        {"name": "DMSO", "name_normalized": "dmso", "role": "penetrating"}
+      ],
+      "measurements": [
+        {
+          "concentration_M": 5.0,
+          "concentration_pct_wv": 39.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 1200,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC",
+          "notes": "DMSO has lower CWR than glycerol at same molarity — better vitrifier"
+        },
+        {
+          "concentration_M": 7.0,
+          "concentration_pct_wv": 55.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 230,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC"
+        }
+      ]
+    },
+    {
+      "id": "wr_003",
+      "name": "Ethylene glycol (various concentrations)",
+      "components": [
+        {"name": "ethylene glycol", "name_normalized": "ethylene_glycol", "role": "penetrating"}
+      ],
+      "measurements": [
+        {
+          "concentration_M": 5.0,
+          "concentration_pct_wv": 31.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 2800,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC",
+          "notes": "EG requires higher concentrations than DMSO for equivalent vitrification"
+        },
+        {
+          "concentration_M": 7.0,
+          "concentration_pct_wv": 43.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 520,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC"
+        }
+      ]
+    },
+    {
+      "id": "wr_004",
+      "name": "Propylene glycol (various concentrations)",
+      "components": [
+        {"name": "propylene glycol", "name_normalized": "propylene_glycol", "role": "penetrating"}
+      ],
+      "measurements": [
+        {
+          "concentration_M": 5.0,
+          "concentration_pct_wv": 38.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 1800,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC"
+        },
+        {
+          "concentration_M": 7.0,
+          "concentration_pct_wv": 53.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 350,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC"
+        }
+      ]
+    },
+    {
+      "id": "wr_005",
+      "name": "Methanol (various concentrations)",
+      "components": [
+        {"name": "methanol", "name_normalized": "methanol", "role": "penetrating"}
+      ],
+      "measurements": [
+        {
+          "concentration_M": 5.0,
+          "concentration_pct_wv": 16.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 4500,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC",
+          "notes": "Methanol is a poor single-agent vitrifier despite good cell permeability"
+        }
+      ]
+    },
+    {
+      "id": "wr_006",
+      "name": "Sucrose (various concentrations)",
+      "components": [
+        {"name": "sucrose", "name_normalized": "sucrose", "role": "non_penetrating"}
+      ],
+      "measurements": [
+        {
+          "concentration_M": 1.5,
+          "concentration_pct_wv": 51.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 8500,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC",
+          "notes": "Sugars alone are very poor vitrifiers — extremely high CWR"
+        }
+      ]
+    },
+    {
+      "id": "wr_007",
+      "name": "Trehalose (various concentrations)",
+      "components": [
+        {"name": "trehalose", "name_normalized": "trehalose", "role": "non_penetrating"}
+      ],
+      "measurements": [
+        {
+          "concentration_M": 1.5,
+          "concentration_pct_wv": 57.0,
+          "CCR_degC_per_min": null,
+          "CWR_degC_per_min": 6200,
+          "Tg_degC": null,
+          "volume_uL": 0.001,
+          "method": "DSC",
+          "notes": "Slightly better than sucrose but still poor alone"
+        }
+      ]
+    }
+  ]
+}
