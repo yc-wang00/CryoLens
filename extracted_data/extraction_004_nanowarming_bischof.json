@@ -1,0 +1,71 @@
+{
+  "extraction_metadata": {
+    "source_paper": {
+      "title": "Improved tissue cryopreservation using inductive heating of magnetic nanoparticles",
+      "authors": ["Manuchehrabadi N", "Gao Z", "Zhang J", "Ring HL", "Shao Q", "Liu F", "McDermott M", "Faber A", "Raber B", "Brber M", "Etheridge ML", "Bischof JC"],
+      "year": 2017,
+      "journal": "Science Translational Medicine",
+      "doi": "10.1126/scitranslmed.aah4586",
+      "access": "hackathon_provided_pdf"
+    },
+    "extraction_confidence": 0.8,
+    "extraction_notes": "Landmark nanowarming paper. Demonstrates that magnetic nanoparticle-based inductive heating can achieve uniform, rapid warming of vitrified tissues at rates sufficient to avoid devitrification. This addresses the critical warming rate bottleneck.",
+    "data_type": "nanowarming_technology"
+  },
+  "formulations_used": [
+    {
+      "id": "nano_001",
+      "name": "VS55 + mNPs (nanowarming)",
+      "base_formulation": "VS55",
+      "components": [
+        {"name": "DMSO", "name_normalized": "dmso", "concentration": 3.1, "unit": "M", "role": "penetrating"},
+        {"name": "propylene glycol", "name_normalized": "propylene_glycol", "concentration": 2.2, "unit": "M", "role": "penetrating"},
+        {"name": "formamide", "name_normalized": "formamide", "concentration": 3.1, "unit": "M", "role": "penetrating"},
+        {"name": "iron oxide nanoparticles (Fe3O4)", "name_normalized": "iron_oxide_nanoparticles", "concentration": 10, "unit": "mg Fe/mL", "role": "warming_agent"}
+      ],
+      "warming_method": "radiofrequency inductive heating (1 kW, 360 kHz)",
+      "warming_rate_achieved": {"value": 100, "unit": "°C/min", "uniformity": "high", "notes": "Volumetric heating — every point in the sample heats simultaneously. Avoids thermal gradients that cause cracking."},
+      "biological_outcomes": [
+        {
+          "tissue_type": "porcine arterial tissue",
+          "organism": "porcine",
+          "outcome": "Nanowarmed tissues showed significantly better viability and structural integrity than convectively warmed controls",
+          "viability_metric": "alamarBlue cell viability, histology",
+          "viability_value": "~80% viability recovery in nanowarmed vs ~20% in convectively warmed",
+          "confidence": 0.8
+        },
+        {
+          "tissue_type": "porcine heart valve leaflets",
+          "organism": "porcine",
+          "outcome": "Successful vitrification and nanowarming with preserved mechanical properties",
+          "viability_metric": "biomechanical testing, histology",
+          "confidence": 0.75
+        }
+      ],
+      "key_results": {
+        "volume_tested": "up to 80 mL",
+        "thermal_uniformity": "±2°C across sample during warming",
+        "cracking": "No cracking observed (major improvement over convective warming)",
+        "nanoparticle_removal": "Nanoparticles can be washed out after warming"
+      }
+    },
+    {
+      "id": "nano_002",
+      "name": "DP6 + mNPs (nanowarming)",
+      "base_formulation": "DP6",
+      "components": [
+        {"name": "DMSO", "name_normalized": "dmso", "concentration": 3.0, "unit": "M", "role": "penetrating"},
+        {"name": "propylene glycol", "name_normalized": "propylene_glycol", "concentration": 3.0, "unit": "M", "role": "penetrating"},
+        {"name": "iron oxide nanoparticles (Fe3O4)", "name_normalized": "iron_oxide_nanoparticles", "concentration": 10, "unit": "mg Fe/mL", "role": "warming_agent"}
+      ],
+      "warming_method": "radiofrequency inductive heating",
+      "warming_rate_achieved": {"value": 100, "unit": "°C/min", "notes": "Sufficient to exceed DP6's CWR of 189°C/min in small samples, but marginal. Larger volumes may be insufficient."},
+      "notes": "DP6 with nanowarming is attractive because DP6 is less toxic, but its high CWR (189°C/min) means nanowarming needs to achieve very high rates. For larger volumes, VS55 or M22 are safer choices."
+    }
+  ],
+  "technology_implications": {
+    "why_nanowarming_matters": "Warming, not cooling, is the dominant bottleneck in organ-scale vitrification. Convective warming creates thermal gradients that cause devitrification and cracking. Nanowarming provides volumetric, uniform heating that solves both problems simultaneously.",
+    "scale_up_potential": "Demonstrated at 80mL. Active research to scale to organ volumes (hundreds of mL to liters).",
+    "current_limitations": "Nanoparticle biocompatibility, FDA regulatory pathway, cost of nanoparticles, penetration into dense tissues"
+  }
+}

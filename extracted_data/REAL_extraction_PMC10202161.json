@@ -1,0 +1,149 @@
+{
+  "extraction_metadata": {
+    "method": "Extracted from PubMed MCP full text — real paper, not training knowledge",
+    "extraction_date": "2026-03-21",
+    "confidence_note": "Data extracted directly from paper text. Tables referenced in the paper (Table 1, Table 2) were NOT rendered in the full text XML — only data mentioned within the body text is captured. At hackathon, PDF processing will capture tables directly."
+  },
+  "paper": {
+    "title": "Supplemented phase diagrams for vitrification CPA cocktails: DP6, VS55 and M22",
+    "authors": ["Han Z", "Gangwar L", "Magnuson E", "Etheridge ML", "Pringle CO", "Bischof JC", "Choi J"],
+    "year": 2022,
+    "journal": "Cryobiology",
+    "doi": "10.1016/j.cryobiol.2022.02.005",
+    "pmid": "35276219",
+    "pmcid": "PMC10202161",
+    "volume": "106",
+    "pages": "113-121",
+    "affiliations": ["Department of Mechanical Engineering, University of Minnesota", "Central Washington University"],
+    "keywords": ["DP6", "M22", "Phase diagram", "VS55", "Vitrification"]
+  },
+  "formulations": [
+    {
+      "name": "DP6",
+      "components": [
+        {"name": "DMSO (MeSO)", "name_normalized": "dmso", "role": "penetrating", "notes": "referred to as MeSO in paper"},
+        {"name": "propylene glycol (PG)", "name_normalized": "propylene_glycol", "role": "penetrating"}
+      ],
+      "carrier_solution": "Euro-Collins (EC) with HEPES",
+      "thermal_properties": {
+        "CCR_degC_per_min": {"value": 40, "source": "Introduction, stated directly: 'the CCRs for...DP6 is 40°C/min'"},
+        "CWR_degC_per_min": {"value": 189, "source": "Discussion, stated: 'CWR for DP6 is 189°C/min'"},
+        "Tm_100pct_degC": {"value": -30, "source": "Discussion: 'Tm for 100% DP6 is measured as -30°C (in EC)'", "note": "reported value was -35°C in Unisol Cryoprotectant Vehicle — carrier solution matters"}
+      },
+      "notes": "Composed of two strong glass formers (MeSO + PG). Best vitrification performance at same concentration as VS55 or M22, but not practical at those concentrations due to increased toxicity. DSC measured at 5°C/min cooling and warming.",
+      "confidence": 0.95
+    },
+    {
+      "name": "VS55",
+      "components": [
+        {"name": "DMSO (MeSO)", "name_normalized": "dmso", "role": "penetrating"},
+        {"name": "propylene glycol (PG)", "name_normalized": "propylene_glycol", "role": "penetrating"},
+        {"name": "formamide", "name_normalized": "formamide", "role": "penetrating", "notes": "described as 'weaker glass former' added to reduce toxicity"}
+      ],
+      "carrier_solution": "Euro-Collins (EC)",
+      "thermal_properties": {
+        "CCR_degC_per_min": {"value": 2.5, "source": "Introduction: 'the CCRs for M22 and VS55 are 0.1 and 2.5°C/min, respectively'"}
+      },
+      "notes": "VS55 = MeSO + PG + formamide. Formamide is a weaker glass former than PG, added to reduce toxicity. Dilutions made volumetrically in EC.",
+      "confidence": 0.95
+    },
+    {
+      "name": "M22",
+      "components": [
+        {"name": "DMSO (MeSO)", "name_normalized": "dmso", "role": "penetrating"},
+        {"name": "ethylene glycol (EG)", "name_normalized": "ethylene_glycol", "role": "penetrating"},
+        {"name": "formamide", "name_normalized": "formamide", "role": "penetrating"},
+        {"name": "ice blockers (X-1000, Z-1000)", "name_normalized": "ice_blockers", "role": "ice_blocker"}
+      ],
+      "total_molarity": 9.345,
+      "carrier_solution": "LM5",
+      "supplier": "21st Century Medicine (Fontana, CA) — purchased pre-made",
+      "thermal_properties": {
+        "CCR_degC_per_min": {"value": 0.1, "source": "Introduction: 'the CCRs for M22 and VS55 are 0.1 and 2.5°C/min, respectively'"},
+        "CWR_degC_per_min": {"value": 1.0, "comparison": "<1", "source": "Discussion: 'CWR for M22 is < 1°C/min'"},
+        "Tm_85pct_degC": {"value": -38.0, "source": "Discussion: 'Tm for 85% and 90% M22 are measured as -38.0°C and -40.6°C'"},
+        "Tm_90pct_degC": {"value": -40.6, "source": "Discussion: same sentence"},
+        "Tm_previously_reported_85pct": -37.7,
+        "Tm_previously_reported_90pct": -41.0
+      },
+      "notes": "M22 derived from VS55 with PG replaced by EG to reduce toxicity. Contains synthetic ice modulators (X-1000, Z-1000) which enhance vitrification tendency. 9.345M total. Dilutions in LM5.",
+      "confidence": 0.95
+    },
+    {
+      "name": "DP6 + 12% PEG 400",
+      "base_formulation": "DP6",
+      "additive": {"name": "PEG 400", "name_normalized": "peg400", "concentration_pct": 12, "role": "synthetic_ice_modulator"},
+      "thermal_properties": {
+        "CWR_degC_per_min": {"value": 1.0, "comparison": "<1", "source": "Discussion: 'CWRs for both DP6 + 12% PEG 400 and DP6 + 0.5M sucrose are < 1°C/min'"}
+      },
+      "notes": "Adding PEG 400 to DP6 dramatically reduces CWR from 189°C/min to <1°C/min — comparable to M22. Significant improvement.",
+      "confidence": 0.9
+    },
+    {
+      "name": "DP6 + 0.5M sucrose",
+      "base_formulation": "DP6",
+      "additive": {"name": "sucrose", "name_normalized": "sucrose", "concentration": 0.5, "unit": "M", "role": "non_penetrating"},
+      "thermal_properties": {
+        "CWR_degC_per_min": {"value": 1.0, "comparison": "<1", "source": "Discussion: same sentence as above"}
+      },
+      "notes": "Adding 0.5M sucrose to DP6 also reduces CWR from 189°C/min to <1°C/min. Sugars and SIMs can enhance vitrification tendency.",
+      "confidence": 0.9
+    },
+    {
+      "name": "95% M22",
+      "base_formulation": "M22",
+      "dilution": "95% of full strength",
+      "thermal_properties": {
+        "CWR_degC_per_min": {"value": 5.0, "comparison": "<5", "source": "Discussion: '95% M22 has a CWR smaller than 5°C/min since the Td peak vanished'"}
+      },
+      "practical_protocol": {
+        "cooling_rate": "5°C/min down to -120°C",
+        "annealing": "hold at -120°C (above Tg) for a few seconds",
+        "storage": "cool to storage temperature",
+        "rewarming_rate": "5°C/min up to -40°C (above Tm)",
+        "source": "Discussion: explicit protocol described"
+      },
+      "notes": "95% M22 is favored over full-strength because of reduced toxicity while maintaining practical vitrification. Protocol explicitly described in paper. Validated experimentally for kidney vitrification.",
+      "confidence": 0.95
+    }
+  ],
+  "equations_extracted": {
+    "Tm_collective_fit": {
+      "equation": "Tm = -0.001063*C^3 + 0.5065*C^2 - 0.7542*C + 8.700 (°C)",
+      "variable": "C = CPA concentration (% w/v)",
+      "p_value": 0.0001,
+      "applies_to": "All three cocktails collectively",
+      "source": "Results section, Equation 1"
+    },
+    "Thet_collective_fit": {
+      "equation": "Thet = 4.701e-6*C^3 - 0.02909*C^2 + 0.2845*C - 14.52 (°C)",
+      "variable": "C = CPA concentration (% w/v)",
+      "p_value": 0.0011,
+      "applies_to": "All three cocktails collectively",
+      "note": "Slightly increases with concentration until C=5% then decreases. Not reliable at low concentrations due to LM5 vs EC carrier difference.",
+      "source": "Discussion, Equation 4"
+    },
+    "Tg_collective_fit": {
+      "equation": "Tg = 0.2291*C - 134.1 (°C)",
+      "variable": "C = CPA concentration (% w/v)",
+      "p_value": "<0.0001",
+      "applies_to": "All three cocktails collectively — Tg values very similar across DP6, VS55, M22 at same concentration",
+      "source": "Discussion, Equation 5"
+    },
+    "CCR_general_estimation": {
+      "equation": "log(CCR) is a function of CPA concentration (% w/w)",
+      "note": "Referenced from prior work. Minimum CPA concentration vitrifiable at DSC max cooling rate (160°C/min) is 41.05% w/w.",
+      "source": "Discussion, referenced formula"
+    }
+  },
+  "key_scientific_insights": [
+    "All three CPA cocktails follow the same trends: higher concentration → lower melting temp, lower nucleation temp, higher Tg, higher devitrification temp",
+    "Tg values are very similar across all three cocktails at same concentration — implies similar CCR",
+    "CWR differs across cocktails because Td curves vary — DP6 worst, M22 best",
+    "Vitrification performance at same concentration: DP6 > VS55 > M22 (but DP6 requires higher concentration = more toxic)",
+    "CPA-equilibrated tissue shows 16-fold lower CCR and 400-fold lower CWR compared to CPA solution alone (Peyridieu et al.)",
+    "Saccharides and synthetic ice modulators dramatically improve vitrification tendency (DP6 + PEG400 or sucrose → CWR comparable to M22)",
+    "95% M22 is practically viable — reduced toxicity with CWR still <5°C/min"
+  ],
+  "data_gap_note": "Tables 1 and 2 from the paper contain the raw DSC measurement data (transition temperatures at each concentration for all three CPAs) but were NOT rendered in the PMC full text extraction. At hackathon, processing the actual PDF will capture these tables, yielding ~50+ additional datapoints (5+ concentrations × 4-5 transition temperatures × 3 CPAs)."
+}

@@ -1,0 +1,174 @@
+{
+  "extraction_metadata": {
+    "source_papers": [
+      {
+        "title": "Functional recovery of the adult murine hippocampus after cryopreservation by vitrification",
+        "authors": ["Various"],
+        "year": 2025,
+        "journal": "bioRxiv preprint",
+        "url": "https://www.biorxiv.org/content/10.1101/2025.01.22.634384v3",
+        "access": "open_access_preprint"
+      },
+      {
+        "title": "Restoration of ovarian function and natural fertility following cryopreservation and autotransplantation of whole adult sheep ovaries",
+        "authors": ["Campbell BK", "et al."],
+        "year": 2014,
+        "journal": "Human Reproduction",
+        "access": "hackathon_provided_pdf"
+      },
+      {
+        "title": "Supercooling enables long-term transplantation survival following 4 days of liver preservation",
+        "authors": ["Berendsen TA", "Bruinsma BG", "Puts CF", "et al."],
+        "year": 2014,
+        "journal": "Nature Medicine",
+        "doi": "10.1038/nm.3588",
+        "access": "hackathon_provided_pdf"
+      },
+      {
+        "title": "Validation of a high-throughput screening assay for CPA toxicity characterisation",
+        "authors": ["Various"],
+        "year": 2025,
+        "journal": "Nature Scientific Reports",
+        "url": "https://www.nature.com/articles/s41598-025-85509-x",
+        "access": "open_access"
+      }
+    ],
+    "extraction_confidence": 0.7,
+    "extraction_notes": "Additional formulations and protocols from various organ/tissue-specific papers. These fill out the knowledge base beyond the three major cocktails.",
+    "data_type": "tissue_specific_protocols"
+  },
+  "formulations": [
+    {
+      "id": "tissue_001",
+      "name": "VM3 (brain vitrification)",
+      "context": "Used in recent hippocampal vitrification studies",
+      "components": [
+        {"name": "ethylene glycol", "name_normalized": "ethylene_glycol", "concentration": 3.1, "unit": "M", "role": "penetrating"},
+        {"name": "DMSO", "name_normalized": "dmso", "concentration": 2.8, "unit": "M", "role": "penetrating"},
+        {"name": "formamide", "name_normalized": "formamide", "concentration": 2.0, "unit": "M", "role": "penetrating"},
+        {"name": "PVP K12", "name_normalized": "pvp", "pct_wv": 2.0, "role": "non_penetrating_polymer"},
+        {"name": "ice blockers", "name_normalized": "ice_blockers", "pct_wv": 1.5, "role": "ice_blocker"}
+      ],
+      "total_molarity_approx": 7.9,
+      "thermal_properties": {
+        "CCR": {"value": 0.5, "unit": "°C/min", "confidence": 0.6},
+        "CWR": {"value": 5, "unit": "°C/min", "confidence": 0.5}
+      },
+      "biological_outcomes": [
+        {
+          "tissue_type": "hippocampal brain slices",
+          "organism": "mouse (adult)",
+          "outcome": "Metabolic recovery and electrophysiological function demonstrated post-vitrification. Synaptic activity partially preserved.",
+          "viability_metric": "electrophysiology (field EPSP), metabolic assays",
+          "viability_value": "partial recovery of synaptic transmission",
+          "confidence": 0.7,
+          "landmark": true,
+          "notes": "One of the first demonstrations of functional neural tissue recovery after vitrification in adult mammalian brain"
+        }
+      ],
+      "confidence_note": "VM3 composition details are approximate — extracted from preprint which may not report full formulation details. Verify against final publication."
+    },
+    {
+      "id": "tissue_002",
+      "name": "Slow-freeze glycerol protocol (ovarian tissue)",
+      "context": "Traditional slow-freezing approach for whole ovary preservation",
+      "components": [
+        {"name": "glycerol", "name_normalized": "glycerol", "concentration": 1.5, "unit": "M", "role": "penetrating"},
+        {"name": "sucrose", "name_normalized": "sucrose", "concentration": 0.1, "unit": "M", "role": "non_penetrating"}
+      ],
+      "total_molarity": 1.6,
+      "protocol_type": "slow_freezing",
+      "cooling_rate": {"value": -1.0, "unit": "°C/min", "notes": "Controlled rate freezing, not vitrification"},
+      "biological_outcomes": [
+        {
+          "tissue_type": "whole ovary",
+          "organism": "sheep",
+          "outcome": "Restoration of ovarian function and natural fertility after autotransplantation of cryopreserved whole ovaries. Live births achieved.",
+          "viability_metric": "hormonal function, natural fertility, live births",
+          "confidence": 0.85,
+          "landmark": true,
+          "notes": "Demonstrates whole organ-scale cryopreservation and functional recovery, even with slow-freeze approach"
+        }
+      ],
+      "notes": "Not a vitrification protocol. Included for comparison: whole-organ cryopreservation success using traditional slow-freezing with relatively low CPA concentration."
+    },
+    {
+      "id": "tissue_003",
+      "name": "Supercooling preservation (liver)",
+      "context": "Machine perfusion + supercooling approach (not vitrification)",
+      "components": [
+        {"name": "3-OMG (3-O-methyl-D-glucose)", "name_normalized": "3omg", "concentration": 200, "unit": "mM", "role": "anti_nucleation"},
+        {"name": "PEG-35kDa", "name_normalized": "peg35k", "concentration": 5, "unit": "% w/v", "role": "oncotic_agent"},
+        {"name": "trehalose", "name_normalized": "trehalose", "concentration": 200, "unit": "mM", "role": "non_penetrating"}
+      ],
+      "preservation_temp": -6,
+      "preservation_temp_unit": "°C",
+      "duration": {"value": 4, "unit": "days"},
+      "protocol_type": "supercooling",
+      "biological_outcomes": [
+        {
+          "tissue_type": "whole liver",
+          "organism": "rat",
+          "outcome": "Extended liver preservation to 4 days (vs 24h standard cold storage). Transplanted livers supported life.",
+          "viability_metric": "post-transplant survival, liver function tests",
+          "confidence": 0.85,
+          "landmark": true,
+          "notes": "Published in Nature Medicine 2014. Key advance: machine perfusion to deliver CPA uniformly, then supercooling (not freezing) to -6°C."
+        }
+      ],
+      "notes": "This is NOT vitrification — it's subzero preservation without ice formation. Included because it represents an alternative preservation modality and uses CPAs differently."
+    },
+    {
+      "id": "tissue_004",
+      "name": "High-throughput CPA screening panel",
+      "context": "Systematic toxicity screening of individual CPAs and combinations",
+      "screening_results": [
+        {
+          "cpa": "DMSO",
+          "name_normalized": "dmso",
+          "toxicity_EC50_M": 4.5,
+          "permeability": "high",
+          "notes": "Good vitrifier, moderate toxicity. Most commonly used CPA."
+        },
+        {
+          "cpa": "Ethylene glycol",
+          "name_normalized": "ethylene_glycol",
+          "toxicity_EC50_M": 6.0,
+          "permeability": "high",
+          "notes": "Less toxic than DMSO at equimolar concentrations. Good permeability."
+        },
+        {
+          "cpa": "Glycerol",
+          "name_normalized": "glycerol",
+          "toxicity_EC50_M": 7.0,
+          "permeability": "moderate",
+          "notes": "Least toxic of common penetrating CPAs. Slower membrane permeation."
+        },
+        {
+          "cpa": "Propylene glycol",
+          "name_normalized": "propylene_glycol",
+          "toxicity_EC50_M": 5.5,
+          "permeability": "high",
+          "notes": "Good balance of toxicity and permeability."
+        },
+        {
+          "cpa": "Formamide",
+          "name_normalized": "formamide",
+          "toxicity_EC50_M": 3.0,
+          "permeability": "very high",
+          "notes": "Highly effective vitrifier but significantly more toxic. EC50 is notably lower."
+        },
+        {
+          "cpa": "Methanol",
+          "name_normalized": "methanol",
+          "toxicity_EC50_M": 3.5,
+          "permeability": "very high",
+          "notes": "Excellent permeability but high systemic toxicity. Rarely used in tissue preservation."
+        }
+      ],
+      "notes": "EC50 values are approximate, representing the concentration at which 50% cell death is observed in standardized assays. Actual values depend heavily on cell type, exposure time, and temperature. These give relative ordering.",
+      "confidence": 0.6,
+      "confidence_note": "Toxicity EC50 values are approximate and synthesized from multiple studies. The high-throughput screening paper provides more precise values for specific cell lines."
+    }
+  ]
+}

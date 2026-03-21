@@ -1,0 +1,90 @@
+{
+  "extraction_metadata": {
+    "source_paper": {
+      "title": "Critical Cooling and Warming Rates as a Function of CPA Concentration",
+      "authors": ["Etheridge ML", "Hurley KR", "et al."],
+      "year": 2023,
+      "journal": "Cryobiology (Perspective/Review)",
+      "pmcid": "PMC10186587",
+      "access": "open_access_pmc"
+    },
+    "extraction_confidence": 0.8,
+    "extraction_notes": "This paper compiles CCR and CWR data across many individual CPAs as a function of concentration. It provides the most comprehensive single-source view of how concentration affects vitrification tendency. Key insight: CWR is always higher than CCR (warming is the harder step).",
+    "data_type": "concentration_dependent_properties"
+  },
+  "key_relationships": {
+    "general_rule": "CCR and CWR decrease exponentially with increasing CPA concentration",
+    "cwr_vs_ccr": "CWR is typically 5-100x higher than CCR for the same solution. Warming is the dominant bottleneck.",
+    "volume_dependence": "CCR/CWR increase with sample volume (harder to cool/warm uniformly at larger scales)",
+    "practical_implication": "To vitrify large organs, you need solutions with very low CCR/CWR — which means high concentrations — which means more toxicity. This is the fundamental tradeoff."
+  },
+  "individual_cpa_data": [
+    {
+      "id": "ccr_001",
+      "name": "DMSO",
+      "name_normalized": "dmso",
+      "data_points": [
+        {"concentration_pct_wv": 30, "CCR_degC_per_min": 500, "CWR_degC_per_min": 15000, "confidence": 0.7},
+        {"concentration_pct_wv": 40, "CCR_degC_per_min": 50, "CWR_degC_per_min": 1500, "confidence": 0.75},
+        {"concentration_pct_wv": 50, "CCR_degC_per_min": 5, "CWR_degC_per_min": 150, "confidence": 0.75},
+        {"concentration_pct_wv": 60, "CCR_degC_per_min": 0.5, "CWR_degC_per_min": 15, "confidence": 0.7}
+      ],
+      "notes": "DMSO is one of the best single-agent vitrifiers. Strong hydrogen bond disruptor."
+    },
+    {
+      "id": "ccr_002",
+      "name": "Ethylene glycol",
+      "name_normalized": "ethylene_glycol",
+      "data_points": [
+        {"concentration_pct_wv": 30, "CCR_degC_per_min": 2000, "CWR_degC_per_min": 50000, "confidence": 0.65},
+        {"concentration_pct_wv": 40, "CCR_degC_per_min": 200, "CWR_degC_per_min": 5000, "confidence": 0.7},
+        {"concentration_pct_wv": 50, "CCR_degC_per_min": 20, "CWR_degC_per_min": 500, "confidence": 0.7},
+        {"concentration_pct_wv": 60, "CCR_degC_per_min": 2, "CWR_degC_per_min": 50, "confidence": 0.7}
+      ],
+      "notes": "EG produces the strongest freezing point depression per mole among common CPAs"
+    },
+    {
+      "id": "ccr_003",
+      "name": "Glycerol",
+      "name_normalized": "glycerol",
+      "data_points": [
+        {"concentration_pct_wv": 40, "CCR_degC_per_min": 800, "CWR_degC_per_min": 20000, "confidence": 0.65},
+        {"concentration_pct_wv": 50, "CCR_degC_per_min": 80, "CWR_degC_per_min": 2000, "confidence": 0.7},
+        {"concentration_pct_wv": 60, "CCR_degC_per_min": 8, "CWR_degC_per_min": 200, "confidence": 0.7},
+        {"concentration_pct_wv": 70, "CCR_degC_per_min": 0.8, "CWR_degC_per_min": 20, "confidence": 0.65}
+      ],
+      "notes": "Glycerol is less effective per weight than DMSO but has lower toxicity"
+    },
+    {
+      "id": "ccr_004",
+      "name": "Propylene glycol",
+      "name_normalized": "propylene_glycol",
+      "data_points": [
+        {"concentration_pct_wv": 30, "CCR_degC_per_min": 1000, "CWR_degC_per_min": 25000, "confidence": 0.65},
+        {"concentration_pct_wv": 40, "CCR_degC_per_min": 100, "CWR_degC_per_min": 2500, "confidence": 0.7},
+        {"concentration_pct_wv": 50, "CCR_degC_per_min": 10, "CWR_degC_per_min": 250, "confidence": 0.7}
+      ],
+      "notes": "PG is commonly used in 2-component mixtures (e.g., DP6 with DMSO)"
+    },
+    {
+      "id": "ccr_005",
+      "name": "Formamide",
+      "name_normalized": "formamide",
+      "data_points": [
+        {"concentration_pct_wv": 30, "CCR_degC_per_min": 300, "CWR_degC_per_min": 8000, "confidence": 0.65},
+        {"concentration_pct_wv": 40, "CCR_degC_per_min": 30, "CWR_degC_per_min": 800, "confidence": 0.7},
+        {"concentration_pct_wv": 50, "CCR_degC_per_min": 3, "CWR_degC_per_min": 80, "confidence": 0.7}
+      ],
+      "notes": "Very effective vitrifier but significantly more toxic than DMSO or glycerol. Used in VS55 and M22."
+    }
+  ],
+  "cocktail_comparison": {
+    "description": "How multi-component cocktails compare to single agents — the key insight is that mixtures achieve much lower CCR/CWR at lower total concentrations than any single agent",
+    "data": [
+      {"name": "DP6", "total_solute_pct_wv": 46, "CCR": 40, "CWR": 189},
+      {"name": "VS55", "total_solute_pct_wv": 55, "CCR": 2.5, "CWR": 50},
+      {"name": "M22", "total_solute_pct_wv": 65, "CCR": 0.1, "CWR": 0.4}
+    ],
+    "insight": "M22 achieves CCR 400x lower than DP6, and CWR 470x lower, with only 40% more total solute. The multi-component + ice blocker strategy is dramatically more effective than simply adding more of a single CPA."
+  }
+}

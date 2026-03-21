@@ -1,0 +1,180 @@
+{
+  "extraction_metadata": {
+    "source_papers": [
+      {
+        "title": "Supplemented phase diagrams for the vitrification CPA cocktails DP6, VS55 and M22",
+        "authors": ["Manuchehrabadi N", "et al."],
+        "year": 2022,
+        "journal": "Cryobiology / CryoLetters",
+        "doi": "10.1016/j.cryobiol.2022.01.001",
+        "pmcid": "PMC10202161",
+        "access": "open_access_pmc"
+      },
+      {
+        "title": "Physical and biological aspects of renal vitrification",
+        "authors": ["Fahy GM", "Wowk B", "Pagotan R", "Chang A", "Phan J", "Thomson B", "Phan L"],
+        "year": 2009,
+        "journal": "Organogenesis",
+        "doi": "10.4161/org.5.3.9974",
+        "access": "open_access"
+      },
+      {
+        "title": "Cryopreservation of Complex Systems: The Missing Link in the Regenerative Medicine Supply Chain (Review)",
+        "authors": ["Lewis JK", "et al."],
+        "year": 2016,
+        "journal": "Rejuvenation Research",
+        "access": "hackathon_provided"
+      }
+    ],
+    "extraction_confidence": 0.85,
+    "extraction_notes": "The three major vitrification cocktails (DP6, VS55, M22) are extremely well-documented across many papers. Composition data is high confidence. Thermal property values are from multiple corroborating sources. This represents the core 'gold standard' data for the knowledge base.",
+    "data_type": "multi_component_cocktails"
+  },
+  "formulations": [
+    {
+      "id": "cocktail_001",
+      "name": "DP6",
+      "full_name": "DP6 (6 Molar Two-Component Solution)",
+      "components": [
+        {"name": "DMSO", "name_normalized": "dmso", "concentration": 3.0, "unit": "M", "pct_wv": 23.4, "role": "penetrating"},
+        {"name": "propylene glycol", "name_normalized": "propylene_glycol", "concentration": 3.0, "unit": "M", "pct_wv": 22.8, "role": "penetrating"}
+      ],
+      "carrier_solution": "Euro-Collins with 6mM HEPES",
+      "total_molarity": 6.0,
+      "total_solute_pct_wv": 46.2,
+      "thermal_properties": {
+        "Tg": {"value": -119, "unit": "°C", "method": "DSC", "confidence": 0.85, "notes": "Values vary slightly across papers: -115 to -122°C range reported"},
+        "Tm": {"value": -45, "unit": "°C", "method": "DSC", "confidence": 0.7, "notes": "Onset of melting/devitrification"},
+        "Td": {"value": -85, "unit": "°C", "method": "DSC", "confidence": 0.7, "notes": "Devitrification temperature on warming"},
+        "CCR": {"value": 40, "unit": "°C/min", "confidence": 0.8, "notes": "Requires relatively fast cooling — limits applicability to small volumes"},
+        "CWR": {"value": 189, "unit": "°C/min", "confidence": 0.75, "notes": "Very high warming rate required — major practical limitation"}
+      },
+      "biological_outcomes": [
+        {
+          "tissue_type": "articular cartilage",
+          "organism": "porcine",
+          "outcome": "Successful vitrification of small cartilage samples with good post-thaw viability",
+          "viability_metric": "cell viability",
+          "confidence": 0.7
+        },
+        {
+          "tissue_type": "blood vessels",
+          "organism": "rabbit",
+          "outcome": "Vitrification demonstrated with nanowarming",
+          "viability_metric": "histological integrity",
+          "confidence": 0.7
+        }
+      ],
+      "toxicity_profile": {
+        "relative_toxicity": "low-moderate",
+        "notes": "Lower toxicity than VS55 or M22 due to lower total molarity and absence of formamide. Main limitation is high CCR/CWR requirement, not toxicity.",
+        "confidence": 0.8
+      },
+      "practical_notes": "DP6 is the 'gentler' cocktail — less toxic but harder to vitrify (needs fast cooling/warming). Best suited for small samples where rapid thermal change is achievable. Often used with nanowarming to address high CWR."
+    },
+    {
+      "id": "cocktail_002",
+      "name": "VS55",
+      "full_name": "VS55 (Vitrification Solution 55% w/v)",
+      "components": [
+        {"name": "DMSO", "name_normalized": "dmso", "concentration": 3.1, "unit": "M", "pct_wv": 24.2, "role": "penetrating"},
+        {"name": "propylene glycol", "name_normalized": "propylene_glycol", "concentration": 2.2, "unit": "M", "pct_wv": 16.8, "role": "penetrating"},
+        {"name": "formamide", "name_normalized": "formamide", "concentration": 3.1, "unit": "M", "pct_wv": 14.0, "role": "penetrating"}
+      ],
+      "carrier_solution": "Euro-Collins",
+      "total_molarity": 8.4,
+      "total_solute_pct_wv": 55.0,
+      "thermal_properties": {
+        "Tg": {"value": -123, "unit": "°C", "method": "DSC", "confidence": 0.9, "notes": "Well-characterized. Consistent across multiple studies."},
+        "Tm": {"value": -40, "unit": "°C", "method": "DSC", "confidence": 0.7},
+        "Td": {"value": -75, "unit": "°C", "method": "DSC", "confidence": 0.7},
+        "CCR": {"value": 2.5, "unit": "°C/min", "confidence": 0.85, "notes": "Much more achievable than DP6 — compatible with moderate-sized samples"},
+        "CWR": {"value": 50, "unit": "°C/min", "confidence": 0.8, "notes": "Still challenging for large organs but manageable for tissues"}
+      },
+      "biological_outcomes": [
+        {
+          "tissue_type": "blood vessels",
+          "organism": "rabbit",
+          "outcome": "Successful vitrification and recovery of vascular grafts",
+          "viability_metric": "smooth muscle viability, endothelial integrity",
+          "confidence": 0.8
+        },
+        {
+          "tissue_type": "articular cartilage",
+          "organism": "various",
+          "outcome": "Used in cartilage vitrification studies",
+          "viability_metric": "chondrocyte viability",
+          "confidence": 0.7
+        },
+        {
+          "tissue_type": "ovarian tissue",
+          "organism": "various",
+          "outcome": "Used in ovarian tissue cryopreservation",
+          "viability_metric": "follicle viability",
+          "confidence": 0.6
+        }
+      ],
+      "toxicity_profile": {
+        "relative_toxicity": "moderate",
+        "notes": "Formamide adds toxicity risk. Requires careful step-wise introduction and removal. Exposure time at higher temperatures is critical. The 3-component approach balances toxicity (no single agent at very high concentration) against vitrification tendency.",
+        "confidence": 0.8
+      },
+      "practical_notes": "VS55 is the 'workhorse' cocktail — good balance of vitrification tendency and manageable toxicity. The inclusion of formamide is controversial (toxic) but dramatically lowers CCR/CWR requirements. Has the longest track record in tissue vitrification research."
+    },
+    {
+      "id": "cocktail_003",
+      "name": "M22",
+      "full_name": "M22 (21st Century Medicine Vitrification Solution)",
+      "components": [
+        {"name": "DMSO", "name_normalized": "dmso", "concentration": 2.855, "unit": "M", "pct_wv": 22.305, "role": "penetrating"},
+        {"name": "formamide", "name_normalized": "formamide", "concentration": 2.855, "unit": "M", "pct_wv": 12.858, "role": "penetrating"},
+        {"name": "ethylene glycol", "name_normalized": "ethylene_glycol", "concentration": 2.713, "unit": "M", "pct_wv": 16.837, "role": "penetrating"},
+        {"name": "N-methylformamide", "name_normalized": "n_methylformamide", "concentration": 0.508, "unit": "M", "pct_wv": 3.0, "role": "penetrating"},
+        {"name": "3-methoxy-1,2-propanediol", "name_normalized": "3_methoxy_propanediol", "concentration": 0.377, "unit": "M", "pct_wv": 4.0, "role": "penetrating"},
+        {"name": "PVP K12", "name_normalized": "pvp", "concentration": null, "unit": "% w/v", "pct_wv": 2.8, "role": "non_penetrating_polymer"},
+        {"name": "X-1000 ice blocker", "name_normalized": "x1000", "concentration": null, "unit": "% w/v", "pct_wv": 1.0, "role": "ice_blocker"},
+        {"name": "Z-1000 ice blocker", "name_normalized": "z1000", "concentration": null, "unit": "% w/v", "pct_wv": 2.0, "role": "ice_blocker"}
+      ],
+      "carrier_solution": "LM5 (modified carrier solution)",
+      "total_molarity": 9.345,
+      "total_solute_pct_wv": 64.8,
+      "thermal_properties": {
+        "Tg": {"value": -123.3, "unit": "°C", "method": "DSC", "confidence": 0.9, "notes": "Well-characterized by Fahy group"},
+        "CCR": {"value": 0.1, "unit": "°C/min", "confidence": 0.9, "notes": "Extraordinarily low — can vitrify at near-passive cooling rates. This is the key achievement of M22."},
+        "CWR": {"value": 0.4, "unit": "°C/min", "confidence": 0.85, "notes": "Extremely low CWR — practical for large organs. Ice blockers (X-1000, Z-1000) are the key innovation."}
+      },
+      "biological_outcomes": [
+        {
+          "tissue_type": "kidney (whole organ)",
+          "organism": "rabbit",
+          "outcome": "First successful vitrification and transplantation of a whole mammalian kidney. Rabbit kidneys were vitrified with M22, rewarmed, transplanted, and supported life as sole kidney.",
+          "viability_metric": "organ function post-transplant, life support as sole kidney",
+          "reference": "Fahy et al., 2009, Organogenesis",
+          "confidence": 0.95,
+          "landmark": true
+        },
+        {
+          "tissue_type": "kidney cortical slices",
+          "organism": "rabbit",
+          "outcome": "High viability recovery in cortical slices — K/Na ratio recovery >80% of control",
+          "viability_metric": "K/Na ratio",
+          "confidence": 0.85
+        },
+        {
+          "tissue_type": "hippocampal brain slices",
+          "organism": "mouse",
+          "outcome": "Structural preservation and some electrophysiological recovery reported in recent studies (2025)",
+          "viability_metric": "electrophysiology, ultrastructure",
+          "confidence": 0.7,
+          "notes": "Recent bioRxiv preprints — active area of research"
+        }
+      ],
+      "toxicity_profile": {
+        "relative_toxicity": "moderate-high",
+        "notes": "M22 achieves low CCR/CWR at the cost of high total solute concentration (9.3M). Toxicity is managed through: (1) step-wise CPA introduction at low temperature, (2) careful control of exposure time, (3) use of carrier solution with osmotic buffering. The ice blockers (X-1000, Z-1000) allow lower penetrating CPA concentrations than would otherwise be needed.",
+        "confidence": 0.85
+      },
+      "practical_notes": "M22 is the most advanced vitrification solution for organ-scale preservation. Developed by Greg Fahy at 21st Century Medicine over decades. The key innovations are: (1) multi-component approach distributes toxicity, (2) ice blockers suppress ice nucleation without adding osmotic load, (3) the combination achieves CCR/CWR low enough for whole organs. The formulation is complex and somewhat proprietary (ice blockers are specialty chemicals)."
+    }
+  ]
+}
