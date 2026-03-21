@@ -1,4 +1,4 @@
-"""Pydantic output models for CryoSight MCP server tools."""
+"""Pydantic output models for CryoLens MCP server tools."""
 
 from pydantic import BaseModel, Field
 

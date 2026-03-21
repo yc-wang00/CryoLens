@@ -1,4 +1,4 @@
-"""Database connection pool for CryoSight MCP server.
+"""Database connection pool for CryoLens MCP server.
 
 Provides two asyncpg pools:
 - Primary pool: used by all tools
@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 
 import asyncpg
 
-logger = logging.getLogger("cryosight.db")
+logger = logging.getLogger("cryolens.db")
 
 # Sanitize connection URLs in logs
 def _sanitize_url(url: str) -> str:
@@ -93,10 +93,10 @@ def validate_readonly_sql(sql: str) -> str | None:
 
 def get_dsn() -> str:
     return os.environ.get(
-        "CRYOSIGHT_DB_URL",
-        "postgresql://localhost/cryosight",
+        "CRYOLENS_DB_URL",
+        "postgresql://localhost/cryolens",
     )
 
 
 def get_readonly_dsn() -> str:
-    return os.environ.get("CRYOSIGHT_DB_READONLY_URL", get_dsn())
+    return os.environ.get("CRYOLENS_DB_READONLY_URL", get_dsn())

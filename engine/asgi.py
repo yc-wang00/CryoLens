@@ -2,7 +2,7 @@
 
 Wraps the FastMCP streamable-http app with:
 - GET /health — health check for Railway deploy probes
-- Bearer token auth on /mcp — optional, enabled via CRYOSIGHT_API_KEY env var
+- Bearer token auth on /mcp — optional, enabled via CRYOLENS_API_KEY env var
 
 Usage:
     uvicorn engine.asgi:app --host 0.0.0.0 --port $PORT
@@ -20,7 +20,7 @@ from starlette.routing import Mount, Route
 
 from engine.mcp_server import mcp
 
-API_KEY = os.environ.get("CRYOSIGHT_API_KEY")
+API_KEY = os.environ.get("CRYOLENS_API_KEY")
 
 
 class BearerAuthMiddleware(BaseHTTPMiddleware):

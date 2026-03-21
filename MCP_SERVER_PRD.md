@@ -1,14 +1,14 @@
-# CryoSight MCP Server — Product Requirements Document
+# CryoLens MCP Server — Product Requirements Document
 
 ## Overview
 
-The CryoSight MCP Server exposes the world's largest structured cryopreservation database to any AI agent via the Model Context Protocol. It enables researchers and AI systems to query CPA properties, compare formulations, search findings, retrieve protocols, and identify knowledge gaps — all through a standardized tool interface.
+The CryoLens MCP Server exposes the world's largest structured cryopreservation database to any AI agent via the Model Context Protocol. It enables researchers and AI systems to query CPA properties, compare formulations, search findings, retrieve protocols, and identify knowledge gaps — all through a standardized tool interface.
 
 ## Context
 
 ### What We Have
 
-- **PostgreSQL database `cryosight`** with normalized schema (v2 + protocols + findings)
+- **PostgreSQL database `cryolens`** with normalized schema (v2 + protocols + findings)
 - **13+ papers** seeded with 91+ findings, 165 measurements, 5 formulations, 7 protocols
 - **1,759 PDFs** in corpus, actively being extracted by sub-agents (scaling to hundreds of papers)
 - **33 compounds** with SMILES, synonyms, molecular properties
@@ -33,7 +33,7 @@ Any AI Agent (Claude, GPT, open-source)
         |  MCP Protocol (stdio or streamable-http)
         |
 +-------v--------------------------------------+
-|       CryoSight MCP Server                   |
+|       CryoLens MCP Server                   |
 |       (Python, mcp SDK v1.12+)               |
 |                                              |
 |  TOOLS:        RESOURCES:     PROMPTS:       |
@@ -47,7 +47,7 @@ Any AI Agent (Claude, GPT, open-source)
         |  asyncpg connection pool
         |
 +-------v--------------------------------------+
-|       PostgreSQL `cryosight`                 |
+|       PostgreSQL `cryolens`                 |
 |       (13 tables, 5 views, FTS indexes)      |
 +----------------------------------------------+
 ```
@@ -366,8 +366,8 @@ engine/
 ### Configuration
 ```bash
 # Environment variables
-CRYOSIGHT_DB_URL=postgresql://localhost/cryosight
-CRYOSIGHT_DB_POOL_SIZE=5
+CRYOLENS_DB_URL=postgresql://localhost/cryolens
+CRYOLENS_DB_POOL_SIZE=5
 MCP_TRANSPORT=streamable-http  # or stdio
 MCP_PORT=8000
 ```
@@ -376,11 +376,11 @@ MCP_PORT=8000
 ```json
 {
   "mcpServers": {
-    "cryosight": {
+    "cryolens": {
       "command": "uv",
       "args": ["run", "python", "engine/mcp_server.py"],
       "env": {
-        "CRYOSIGHT_DB_URL": "postgresql://localhost/cryosight"
+        "CRYOLENS_DB_URL": "postgresql://localhost/cryolens"
       }
     }
   }
@@ -422,4 +422,4 @@ MCP_PORT=8000
 
 ---
 
-*Document version: 1.0 | March 21, 2026 | CryoSight Hackathon*
+*Document version: 1.0 | March 21, 2026 | CryoLens Hackathon*

@@ -1,4 +1,4 @@
-"""CryoSight MCP Server.
+"""CryoLens MCP Server.
 
 Exposes the cryopreservation knowledge database to AI agents via MCP.
 Supports stdio (Claude Desktop) and streamable-http transports.
@@ -55,7 +55,7 @@ async def app_lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
 
 
 mcp = FastMCP(
-    "CryoSight",
+    "CryoLens",
     lifespan=app_lifespan,
     json_response=True,
 )

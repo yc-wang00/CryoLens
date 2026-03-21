@@ -1,4 +1,4 @@
-"""Tool implementations for CryoSight MCP server.
+"""Tool implementations for CryoLens MCP server.
 
 Compound-centric tools (search_compounds, get_compound_details, search_viability)
 are in tools_compounds.py. This module contains formulation, findings, protocol,

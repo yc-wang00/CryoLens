@@ -1,4 +1,4 @@
-"""Integration test for CryoSight MCP server tools against live database."""
+"""Integration test for CryoLens MCP server tools against live database."""
 
 import asyncio
 
