@@ -12,6 +12,7 @@ from claude_agent_sdk import (
     ThinkingBlock,
     ToolResultBlock,
     ToolUseBlock,
+    UserMessage,
     query,
 )
 from fastapi import APIRouter
@@ -85,6 +86,20 @@ async def _stream_agent(req: ChatRequest):
                             "content": str(content)[:3000] if content else "",
                             "is_error": block.is_error,
                         })
+
+            elif isinstance(message, UserMessage):
+                # Tool results come as UserMessage in the Agent SDK
+                if isinstance(message.content, list):
+                    for block in message.content:
+                        if isinstance(block, ToolResultBlock):
+                            content = block.content
+                            if isinstance(content, list):
+                                content = json.dumps(content, default=str)
+                            yield _sse("tool_result", {
+                                "tool_use_id": message.parent_tool_use_id or "",
+                                "content": str(content)[:3000] if content else "",
+                                "is_error": block.is_error,
+                            })
 
             elif isinstance(message, ResultMessage):
                 yield _sse("result", {
