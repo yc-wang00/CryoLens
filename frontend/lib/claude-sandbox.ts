@@ -6,7 +6,7 @@
  *
  * KEY CONCEPTS:
  * - bootstrap the sandbox on demand or reuse a prepared snapshot
- * - expose only a read-only Supabase SQL MCP surface to the agent
+ * - mount exactly one remote read-only MCP server for research
  * - stream JSONL from the sandbox process and translate it into SSE events
  *
  * USAGE:
@@ -16,13 +16,13 @@
  * - MEM-0007
  */
 
-import { PassThrough } from "node:stream";
-import { createInterface } from "node:readline";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { createInterface } from "node:readline";
+import { PassThrough } from "node:stream";
 
-import ms from "ms";
 import { Sandbox } from "@vercel/sandbox";
+import ms from "ms";
 
 export type AgentSearchEvent =
   | { type: "status"; phase: string; message: string; sandboxId?: string }
@@ -31,6 +31,19 @@ export type AgentSearchEvent =
   | { type: "tool_input_delta"; text: string }
   | { type: "tool_end"; name: string; input: string }
   | { type: "result"; text: string }
+  | {
+      type: "hypothesis_saved";
+      hypothesis: {
+        id: string;
+        title: string;
+        status: string;
+        benchmark: string;
+        target: string;
+        summary: string;
+        evidenceIds: string[];
+        nextStep: string;
+      };
+    }
   | { type: "error"; message: string };
 
 export type AgentProfile = "research" | "hypothesis";
@@ -42,10 +55,12 @@ interface RunSandboxedAgentSearchParams {
 }
 
 const SANDBOX_PROJECT_DIR = "/vercel/sandbox/project";
-const SANDBOX_DATASET_PATH = `${SANDBOX_PROJECT_DIR}/dataset.json`;
 const SANDBOX_QUERY_PATH = `${SANDBOX_PROJECT_DIR}/run-agent-search.mjs`;
 const SANDBOX_PACKAGE_JSON_PATH = `${SANDBOX_PROJECT_DIR}/package.json`;
-const SANDBOX_SKILL_PATH = `${SANDBOX_PROJECT_DIR}/.claude/skills/cryo-sql-research/SKILL.md`;
+const SANDBOX_SKILL_PATH = `${SANDBOX_PROJECT_DIR}/.claude/skills/cryo-remote-mcp/SKILL.md`;
+const DEFAULT_AGENT_MODEL = "claude-sonnet-4-5";
+const DEFAULT_MCP_NAME = "cryosight-knowledge";
+const DEFAULT_DOCS_MCP_URL = "https://code.claude.com/docs/mcp";
 
 let envLoaded = false;
 
@@ -55,8 +70,12 @@ function loadLocalEnvFiles(): void {
   }
 
   const candidates = [
+    path.resolve(process.cwd(), ".env.server.local"),
+    path.resolve(process.cwd(), ".env.server"),
     path.resolve(process.cwd(), ".env.local"),
     path.resolve(process.cwd(), ".env"),
+    path.resolve(process.cwd(), "frontend/.env.server.local"),
+    path.resolve(process.cwd(), "frontend/.env.server"),
     path.resolve(process.cwd(), "frontend/.env.local"),
     path.resolve(process.cwd(), "frontend/.env"),
   ];
@@ -101,12 +120,28 @@ function attachCommandLogs(
 }
 
 function requireEnv(name: string): string {
-  const value = process.env[name];
+  const value = process.env[name]?.trim();
   if (!value) {
     throw new Error(`Missing required environment variable: ${name}`);
   }
 
   return value;
+}
+
+function resolveAgentModel(): string {
+  return process.env.CLAUDE_AGENT_MODEL?.trim() || DEFAULT_AGENT_MODEL;
+}
+
+function resolveResearchMcpUrl(): string {
+  return (
+    process.env.CRYOSIGHT_RESEARCH_MCP_URL?.trim() ||
+    process.env.CLAUDE_AGENT_MCP_URL?.trim() ||
+    DEFAULT_DOCS_MCP_URL
+  );
+}
+
+function resolveResearchMcpName(): string {
+  return process.env.CRYOSIGHT_RESEARCH_MCP_NAME?.trim() || DEFAULT_MCP_NAME;
 }
 
 function buildSandboxPackageJsonText(): string {
@@ -117,7 +152,6 @@ function buildSandboxPackageJsonText(): string {
       type: "module",
       dependencies: {
         "@anthropic-ai/claude-agent-sdk": "^0.1.0",
-        zod: "^3.25.76",
       },
     },
     null,
@@ -127,20 +161,26 @@ function buildSandboxPackageJsonText(): string {
 
 function buildSandboxSkill(profile: AgentProfile): string {
   return `---
-name: cryo-sql-research
-description: Use when answering CryoSight Ask-page ${profile} prompts against the live cryoLens dataset exported from the backend. Inspect the dataset summary first, use the bounded search tools, and cite exact result counts and entities.
+name: cryo-remote-mcp
+description: Use when answering CryoSight Ask-page ${profile} prompts through the configured remote MCP server. Prefer evidence from MCP tools, cite the tools you used, and do not rely on any local dataset preload.
 ---
 
-# CryoSight Dataset Research
+# CryoSight Remote MCP Research
 
-1. Call \`summarize_dataset\` first to understand the available evidence.
-2. Use \`search_findings\` for experimental claims and conditions.
-3. Use \`search_molecules\`, \`search_cocktails\`, and \`search_sources\` for supporting context.
-4. Keep searches bounded and focused on the user question.
-5. In the final answer, cite the tool names, query terms, and result counts that support your conclusion.
-6. ${profile === "hypothesis"
-    ? "When generating a hypothesis, produce one structured draft only and keep the recommendation experimentally tractable."
-    : "When researching, prefer direct evidence-backed answers over speculation."}
+1. Use the remote MCP tools first.
+2. Keep tool calls narrow and relevant to the prompt. Use at most 3 tool calls unless the user explicitly asks for exhaustive research.
+3. Stop searching as soon as you have enough evidence to answer. Do not keep searching for a better answer once you can support a decision.
+4. Cite exact tool names, source IDs, paper DOIs, or returned record identifiers whenever the tools provide them.
+5. If the available MCP tools do not answer the question directly, say "I did not retrieve direct evidence" and then give the best-supported inference as inference.
+6. Do not narrate your search process in prose. The UI already renders tool activity, so skip filler like "I'll search", "let me look", or "perfect". Do not emit preambles before the first tool call.
+7. Separate retrieved facts from inference or uncertainty. Use explicit headings like "Retrieved Facts", "Inference", and "Open Questions" when appropriate.
+8. Add the strongest counterpoint or failure mode whenever you recommend a next step.
+9. Include direct source links in the evidence section whenever the MCP tool returns them.
+10. End with a short section called "What I'd Need For Real Research" that names the missing data, experiments, documents, or tool access required for a stronger answer.
+11. Avoid strong systems wording like "deterministic" or "blocks permissions" unless the source explicitly states it. Prefer softer phrasing like "predictable event-driven automation" or "can influence execution flow".
+12. ${profile === "hypothesis"
+    ? "For hypothesis mode, return one experimentally tractable hypothesis to test, not a validated recommendation, and make clear what evidence supports it versus what is inferred."
+    : "For research mode, treat the answer as decision support rather than a literature review. Lead with the most decision-relevant or surprising finding."}
 `;
 }
 
@@ -148,215 +188,119 @@ function buildSandboxUserPrompt(profile: AgentProfile, prompt: string): string {
   if (profile === "hypothesis") {
     return `${prompt}
 
-Return ONLY valid JSON with this exact shape:
-{
-  "title": string,
-  "status": "draft" | "prioritized" | "planned",
-  "benchmark": string,
-  "target": string,
-  "summary": string,
-  "evidenceIds": string[],
-  "nextStep": string
-}
-
-Rules:
-- Start from an existing benchmark or working recipe if one is named.
-- Keep the hypothesis experimentally tractable.
-- Use evidenceIds that match the finding ids returned by the dataset tools.
-- Do not wrap the JSON in markdown fences.
-- Do not include any prose before or after the JSON.`;
+Return a concise hypothesis proposal grounded in the MCP evidence you found.
+State the benchmark, proposed change, strongest counterpoint, and next step clearly.
+Label anything not directly retrieved from MCP evidence as inference.`;
   }
 
-  return prompt;
+  return `${prompt}
+
+Treat this as decision support, not a literature review.
+Use the minimum tool calls needed for a strong answer.
+Do not output any preamble before the first tool call.
+After retrieval, answer with:
+1. Direct Answer
+2. Retrieved Facts
+3. Inference
+4. Strongest Counterpoint
+5. Next Experiment or Decision Move when relevant
+6. Open Questions
+7. What I'd Need For Real Research
+
+If direct evidence is missing, say "I did not retrieve direct evidence" and then give the best-supported inference.`;
 }
 
-function buildSystemPrompt(profile: AgentProfile): string {
+function buildSystemPrompt(profile: AgentProfile, mcpName: string): string {
   if (profile === "hypothesis") {
-    return "You are CryoSight's hypothesis generation agent. Use the supplied read-only dataset tools over the live CryoSight knowledge payload to design one evidence-backed experimental hypothesis. Search first, reason from findings, and finish with only the required JSON object.";
+    return `You are CryoSight's hypothesis agent. Use the read-only MCP server "${mcpName}" to gather evidence first, then propose one tractable next experiment. Use at most 3 tool calls unless the user explicitly asks for exhaustive research, and stop searching once you have enough evidence to support the hypothesis. Your final answer should be researcher-grade: state the hypothesis clearly, separate retrieved facts from inference and uncertainty, cite the MCP evidence you used with direct links or record identifiers when available, include the strongest counterpoint or failure mode, and end with a section titled "What I'd Need For Real Research". Do not narrate your search process or tool use in prose, do not emit preambles before the first tool call, and avoid strong claims unless the retrieved evidence explicitly supports them.`;
   }
 
-  return "You are CryoSight's research agent. Answer the user's cryobiology question using the supplied read-only dataset tools over the live CryoSight knowledge payload. Start by summarizing the dataset when the available evidence surface is unclear. Use the bounded search tools to gather findings, molecules, cocktails, and sources, then explain what evidence actually supports the conclusion.";
+  return `You are CryoSight's research agent. Use the read-only MCP server "${mcpName}" to answer the user's question with evidence from MCP tool calls. Treat the answer as decision support rather than a literature review. Use at most 3 tool calls unless the user explicitly asks for exhaustive research, and stop searching as soon as you have enough evidence to answer. Do not narrate your search process or tool use in prose, and do not emit preambles before the first tool call. Your final answer should include: (1) a one-sentence direct answer, (2) a "Retrieved Facts" section containing only directly retrieved claims, (3) an "Inference" section for the best-supported inference, (4) a "Strongest Counterpoint" section, (5) a "Next Experiment or Decision Move" section when relevant, (6) an "Open Questions" section for anything still uncertain, (7) an evidence section with direct source links or record identifiers when available, and (8) a short section titled "What I'd Need For Real Research" that names the missing information required for a stronger conclusion. If direct evidence is missing, explicitly say "I did not retrieve direct evidence" before giving an inference. Avoid strong claims unless the retrieved evidence explicitly supports them.`;
 }
 
-function buildSandboxQueryScript(profile: AgentProfile, prompt: string): string {
-  return `import { readFile } from "node:fs/promises";
-import { createSdkMcpServer, query, tool } from "@anthropic-ai/claude-agent-sdk";
-import { z } from "zod";
+function buildSandboxQueryScript(profile: AgentProfile, prompt: string, mcpName: string, mcpUrl: string): string {
+  return `import { query } from "@anthropic-ai/claude-agent-sdk";
 
 const prompt = ${JSON.stringify(buildSandboxUserPrompt(profile, prompt))};
-const model = process.env.CLAUDE_AGENT_MODEL;
-const dataset = JSON.parse(await readFile(${JSON.stringify(SANDBOX_DATASET_PATH)}, "utf8"));
+const model = process.env.CLAUDE_AGENT_MODEL || ${JSON.stringify(DEFAULT_AGENT_MODEL)};
+const mcpName = ${JSON.stringify(mcpName)};
+const mcpUrl = ${JSON.stringify(mcpUrl)};
 
 function emit(event) {
   process.stdout.write(JSON.stringify(event) + "\\n");
 }
 
-function buildTextResult(payload) {
-  return {
-    content: [
-      {
-        type: "text",
-        text: JSON.stringify(payload, null, 2),
-      },
-    ],
-  };
-}
-
-function tokenize(raw) {
-  return raw
-    .toLowerCase()
-    .split(/\\s+/u)
-    .map((token) => token.trim())
-    .filter(Boolean);
-}
-
-function scoreText(query, values) {
-  const tokens = tokenize(query);
-  const haystack = values.join(" ").toLowerCase();
-  return tokens.reduce((total, token) => total + (haystack.includes(token) ? 1 : 0), 0);
-}
-
-function topMatches(items, query, projector, limit) {
-  return items
-    .map((item) => ({ item, score: scoreText(query, projector(item)) }))
-    .filter((entry) => entry.score > 0)
-    .sort((left, right) => right.score - left.score)
-    .slice(0, limit)
-    .map((entry) => entry.item);
-}
-
-const dbServer = createSdkMcpServer({
-  name: "cryosight_dataset",
-  tools: [
-    tool(
-      "summarize_dataset",
-      "Summarize the available live CryoSight dataset.",
-      {},
-      async () => {
-        return buildTextResult({
-          appStats: dataset.appStats,
-          savedPrompts: dataset.savedPrompts,
-        });
-      },
-      { annotations: { readOnly: true } },
-    ),
-    tool(
-      "search_findings",
-      "Search experimental findings in the live CryoSight dataset.",
-      {
-        query: z.string().min(1),
-        limit: z.number().int().positive().max(12).default(6),
-      },
-      async ({ query, limit }) => {
-        const rows = topMatches(
-          dataset.findings,
-          query,
-          (finding) => [
-            finding.summary,
-            finding.sourceTitle,
-            finding.metricType,
-            finding.conditions,
-            ...finding.components,
-            ...finding.tags,
-          ],
-          limit,
-        );
-
-        return buildTextResult({
-          query,
-          rowCount: rows.length,
-          rows,
-        });
-      },
-      { annotations: { readOnly: true } },
-    ),
-    tool(
-      "search_molecules",
-      "Search molecules in the live CryoSight dataset.",
-      {
-        query: z.string().min(1),
-        limit: z.number().int().positive().max(12).default(6),
-      },
-      async ({ query, limit }) => {
-        const rows = topMatches(
-          dataset.molecules,
-          query,
-          (molecule) => [
-            molecule.name,
-            molecule.className,
-            molecule.roleHint,
-            molecule.notes,
-            molecule.keySignal,
-            ...molecule.aliases,
-          ],
-          limit,
-        );
-
-        return buildTextResult({
-          query,
-          rowCount: rows.length,
-          rows,
-        });
-      },
-      { annotations: { readOnly: true } },
-    ),
-    tool(
-      "search_cocktails",
-      "Search cocktails and formulations in the live CryoSight dataset.",
-      {
-        query: z.string().min(1),
-        limit: z.number().int().positive().max(12).default(6),
-      },
-      async ({ query, limit }) => {
-        const rows = topMatches(
-          dataset.cocktails,
-          query,
-          (cocktail) => [
-            cocktail.name,
-            cocktail.type,
-            cocktail.notes,
-            ...cocktail.tissueTags,
-            ...cocktail.components.map((component) => component.name),
-          ],
-          limit,
-        );
-
-        return buildTextResult({
-          query,
-          rowCount: rows.length,
-          rows,
-        });
-      },
-      { annotations: { readOnly: true } },
-    ),
-    tool(
-      "search_sources",
-      "Search source papers in the live CryoSight dataset.",
-      {
-        query: z.string().min(1),
-        limit: z.number().int().positive().max(12).default(6),
-      },
-      async ({ query, limit }) => {
-        const rows = topMatches(
-          dataset.sources,
-          query,
-          (source) => [source.title, source.journal, source.note, source.abstract, source.doi],
-          limit,
-        );
-
-        return buildTextResult({
-          query,
-          rowCount: rows.length,
-          rows,
-        });
-      },
-      { annotations: { readOnly: true } },
-    ),
-  ],
-});
-
 let currentTool = null;
 let currentToolInput = "";
+let sawToolCall = false;
+let preToolText = "";
+let answerText = "";
+
+function appendText(text) {
+  if (!text) {
+    return;
+  }
+
+  if (sawToolCall) {
+    answerText += text;
+  } else {
+    preToolText += text;
+  }
+
+  emit({ type: "text_delta", text });
+}
+
+function extractTextBlocks(content) {
+  if (!Array.isArray(content)) {
+    return "";
+  }
+
+  return content
+    .map((block) => {
+      if (!block || typeof block !== "object") {
+        return "";
+      }
+
+      if (block.type === "text" && typeof block.text === "string") {
+        return block.text;
+      }
+
+      if (typeof block.text === "string") {
+        return block.text;
+      }
+
+      return "";
+    })
+    .filter(Boolean)
+    .join("\\n\\n");
+}
+
+function extractResultText(message) {
+  if (typeof message?.result === "string" && message.result.trim()) {
+    return message.result;
+  }
+
+  if (typeof message?.finalResult === "string" && message.finalResult.trim()) {
+    return message.finalResult;
+  }
+
+  const directContentText = extractTextBlocks(message?.content);
+  if (directContentText.trim()) {
+    return directContentText;
+  }
+
+  const nestedMessageText = extractTextBlocks(message?.message?.content);
+  if (nestedMessageText.trim()) {
+    return nestedMessageText;
+  }
+
+  const nestedResultText = extractTextBlocks(message?.result?.content);
+  if (nestedResultText.trim()) {
+    return nestedResultText;
+  }
+
+  return answerText.trim() || preToolText.trim();
+}
 
 try {
   for await (const message of query({
@@ -364,24 +308,23 @@ try {
     options: {
       allowedTools: [
         "Skill",
-        "mcp__cryosight_dataset__summarize_dataset",
-        "mcp__cryosight_dataset__search_findings",
-        "mcp__cryosight_dataset__search_molecules",
-        "mcp__cryosight_dataset__search_cocktails",
-        "mcp__cryosight_dataset__search_sources",
+        \`mcp__\${mcpName}__*\`,
       ],
       allowDangerouslySkipPermissions: true,
       cwd: process.cwd(),
       includePartialMessages: true,
       maxTurns: 12,
       mcpServers: {
-        cryosight_dataset: dbServer,
+        [mcpName]: {
+          type: "http",
+          url: mcpUrl,
+        },
       },
       model,
       permissionMode: "bypassPermissions",
       persistSession: false,
       settingSources: ["project"],
-      systemPrompt: ${JSON.stringify(buildSystemPrompt(profile))},
+      systemPrompt: ${JSON.stringify(buildSystemPrompt(profile, mcpName))},
       tools: ["Skill"],
     },
   })) {
@@ -389,12 +332,13 @@ try {
       const event = message.event;
 
       if (event.type === "content_block_start" && event.content_block.type === "tool_use") {
+        sawToolCall = true;
         currentTool = event.content_block.name;
         currentToolInput = "";
         emit({ type: "tool_start", name: currentTool });
       } else if (event.type === "content_block_delta") {
         if (event.delta.type === "text_delta") {
-          emit({ type: "text_delta", text: event.delta.text });
+          appendText(event.delta.text);
         }
 
         if (event.delta.type === "input_json_delta") {
@@ -408,10 +352,30 @@ try {
       }
     }
 
+    if ((message.type === "assistant" || message.type === "assistant_message") && !answerText.trim()) {
+      const assistantText = extractResultText(message);
+      if (assistantText.trim()) {
+        answerText = assistantText;
+      }
+    }
+
     if (message.type === "result") {
+      const resultText = extractResultText(message);
+      if (!answerText.trim()) {
+        emit({
+          type: "status",
+          phase: "result-debug",
+          message: JSON.stringify({
+            messageType: message.type,
+            keys: Object.keys(message ?? {}),
+            raw: message,
+          }),
+        });
+      }
+
       emit({
         type: "result",
-        text: typeof message.result === "string" ? message.result : JSON.stringify(message.result),
+        text: resultText,
       });
     }
   }
@@ -422,44 +386,6 @@ try {
   });
 }
 `;
-}
-
-async function fetchDatasetPayload(
-  onEvent: RunSandboxedAgentSearchParams["onEvent"],
-): Promise<string> {
-  const configuredBaseUrl = process.env.VITE_API_BASE_URL?.trim();
-  const candidates = configuredBaseUrl
-    ? [configuredBaseUrl, "http://127.0.0.1:8001", "http://127.0.0.1:8000"]
-    : ["http://127.0.0.1:8000", "http://127.0.0.1:8001"];
-  const attempted = new Set<string>();
-  let lastStatus = "unknown";
-
-  for (const apiBaseUrl of candidates) {
-    if (attempted.has(apiBaseUrl)) {
-      continue;
-    }
-    attempted.add(apiBaseUrl);
-
-    onEvent({
-      type: "status",
-      phase: "dataset",
-      message: `Fetching live CryoSight dataset from ${apiBaseUrl}.`,
-    });
-
-    try {
-      const response = await fetch(`${apiBaseUrl}/api/v1/cryo-lens/dataset`);
-      if (!response.ok) {
-        lastStatus = String(response.status);
-        continue;
-      }
-
-      return response.text();
-    } catch (error) {
-      lastStatus = error instanceof Error ? error.message : String(error);
-    }
-  }
-
-  throw new Error(`Failed to fetch backend dataset from all candidates. Last failure: ${lastStatus}`);
 }
 
 async function prepareSandbox(
@@ -645,10 +571,20 @@ export async function runSandboxedAgentSearch({
   onEvent,
 }: RunSandboxedAgentSearchParams): Promise<void> {
   loadLocalEnvFiles();
+
   const runStartedAt = Date.now();
   const anthropicApiKey = requireEnv("ANTHROPIC_API_KEY");
-  const snapshotId = process.env.CLAUDE_AGENT_SANDBOX_SNAPSHOT_ID;
-  const datasetPayload = await fetchDatasetPayload(onEvent);
+  requireEnv("VERCEL_OIDC_TOKEN");
+  const agentModel = resolveAgentModel();
+  const researchMcpUrl = resolveResearchMcpUrl();
+  const researchMcpName = resolveResearchMcpName();
+  const snapshotId = process.env.CLAUDE_AGENT_SANDBOX_SNAPSHOT_ID?.trim();
+
+  onEvent({
+    type: "status",
+    phase: "mcp",
+    message: `Using remote MCP server "${researchMcpName}" at ${researchMcpUrl}.`,
+  });
 
   if (!snapshotId) {
     onEvent({
@@ -673,7 +609,7 @@ export async function runSandboxedAgentSearch({
     await ensureDir(sandbox, SANDBOX_PROJECT_DIR);
     await ensureDir(sandbox, `${SANDBOX_PROJECT_DIR}/.claude`);
     await ensureDir(sandbox, `${SANDBOX_PROJECT_DIR}/.claude/skills`);
-    await ensureDir(sandbox, `${SANDBOX_PROJECT_DIR}/.claude/skills/cryo-sql-research`);
+    await ensureDir(sandbox, `${SANDBOX_PROJECT_DIR}/.claude/skills/cryo-remote-mcp`);
 
     if (!usedSnapshot) {
       await prepareSandbox(sandbox, profile, onEvent);
@@ -685,12 +621,8 @@ export async function runSandboxedAgentSearch({
         content: Buffer.from(buildSandboxSkill(profile)),
       },
       {
-        path: SANDBOX_DATASET_PATH,
-        content: Buffer.from(datasetPayload),
-      },
-      {
         path: SANDBOX_QUERY_PATH,
-        content: Buffer.from(buildSandboxQueryScript(profile, prompt)),
+        content: Buffer.from(buildSandboxQueryScript(profile, prompt, researchMcpName, researchMcpUrl)),
       },
     ]);
 
@@ -746,7 +678,7 @@ export async function runSandboxedAgentSearch({
       cwd: SANDBOX_PROJECT_DIR,
       env: {
         ANTHROPIC_API_KEY: anthropicApiKey,
-        CLAUDE_AGENT_MODEL: process.env.CLAUDE_AGENT_MODEL ?? "",
+        CLAUDE_AGENT_MODEL: agentModel,
       },
       stderr,
       stdout,

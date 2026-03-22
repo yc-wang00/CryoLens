@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "agent:smoke": "node --experimental-strip-types ./scripts/smoke-agent-search.ts",
     "sandbox:bootstrap": "node --experimental-strip-types ./scripts/bootstrap-claude-sandbox.ts",
     "typecheck": "tsc -b"
   },
