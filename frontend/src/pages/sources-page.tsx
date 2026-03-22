@@ -43,10 +43,21 @@ const TABS: Array<{ key: TabKey; label: string }> = [
 
 const MCP_URL = "https://carefree-perfection-production-145c.up.railway.app/mcp";
 
-const CONNECT_STEPS = [
+interface AgentOption {
+  id: string;
+  name: string;
+  description: string;
+  instruction: string;
+  code: string;
+  note?: string;
+}
+
+const AGENTS: AgentOption[] = [
   {
-    tool: "Claude Desktop",
-    instruction: "Add to your Claude Desktop config:",
+    id: "claude-desktop",
+    name: "Claude Desktop",
+    description: "Anthropic's desktop app",
+    instruction: "Add to your Claude Desktop config file:",
     code: `{
   "mcpServers": {
     "cryolens": {
@@ -54,16 +65,20 @@ const CONNECT_STEPS = [
     }
   }
 }`,
-    file: "~/Library/Application Support/Claude/claude_desktop_config.json",
+    note: "Config location: ~/Library/Application Support/Claude/claude_desktop_config.json",
   },
   {
-    tool: "Claude Code",
-    instruction: "Run in your terminal:",
+    id: "claude-code",
+    name: "Claude Code",
+    description: "Anthropic's CLI agent",
+    instruction: "Run this command in your terminal:",
     code: `claude mcp add cryolens --transport http ${MCP_URL}`,
   },
   {
-    tool: "Cursor / Windsurf",
-    instruction: "Add to your .cursor/mcp.json:",
+    id: "cursor",
+    name: "Cursor",
+    description: "AI-powered code editor",
+    instruction: "Add to .cursor/mcp.json in your project:",
     code: `{
   "mcpServers": {
     "cryolens": {
@@ -74,9 +89,40 @@ const CONNECT_STEPS = [
 }`,
   },
   {
-    tool: "Any MCP Client",
-    instruction: "Use the streamable HTTP endpoint:",
+    id: "windsurf",
+    name: "Windsurf",
+    description: "Codeium's AI editor",
+    instruction: "Add to your Windsurf MCP config:",
+    code: `{
+  "mcpServers": {
+    "cryolens": {
+      "type": "http",
+      "url": "${MCP_URL}"
+    }
+  }
+}`,
+  },
+  {
+    id: "codex",
+    name: "OpenAI Codex",
+    description: "OpenAI's coding agent",
+    instruction: "Add to your codex MCP server config:",
+    code: `{
+  "mcpServers": {
+    "cryolens": {
+      "type": "http",
+      "url": "${MCP_URL}"
+    }
+  }
+}`,
+  },
+  {
+    id: "custom",
+    name: "Custom Agent",
+    description: "Any MCP-compatible client",
+    instruction: "Use this streamable HTTP endpoint:",
     code: MCP_URL,
+    note: "Works with any client that supports the Model Context Protocol (MCP) streamable HTTP transport.",
   },
 ];
 
@@ -91,10 +137,83 @@ function CopyButton({ text }: { text: string }) {
           setTimeout(() => setCopied(false), 2000);
         }).catch(() => {});
       }}
-      className="shrink-0 rounded-sm border border-border/50 bg-white px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground hover:text-hero hover:border-border transition-colors"
+      className="shrink-0 rounded-sm border border-border/50 bg-white px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground hover:text-hero hover:border-border transition-colors"
     >
       {copied ? "Copied!" : "Copy"}
     </button>
+  );
+}
+
+function ConnectDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [selected, setSelected] = useState("claude-desktop");
+  const agent = AGENTS.find((a) => a.id === selected) ?? AGENTS[0];
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-xl" onClose={onClose}>
+        <DialogHeader>
+          <DialogTitle>Connect to CryoLens</DialogTitle>
+          <DialogDescription>
+            Choose your AI agent below and follow the setup instructions.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="p-5 space-y-4">
+          {/* Agent selector */}
+          <div className="flex flex-wrap gap-1.5">
+            {AGENTS.map((a) => (
+              <button
+                key={a.id}
+                type="button"
+                onClick={() => setSelected(a.id)}
+                className={`rounded-sm border px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+                  selected === a.id
+                    ? "border-hero bg-hero text-white"
+                    : "border-border bg-white text-muted-foreground hover:text-hero hover:border-border"
+                }`}
+              >
+                {a.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Instructions for selected agent */}
+          <div className="rounded-sm border border-border bg-muted/20 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[13px] font-semibold text-hero">{agent.name}</p>
+                <p className="text-[11px] text-muted-foreground">{agent.description}</p>
+              </div>
+              <CopyButton text={agent.code} />
+            </div>
+            <p className="text-[11px] text-muted-foreground">{agent.instruction}</p>
+            <pre className="rounded-sm bg-white border border-border/50 px-3 py-2.5 text-[11px] font-mono text-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed">
+              {agent.code}
+            </pre>
+            {agent.note && (
+              <p className="text-[10px] text-muted-foreground">{agent.note}</p>
+            )}
+          </div>
+
+          {/* Available tools */}
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-2">
+              8 tools available after connecting
+            </p>
+            <div className="flex flex-wrap gap-1">
+              {[
+                "search_compounds", "get_compound_details", "search_viability",
+                "compare_formulations", "search_findings", "get_protocol",
+                "find_gaps", "query_database",
+              ].map((tool) => (
+                <span key={tool} className="rounded-sm bg-muted/60 px-2 py-1 text-[9px] font-mono text-muted-foreground">
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -201,47 +320,7 @@ export function SourcesPage() {
       </section>
 
       {/* Connect dialog */}
-      <Dialog open={connectOpen} onOpenChange={setConnectOpen}>
-        <DialogContent className="max-w-2xl" onClose={() => setConnectOpen(false)}>
-          <DialogHeader>
-            <DialogTitle>Connect to CryoLens</DialogTitle>
-            <DialogDescription>
-              CryoLens exposes 8 tools via Model Context Protocol. Connect your AI agent to search compounds, query findings, compare formulations, and identify research gaps.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 p-5">
-            {CONNECT_STEPS.map((step) => (
-              <div key={step.tool} className="rounded-sm border border-border bg-white p-4">
-                <div className="flex items-center justify-between gap-3 mb-2">
-                  <p className="text-[12px] font-semibold text-hero">{step.tool}</p>
-                  <CopyButton text={step.code} />
-                </div>
-                <p className="text-[11px] text-muted-foreground mb-2">{step.instruction}</p>
-                <pre className="rounded-sm bg-muted/60 px-3 py-2.5 text-[11px] font-mono text-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed">
-                  {step.code}
-                </pre>
-                {step.file && (
-                  <p className="mt-2 text-[10px] text-muted-foreground font-mono">{step.file}</p>
-                )}
-              </div>
-            ))}
-            <div className="rounded-sm border border-border bg-muted/30 p-4">
-              <p className="text-[11px] font-semibold text-hero mb-1">Available Tools</p>
-              <div className="flex flex-wrap gap-1.5">
-                {[
-                  "search_compounds", "get_compound_details", "search_viability",
-                  "compare_formulations", "search_findings", "get_protocol",
-                  "find_gaps", "query_database",
-                ].map((tool) => (
-                  <span key={tool} className="rounded-sm bg-white border border-border/50 px-2 py-1 text-[10px] font-mono text-muted-foreground">
-                    {tool}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ConnectDialog open={connectOpen} onClose={() => setConnectOpen(false)} />
 
       {/* Tabs */}
       <div className="flex items-center gap-1 border-b border-border/60 pb-px">
