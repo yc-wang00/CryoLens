@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   ArrowLeft,
   Beaker,
@@ -575,52 +577,111 @@ function ReportTab({ h }: { h: HypothesisDetail }) {
   return (
     <div className="page-enter">
       <Card className="glass-panel">
-        <CardContent className="p-8">
-          <div className="prose prose-sm max-w-none prose-headings:font-headline prose-headings:text-hero prose-h1:text-2xl prose-h2:text-xl prose-h2:border-b prose-h2:border-border prose-h2:pb-2 prose-h3:text-base prose-p:text-foreground prose-p:leading-relaxed prose-li:text-foreground prose-strong:text-hero prose-code:text-highlight prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded-sm prose-code:text-xs prose-table:text-sm prose-th:text-[10px] prose-th:uppercase prose-th:tracking-wider prose-th:text-muted-foreground prose-td:text-foreground prose-hr:border-border">
-            <MarkdownRenderer content={h.markdown} />
-          </div>
+        <CardContent className="p-8 md:px-12 lg:px-16">
+          <article className="report-prose">
+            <Markdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ children }) => (
+                  <h1 className="font-headline text-2xl font-bold tracking-tight text-hero mt-8 mb-3 first:mt-0">
+                    {children}
+                  </h1>
+                ),
+                h2: ({ children }) => (
+                  <h2 className="font-headline text-xl font-bold tracking-tight text-hero mt-10 mb-3 pb-2 border-b border-border">
+                    {children}
+                  </h2>
+                ),
+                h3: ({ children }) => (
+                  <h3 className="font-headline text-base font-bold text-hero mt-6 mb-2">
+                    {children}
+                  </h3>
+                ),
+                p: ({ children }) => (
+                  <p className="text-sm leading-7 text-foreground mb-4">{children}</p>
+                ),
+                strong: ({ children }) => (
+                  <strong className="font-semibold text-hero">{children}</strong>
+                ),
+                em: ({ children }) => (
+                  <em className="text-muted-foreground">{children}</em>
+                ),
+                a: ({ href, children }) => (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary underline underline-offset-2 hover:text-highlight transition-colors"
+                  >
+                    {children}
+                  </a>
+                ),
+                ul: ({ children }) => (
+                  <ul className="my-3 ml-1 space-y-1.5">{children}</ul>
+                ),
+                ol: ({ children }) => (
+                  <ol className="my-3 ml-1 space-y-1.5 list-decimal list-inside">{children}</ol>
+                ),
+                li: ({ children }) => (
+                  <li className="text-sm leading-7 text-foreground flex items-start gap-2">
+                    <span className="mt-2.5 h-1.5 w-1.5 rounded-full bg-highlight/60 flex-shrink-0" />
+                    <span>{children}</span>
+                  </li>
+                ),
+                hr: () => <hr className="my-8 border-border" />,
+                blockquote: ({ children }) => (
+                  <blockquote className="my-4 border-l-2 border-highlight/50 pl-4 text-sm italic text-muted-foreground">
+                    {children}
+                  </blockquote>
+                ),
+                code: ({ children, className }) => {
+                  const isBlock = className?.includes("language-");
+                  if (isBlock) {
+                    return (
+                      <code className="text-xs">{children}</code>
+                    );
+                  }
+                  return (
+                    <code className="rounded-sm bg-muted px-1.5 py-0.5 text-xs font-medium text-highlight">
+                      {children}
+                    </code>
+                  );
+                },
+                pre: ({ children }) => (
+                  <pre className="my-4 overflow-x-auto rounded-sm border border-border bg-muted/60 p-4 text-xs leading-relaxed">
+                    {children}
+                  </pre>
+                ),
+                table: ({ children }) => (
+                  <div className="my-6 overflow-x-auto rounded-sm border border-border">
+                    <table className="w-full text-sm">{children}</table>
+                  </div>
+                ),
+                thead: ({ children }) => (
+                  <thead className="bg-muted/60">{children}</thead>
+                ),
+                th: ({ children }) => (
+                  <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    {children}
+                  </th>
+                ),
+                td: ({ children }) => (
+                  <td className="border-t border-border px-4 py-2.5 text-sm text-foreground">
+                    {children}
+                  </td>
+                ),
+                tr: ({ children }) => (
+                  <tr className="hover:bg-muted/30 transition-colors">{children}</tr>
+                ),
+              }}
+            >
+              {h.markdown}
+            </Markdown>
+          </article>
         </CardContent>
       </Card>
     </div>
   );
-}
-
-/* Simple markdown → HTML (no external deps) */
-function MarkdownRenderer({ content }: { content: string }) {
-  const html = content
-    // Code blocks
-    .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre class="bg-muted/80 p-4 rounded-sm overflow-x-auto text-xs"><code>$2</code></pre>')
-    // Tables
-    .replace(/\|(.+)\|\n\|[-| :]+\|\n((?:\|.+\|\n?)*)/g, (_match, header: string, body: string) => {
-      const ths = header.split("|").filter(Boolean).map((h: string) => `<th class="px-3 py-2 text-left">${h.trim()}</th>`).join("");
-      const rows = body.trim().split("\n").map((row: string) => {
-        const tds = row.split("|").filter(Boolean).map((cell: string) => `<td class="px-3 py-2 border-t border-border">${cell.trim()}</td>`).join("");
-        return `<tr>${tds}</tr>`;
-      }).join("");
-      return `<table class="w-full border border-border rounded-sm"><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
-    })
-    // Headers
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    // Bold/italic
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    // Inline code
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    // Links
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer" class="text-primary hover:text-highlight">$1</a>')
-    // Lists
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
-    // Horizontal rules
-    .replace(/^---$/gm, '<hr />')
-    // Paragraphs (lines that aren't already HTML)
-    .replace(/^(?!<[a-z])((?!^\s*$).+)$/gm, '<p>$1</p>')
-    // Blockquotes
-    .replace(/^> (.+)$/gm, '<blockquote class="border-l-2 border-highlight pl-4 italic text-muted-foreground">$1</blockquote>');
-
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 /* ------------------------------------------------------------------ */
