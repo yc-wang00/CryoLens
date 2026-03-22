@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import compounds, findings, formulations, health, papers, stats
+from app.api.routes import compounds, findings, formulations, health, insights, papers, stats
 from app.core.config import settings
 
 app = FastAPI(
@@ -27,3 +27,4 @@ app.include_router(compounds.router)
 app.include_router(findings.router)
 app.include_router(formulations.router)
 app.include_router(stats.router)
+app.include_router(insights.router)
