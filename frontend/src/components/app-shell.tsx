@@ -3,39 +3,25 @@
  * =========
  * Shared route chrome for the CryoLens frontend.
  *
- * KEY CONCEPTS:
- * - Desktop uses a single primary navigation rail.
- * - Mobile keeps navigation behind a lightweight slide-over.
- *
- * USAGE:
- * - Wrap page content in `AppShell` and pass the active page key.
- *
- * MEMORY REFERENCES:
- * - MEM-0004
- * - MEM-0005
- * - MEM-0009
+ * Desktop uses a single primary navigation rail.
+ * Mobile keeps navigation behind a lightweight slide-over.
  */
 
 import {
   BookOpenText,
-  CircleHelp,
-  ExternalLink,
   FlaskConical,
+  Github,
   LayoutGrid,
   Lightbulb,
-  LogOut,
   Menu,
   Search,
   TestTubeDiagonal,
-  UserCircle2,
   X,
 } from "lucide-react";
 import { useState, type JSX, type ReactNode } from "react";
 
 import type { PageKey } from "../types";
 import { cn } from "../lib/utils";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
-import { Button } from "./ui/button";
 
 interface AppShellProps {
   currentPage: PageKey;
@@ -49,10 +35,7 @@ interface SidebarContentProps {
   currentPage: PageKey;
   dataSource?: "live" | "mock";
   dataSourceLabel?: string;
-  onAccountOpen: () => void;
-  onDocsOpen: () => void;
   onPageChange: (page: PageKey) => void;
-  onSupportOpen: () => void;
 }
 
 const navItems: Array<{
@@ -95,10 +78,7 @@ function SidebarContent({
   currentPage,
   dataSource,
   dataSourceLabel,
-  onAccountOpen,
-  onDocsOpen,
   onPageChange,
-  onSupportOpen,
 }: SidebarContentProps): JSX.Element {
   return (
     <>
@@ -146,38 +126,24 @@ function SidebarContent({
         </div>
       </div>
 
-      <div className="mt-auto space-y-3 pt-10">
-        <button
-          className="flex w-full items-center gap-3 rounded-sm border border-border/80 bg-white px-3 py-3 text-left transition-colors hover:bg-muted"
-          onClick={onAccountOpen}
-          type="button"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#b8b699] text-white">
-            <UserCircle2 className="h-4 w-4" />
-          </div>
-          <div className="min-w-0">
-            <div className="truncate text-xs font-semibold text-hero">Kenji Demo</div>
-            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-              local operator
-            </div>
-          </div>
-        </button>
-        <button
-          className="flex items-center gap-2 px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
-          onClick={onDocsOpen}
-          type="button"
-        >
-          <BookOpenText className="h-3.5 w-3.5" />
-          Documentation
-        </button>
-        <button
-          className="flex items-center gap-2 px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
-          onClick={onSupportOpen}
-          type="button"
-        >
-          <CircleHelp className="h-3.5 w-3.5" />
-          Support
-        </button>
+      <div className="mt-auto pt-10">
+        <div className="rounded-sm border border-border/60 bg-white/60 px-4 py-3.5 space-y-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            Defeating Entropy 2026
+          </p>
+          <p className="text-[11px] leading-relaxed text-muted-foreground">
+            Built by Yicheng Wang & Kenji Phang at the Defeating Entropy Hackathon, London.
+          </p>
+          <a
+            className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:text-hero"
+            href="https://github.com/yc-wang00/CryoSight"
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Github className="h-3 w-3" />
+            View source
+          </a>
+        </div>
       </div>
     </>
   );
@@ -190,7 +156,6 @@ export function AppShell({
   onPageChange,
   children,
 }: AppShellProps): JSX.Element {
-  const [shellModal, setShellModal] = useState<"none" | "account" | "docs" | "support">("none");
   const [mobileNavOpen, setMobileNavOpen] = useState<boolean>(false);
 
   function handlePageChange(page: PageKey): void {
@@ -216,14 +181,7 @@ export function AppShell({
               knowledge engine
             </div>
           </div>
-          <button
-            aria-label="Open account"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#b8b699] text-white transition-transform hover:scale-[1.03]"
-            onClick={() => setShellModal("account")}
-            type="button"
-          >
-            <UserCircle2 className="h-4 w-4" />
-          </button>
+          <div className="w-9" />
         </div>
       </header>
 
@@ -255,128 +213,13 @@ export function AppShell({
           currentPage={currentPage}
           dataSource={dataSource}
           dataSourceLabel={dataSourceLabel}
-          onAccountOpen={() => setShellModal("account")}
-          onDocsOpen={() => setShellModal("docs")}
           onPageChange={handlePageChange}
-          onSupportOpen={() => setShellModal("support")}
         />
       </aside>
 
       <main className="min-h-screen px-4 pb-8 pt-4 sm:px-6 lg:ml-64 lg:px-8 lg:py-8">
         <div className="mx-auto w-full max-w-[1380px]">{children}</div>
       </main>
-
-      <Dialog onOpenChange={(open) => (!open ? setShellModal("none") : null)} open={shellModal !== "none"}>
-        <DialogContent className="max-w-xl" onClose={() => setShellModal("none")}>
-          {shellModal === "account" ? (
-            <>
-              <DialogHeader>
-                <DialogTitle>Account</DialogTitle>
-                <DialogDescription>
-                  Local demo profile for the CryoLens operator workspace.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 p-5">
-                <div className="rounded-sm border border-border bg-white/80 p-4">
-                  <p className="table-header">Signed in as</p>
-                  <p className="mt-2 font-headline text-lg font-extrabold tracking-tight text-hero">
-                    Kenji Demo
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    CryoLens research operator · local mock session
-                  </p>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <Button onClick={() => setShellModal("docs")} variant="outline">
-                    Open docs
-                    <BookOpenText className="h-4 w-4" />
-                  </Button>
-                  <Button onClick={() => setShellModal("support")} variant="outline">
-                    Get support
-                    <CircleHelp className="h-4 w-4" />
-                  </Button>
-                </div>
-                <Button className="w-full justify-between" variant="ghost">
-                  Sign out
-                  <LogOut className="h-4 w-4" />
-                </Button>
-              </div>
-            </>
-          ) : null}
-
-          {shellModal === "docs" ? (
-            <>
-              <DialogHeader>
-                <DialogTitle>Documentation</DialogTitle>
-                <DialogDescription>
-                  Quick links for the hackathon story, schema, and frontend contract.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-3 p-5">
-                <a
-                  className="flex items-center justify-between rounded-sm border border-border bg-white/80 px-4 py-3 text-sm text-foreground transition-colors hover:bg-muted"
-                  href="/docs/specs/hackathon-ui-demo-spec.md"
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  Hackathon UI spec
-                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                </a>
-                <a
-                  className="flex items-center justify-between rounded-sm border border-border bg-white/80 px-4 py-3 text-sm text-foreground transition-colors hover:bg-muted"
-                  href="/hero-story.md"
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  Hero story
-                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                </a>
-                <a
-                  className="flex items-center justify-between rounded-sm border border-border bg-white/80 px-4 py-3 text-sm text-foreground transition-colors hover:bg-muted"
-                  href="/queries.md"
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  Demo queries
-                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                </a>
-              </div>
-            </>
-          ) : null}
-
-          {shellModal === "support" ? (
-            <>
-              <DialogHeader>
-                <DialogTitle>Support</DialogTitle>
-                <DialogDescription>
-                  Minimal support actions for the local demo build.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 p-5">
-                <div className="rounded-sm border border-border bg-white/80 p-4">
-                  <p className="table-header">Need help with the demo?</p>
-                  <p className="mt-2 text-sm leading-6 text-foreground">
-                    Use Research for evidence-backed search, then switch to Hypotheses to review saved drafts and the supporting experiment registry.
-                  </p>
-                </div>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <a
-                    className="inline-flex h-10 items-center justify-between rounded-sm border border-border bg-white px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                    href="mailto:demo@cryosight.local?subject=CryoLens%20Hackathon%20Demo"
-                  >
-                    Email support
-                    <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                  </a>
-                  <Button onClick={() => setShellModal("docs")} variant="outline">
-                    Open docs
-                    <BookOpenText className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </>
-          ) : null}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
