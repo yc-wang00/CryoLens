@@ -19,8 +19,7 @@ async def list_hypotheses(
     session: AsyncSession = Depends(get_async_session),
 ) -> list[HypothesisResponse]:
     """Return saved hypothesis drafts for the Hypotheses page."""
-    rows = await list_hypothesis_cards(session)
-    return [HypothesisResponse(**row.model_dump()) for row in rows]
+    return await list_hypothesis_cards(session)
 
 
 @router.post(

@@ -24,16 +24,12 @@ import { cn } from "../lib/utils";
 
 interface AppShellProps {
   currentPage: PageKey;
-  dataSource?: "live" | "mock";
-  dataSourceLabel?: string;
   onPageChange: (page: PageKey) => void;
   children: ReactNode;
 }
 
 interface SidebarContentProps {
   currentPage: PageKey;
-  dataSource?: "live" | "mock";
-  dataSourceLabel?: string;
   onPageChange: (page: PageKey) => void;
 }
 
@@ -49,34 +45,8 @@ const navItems: Array<{
   { key: "sources", label: "Knowledge Base", icon: BookOpenText },
 ];
 
-function DataSourceBadge({
-  dataSource,
-  dataSourceLabel,
-}: Pick<SidebarContentProps, "dataSource" | "dataSourceLabel">): JSX.Element | null {
-  if (!dataSource) {
-    return null;
-  }
-
-  return (
-    <div
-      className={cn(
-        "inline-flex items-center gap-2 rounded-sm border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em]",
-        dataSource === "live"
-          ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-          : "border-amber-200 bg-amber-50 text-amber-800",
-      )}
-      title={dataSourceLabel}
-    >
-      <span className={cn("h-1.5 w-1.5 rounded-full", dataSource === "live" ? "bg-emerald-500" : "bg-amber-500")} />
-      {dataSource === "live" ? "Live data" : "Mock fallback"}
-    </div>
-  );
-}
-
 function SidebarContent({
   currentPage,
-  dataSource,
-  dataSourceLabel,
   onPageChange,
 }: SidebarContentProps): JSX.Element {
   return (
@@ -90,9 +60,6 @@ function SidebarContent({
               knowledge engine
             </div>
           </div>
-        </div>
-        <div className="mt-4">
-          <DataSourceBadge dataSource={dataSource} dataSourceLabel={dataSourceLabel} />
         </div>
       </div>
 
@@ -148,8 +115,6 @@ function SidebarContent({
 
 export function AppShell({
   currentPage,
-  dataSource,
-  dataSourceLabel,
   onPageChange,
   children,
 }: AppShellProps): JSX.Element {
@@ -208,8 +173,6 @@ export function AppShell({
         </div>
         <SidebarContent
           currentPage={currentPage}
-          dataSource={dataSource}
-          dataSourceLabel={dataSourceLabel}
           onPageChange={handlePageChange}
         />
       </aside>

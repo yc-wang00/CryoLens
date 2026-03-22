@@ -18,7 +18,7 @@
  */
 
 import { ArrowUp, Bot, LoaderCircle, Search } from "lucide-react";
-import { Fragment, useRef, useState, type JSX, type KeyboardEvent } from "react";
+import { Fragment, useEffect, useRef, useState, type JSX, type KeyboardEvent } from "react";
 import { Streamdown } from "streamdown";
 
 import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from "../components/ai-elements/tool";
@@ -30,13 +30,19 @@ import {
   streamAgentSearch,
   type LiveAgentSearchState,
 } from "../data/agent-search";
-import type { CryoLensDataset, HypothesisCard } from "../data/cryo-lens";
+import type { HypothesisCard } from "../data/cryo-lens";
 import type { AgentToolCall } from "../types";
 
+const SAVED_PROMPTS = [
+  "What does CryoLens know about VS55?",
+  "Show high-confidence toxicity findings.",
+  "Which formulations contain DMSO and ethylene glycol?",
+  "What experiments were run at 4 C?",
+  "Which papers discuss vitrification outcomes?",
+];
+
 interface AskPageProps {
-  dataset: CryoLensDataset;
   initialPrompt?: string;
-  onHypothesisSaved: () => Promise<void> | void;
   onOpenHypotheses: () => void;
 }
 
@@ -437,16 +443,27 @@ function HypothesisDraftCard({
 }
 
 export function AskPage({
-  dataset,
   initialPrompt,
-  onHypothesisSaved,
   onOpenHypotheses,
 }: AskPageProps): JSX.Element {
   const [prompt, setPrompt] = useState<string>(initialPrompt ?? "");
   const [activeSearch, setActiveSearch] = useState<LiveAgentSearchState | null>(null);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [profile, setProfile] = useState<AgentProfile>("research");
+  const [stats, setStats] = useState<{ papers: number; findings: number; compounds: number; formulations: number } | null>(null);
   const requestIdRef = useRef<number>(0);
+
+  useEffect(() => {
+    fetch("/api/v1/stats")
+      .then((r) => r.json())
+      .then((data: { counts: Record<string, number> }) => setStats({
+        papers: data.counts.papers ?? 0,
+        findings: data.counts.findings ?? 0,
+        compounds: data.counts.compounds ?? 0,
+        formulations: data.counts.formulations ?? 0,
+      }))
+      .catch(() => {});
+  }, []);
 
   async function runPrompt(nextPrompt: string): Promise<void> {
     const trimmedPrompt = nextPrompt.trim();
@@ -464,10 +481,6 @@ export function AskPage({
       await streamAgentSearch(trimmedPrompt, profile, (event) => {
         if (requestIdRef.current !== requestId) {
           return;
-        }
-
-        if (event.type === "hypothesis_saved") {
-          void Promise.resolve(onHypothesisSaved());
         }
 
         setActiveSearch((previousState) => (
@@ -506,8 +519,9 @@ export function AskPage({
     }
   }
 
-  const dataSummary =
-    `${dataset.appStats.papers} papers · ${dataset.appStats.findings} findings · ${dataset.appStats.molecules} molecules · ${dataset.appStats.structures} formulations`;
+  const dataSummary = stats
+    ? `${stats.papers} papers · ${stats.findings} findings · ${stats.compounds} compounds · ${stats.formulations} formulations`
+    : "Loading...";
 
   if (!activeSearch) {
     return (
@@ -554,7 +568,7 @@ export function AskPage({
           />
 
           <div className="grid gap-3 sm:grid-cols-2">
-            {dataset.savedPrompts.map((savedPrompt) => (
+            {SAVED_PROMPTS.map((savedPrompt) => (
               <button
                 key={savedPrompt}
                 className="rounded-xl border border-border/80 bg-white/88 px-4 py-4 text-left text-sm leading-6 text-foreground transition-colors hover:bg-white"

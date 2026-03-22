@@ -1,4 +1,4 @@
-"""Persistence helpers for saved CryoSight hypothesis drafts."""
+"""Persistence helpers for saved hypothesis drafts."""
 
 from __future__ import annotations
 
@@ -6,7 +6,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import Hypothesis, HypothesisStatus
-from app.schemas.cryo_lens import CryoLensHypothesis
 from app.schemas.hypotheses import HypothesisCreateRequest, HypothesisResponse
 
 
@@ -17,8 +16,8 @@ def _normalize_status(value: str) -> HypothesisStatus:
         return HypothesisStatus.draft
 
 
-def _to_cryo_lens_hypothesis(hypothesis: Hypothesis) -> CryoLensHypothesis:
-    return CryoLensHypothesis(
+def _to_response(hypothesis: Hypothesis) -> HypothesisResponse:
+    return HypothesisResponse(
         id=str(hypothesis.id),
         title=hypothesis.title,
         status=hypothesis.status.value,
@@ -33,20 +32,18 @@ def _to_cryo_lens_hypothesis(hypothesis: Hypothesis) -> CryoLensHypothesis:
     )
 
 
-async def list_hypothesis_cards(session: AsyncSession) -> list[CryoLensHypothesis]:
-    """Return saved hypothesis drafts normalized for the frontend dataset."""
+async def list_hypothesis_cards(session: AsyncSession) -> list[HypothesisResponse]:
     result = await session.execute(
         select(Hypothesis).order_by(Hypothesis.created_at.desc())
     )
     rows = result.scalars().all()
-    return [_to_cryo_lens_hypothesis(row) for row in rows]
+    return [_to_response(row) for row in rows]
 
 
 async def create_hypothesis(
     session: AsyncSession,
     payload: HypothesisCreateRequest,
 ) -> HypothesisResponse:
-    """Persist a new hypothesis draft and return its public response shape."""
     record = Hypothesis(
         title=payload.title,
         status=_normalize_status(payload.status),
@@ -61,5 +58,4 @@ async def create_hypothesis(
     session.add(record)
     await session.commit()
     await session.refresh(record)
-    normalized = _to_cryo_lens_hypothesis(record)
-    return HypothesisResponse(**normalized.model_dump())
+    return _to_response(record)

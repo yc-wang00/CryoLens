@@ -2,7 +2,7 @@
 
 from functools import cached_property
 
-from pydantic import Field, field_validator
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -18,12 +18,6 @@ class Settings(BaseSettings):
     app_name: str = "CryoLens API"
     app_env: str = "development"
     database_url: str = "postgresql://localhost:5432/cryosight"
-    supabase_url: str = "https://psbkprsjynqpclcfnmto.supabase.co"
-    supabase_anon_key: str = (
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
-        "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzYmtwcnNqeW5xcGNsY2ZubXRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMzYxOTIsImV4cCI6MjA4OTcxMjE5Mn0."
-        "yIPwXH_aB82scON_rQsgN33ATnAB1UdGg98QOBRhReY"
-    )
     sql_echo: bool = False
     vector_dimensions: int = 768
     chunk_size: int = 1200
@@ -48,17 +42,6 @@ class Settings(BaseSettings):
             "http://127.0.0.1:8000",
         ]
     )
-
-    @field_validator("supabase_url", mode="before")
-    @classmethod
-    def normalize_supabase_url(cls, value: str) -> str:
-        """Ensure Supabase URLs are non-empty and include a protocol."""
-        cleaned = value.strip()
-        if not cleaned:
-            raise ValueError("SUPABASE_URL must be set.")
-        if not cleaned.startswith(("http://", "https://")):
-            cleaned = f"https://{cleaned}"
-        return cleaned.rstrip("/")
 
     @cached_property
     def async_database_url(self) -> str:
