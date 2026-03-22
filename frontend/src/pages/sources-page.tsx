@@ -41,7 +41,7 @@ const TABS: Array<{ key: TabKey; label: string }> = [
   { key: "papers", label: "Papers" },
 ];
 
-const MCP_URL = "https://carefree-perfection-production-145c.up.railway.app/mcp";
+const MCP_URL = "https://mcp.cryolens.io/mcp";
 
 interface AgentOption {
   id: string;
@@ -167,8 +167,8 @@ function ConnectDialog({ open, onClose }: { open: boolean; onClose: () => void }
                 onClick={() => setSelected(a.id)}
                 className={`rounded-sm border px-3 py-1.5 text-[11px] font-semibold transition-colors ${
                   selected === a.id
-                    ? "border-hero bg-hero text-white"
-                    : "border-border bg-white text-muted-foreground hover:text-hero hover:border-border"
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-white text-muted-foreground hover:text-foreground hover:border-border"
                 }`}
               >
                 {a.name}
