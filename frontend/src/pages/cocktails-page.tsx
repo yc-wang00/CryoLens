@@ -111,9 +111,9 @@ export function CocktailsPage() {
                       <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed line-clamp-2">{f.description}</p>
                     )}
                   </div>
-                  {f.total_concentration && (
+                  {f.total_concentration != null && (
                     <div className="shrink-0 text-right">
-                      <p className="font-mono text-lg font-bold text-hero">{f.total_concentration}</p>
+                      <p className="font-mono text-lg font-bold text-hero">{parseFloat(f.total_concentration.toFixed(2))}</p>
                       <p className="text-[9px] text-muted-foreground">{f.concentration_unit}</p>
                     </div>
                   )}
@@ -122,21 +122,26 @@ export function CocktailsPage() {
                 {/* Component bar visualization */}
                 <div className="space-y-1">
                   {f.components.map((c) => {
-                    const pct = c.concentration ? (c.concentration / maxConc) * 100 : 20;
+                    const pct = c.concentration ? (c.concentration / maxConc) * 100 : 15;
+                    const concLabel = c.concentration != null
+                      ? `${parseFloat(c.concentration.toFixed(2))}${c.concentration_unit ? ` ${c.concentration_unit}` : ""}`
+                      : null;
+                    const roleLabel = (c.role_in_formulation || c.role || "").replace(/_/g, " ");
                     return (
-                      <div key={c.id} className="flex items-center gap-2">
-                        <span className="w-24 shrink-0 text-[10px] font-medium text-hero truncate">{c.abbreviation || c.name}</span>
-                        <div className="flex-1 h-4 bg-muted/30 rounded-[1px] overflow-hidden">
-                          <div
-                            className="h-full rounded-[1px] flex items-center px-1.5"
-                            style={{ width: `${Math.max(pct, 8)}%`, background: ROLE_COLORS[c.role] ?? ROLE_COLORS.other, opacity: 0.6 }}
-                          >
-                            {c.concentration && (
-                              <span className="text-[8px] font-mono text-white font-semibold">{c.concentration}{c.concentration_unit ? ` ${c.concentration_unit}` : ""}</span>
-                            )}
+                      <div key={c.id} className="flex items-center gap-2 h-5">
+                        <span className="w-20 shrink-0 text-[10px] font-medium text-hero truncate">{c.abbreviation || c.name}</span>
+                        <div className="flex-1 flex items-center gap-2">
+                          <div className="flex-1 h-3.5 bg-muted/30 rounded-[1px]">
+                            <div
+                              className="h-full rounded-[1px]"
+                              style={{ width: `${Math.max(pct, 4)}%`, background: ROLE_COLORS[c.role] ?? ROLE_COLORS.other, opacity: 0.55 }}
+                            />
                           </div>
+                          {concLabel && (
+                            <span className="shrink-0 text-[9px] font-mono text-muted-foreground whitespace-nowrap">{concLabel}</span>
+                          )}
                         </div>
-                        <span className="text-[9px] text-muted-foreground w-16 shrink-0">{c.role_in_formulation || c.role}</span>
+                        <span className="shrink-0 text-[9px] text-muted-foreground whitespace-nowrap">{roleLabel}</span>
                       </div>
                     );
                   })}
