@@ -1,7 +1,11 @@
 :{$PORT:3000}
 
-reverse_proxy /api/* {$API_URL:http://localhost:8000}
+handle /api/* {
+	reverse_proxy {$API_URL:http://localhost:8000}
+}
 
-root * /srv
-file_server
-try_files {path} /index.html
+handle {
+	root * /srv
+	try_files {path} /index.html
+	file_server
+}
