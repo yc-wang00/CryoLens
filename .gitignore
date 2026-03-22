@@ -4,5 +4,10 @@ __pycache__/
 .DS_Store
 .db_password
 .env
+
+# Large data files
 corpus/papers/
+corpus/manifest.json
+corpus/all_pmids.json
+corpus/pmc_oa_index.json
 *.pdf
