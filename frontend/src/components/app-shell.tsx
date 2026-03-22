@@ -64,7 +64,7 @@ const navItems: Array<{
   { key: "hypotheses", label: "Hypotheses", icon: Lightbulb },
   { key: "molecules", label: "Library", icon: FlaskConical },
   { key: "cocktails", label: "Cocktails", icon: TestTubeDiagonal },
-  { key: "sources", label: "Sources", icon: BookOpenText },
+  { key: "sources", label: "Knowledge Base", icon: BookOpenText },
 ];
 
 function DataSourceBadge({

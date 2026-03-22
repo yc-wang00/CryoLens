@@ -42,6 +42,58 @@ const TABS: Array<{ key: TabKey; label: string }> = [
 
 const PAGE_SIZE = 30;
 
+function ConnectCard({
+  title,
+  description,
+  code,
+  label,
+  href,
+}: {
+  title: string;
+  description: string;
+  code: string;
+  label: string;
+  href?: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {});
+  }
+
+  return (
+    <div className="rounded-sm border border-border/50 bg-muted/20 p-3 space-y-2">
+      <p className="text-[12px] font-semibold text-hero">{title}</p>
+      <p className="text-[11px] leading-relaxed text-muted-foreground">{description}</p>
+      <div className="flex items-center gap-1.5">
+        <code className="flex-1 rounded-sm bg-muted/60 px-2 py-1.5 text-[10px] font-mono text-foreground truncate">
+          {code}
+        </code>
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="shrink-0 rounded-sm border border-border/50 bg-white px-2 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground hover:text-hero transition-colors"
+        >
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div>
+      {href && (
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-block text-[10px] font-semibold uppercase tracking-[0.1em] text-primary hover:text-hero transition-colors"
+        >
+          {label} →
+        </a>
+      )}
+    </div>
+  );
+}
+
 export function SourcesPage() {
   const [tab, setTab] = useState<TabKey>("overview");
   const [papers, setPapers] = useState<Paper[]>([]);
@@ -91,12 +143,39 @@ export function SourcesPage() {
 
   return (
     <div className="space-y-5">
-      {/* Header */}
-      <section>
-        <h1 className="console-title">Knowledge Base</h1>
-        <p className="mt-1 console-subtitle">
-          {stats ? `${stats.counts.papers.toLocaleString()} papers · ${stats.counts.findings.toLocaleString()} findings · ${stats.counts.compounds} compounds` : "Loading..."}
-        </p>
+      {/* Hero banner */}
+      <section className="rounded-sm border border-border/60 bg-white p-6">
+        <div className="flex flex-wrap items-start justify-between gap-6">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-2 mb-3">
+              <Badge>Open Source</Badge>
+              <Badge variant="accent">MCP Connected</Badge>
+            </div>
+            <h1 className="font-headline text-[1.6rem] font-bold tracking-tight text-hero leading-tight">
+              The world's first structured knowledge base for cryopreservation.
+            </h1>
+            <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+              Cryopreservation data is scattered across thousands of papers, locked in PDFs, never structured.
+              CryoLens extracts, normalizes, and connects findings, compounds, formulations, and protocols
+              into a single queryable database — open to every researcher and AI agent.
+            </p>
+          </div>
+          {stats ? (
+            <div className="grid grid-cols-2 gap-2 text-center shrink-0">
+              {[
+                { label: "Papers", value: stats.counts.papers },
+                { label: "Findings", value: stats.counts.findings },
+                { label: "Compounds", value: stats.counts.compounds },
+                { label: "Formulations", value: stats.counts.formulations },
+              ].map((s) => (
+                <div key={s.label} className="rounded-sm border border-border/50 bg-muted/30 px-4 py-2.5">
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{s.label}</p>
+                  <p className="mt-0.5 font-headline text-xl font-bold text-hero">{(s.value ?? 0).toLocaleString()}</p>
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
       </section>
 
       {/* Tabs */}
@@ -122,6 +201,34 @@ export function SourcesPage() {
         <div className="space-y-5">
           {stats?.story ? <CryoProgressStory storyStats={stats.story} /> : null}
 
+          {/* Connect section */}
+          <div className="rounded-sm border border-border/60 bg-white p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground mb-3">
+              Connect to CryoLens
+            </p>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <ConnectCard
+                title="MCP Server"
+                description="Connect any AI agent — Claude Desktop, Claude Code, or custom agents."
+                code='claude mcp add cryolens --transport http https://carefree-perfection-production-145c.up.railway.app/mcp'
+                label="Claude Code"
+              />
+              <ConnectCard
+                title="REST API"
+                description="Direct programmatic access with pagination, search, and filters."
+                code="curl https://your-api/api/v1/papers?limit=10"
+                label="Endpoints"
+                href="/api/v1/papers"
+              />
+              <ConnectCard
+                title="Open Source"
+                description="Full database schema, extraction pipeline, and MCP server on GitHub."
+                code="github.com/yc-wang00/CryoSight"
+                label="Repository"
+                href="https://github.com/yc-wang00/CryoSight"
+              />
+            </div>
+          </div>
         </div>
       )}
 
