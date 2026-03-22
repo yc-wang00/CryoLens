@@ -1,22 +1,16 @@
-FROM python:3.12-slim AS base
+FROM python:3.11-slim
 
-# Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /app
 
-# Install dependencies first (cached layer)
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-install-project
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Copy application code
-COPY engine/ engine/
+COPY . .
 
-# Non-root user
-RUN useradd --create-home appuser
-USER appuser
+RUN uv sync --frozen --no-dev || uv sync --no-dev
 
-EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
-# Railway sets $PORT; default to 8000
-CMD ["uv", "run", "uvicorn", "engine.asgi:app", "--host", "0.0.0.0", "--port", "8000"]
