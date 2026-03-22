@@ -7,7 +7,6 @@ import { OrganismHeatmap } from "../components/insights/organism-heatmap";
 import type { CryoLensStoryStats } from "../data/cryo-lens";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
-import { Card, CardContent } from "../components/ui/card";
 import { ProgressBar } from "../components/ui/progress-bar";
 
 interface Paper {
@@ -123,25 +122,6 @@ export function SourcesPage() {
         <div className="space-y-5">
           {stats?.story ? <CryoProgressStory storyStats={stats.story} /> : null}
 
-          {stats ? (
-            <div className="grid gap-3 sm:grid-cols-4">
-              {[
-                { label: "Papers", value: stats.counts.papers },
-                { label: "Findings", value: stats.counts.findings },
-                { label: "Compounds", value: stats.counts.compounds },
-                { label: "Formulations", value: stats.counts.formulations },
-              ].map((s) => (
-                <Card key={s.label} className="glass-panel">
-                  <CardContent className="p-4">
-                    <p className="table-header">{s.label}</p>
-                    <p className="mt-1 font-headline text-2xl font-bold tracking-tight text-hero">
-                      {(s.value ?? 0).toLocaleString()}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : null}
         </div>
       )}
 
