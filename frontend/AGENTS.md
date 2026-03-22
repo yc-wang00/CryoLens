@@ -15,6 +15,9 @@ Scope: `frontend/`
 - prefer centered modals over persistent right-side detail sidebars for entity inspection
 - prefer mock data in one place over hardcoded page-local constants
 - optimize for demo clarity over feature completeness
+- keep one primary navigation surface per viewport; do not duplicate the sidebar nav in a top navbar
+- keep Ask minimal: one primary composer, answer-first thread, and telemetry behind secondary disclosure
+- read-only cryoLens display pages may fetch directly from Supabase in the browser with RLS-safe publishable credentials when that keeps the app simpler
 - route Ask-page agent search through a server-owned backend surface; never expose Supabase SQL credentials or direct agent tooling to the browser
 
 ## README Requirement
