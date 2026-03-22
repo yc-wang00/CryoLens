@@ -7,6 +7,7 @@ from __future__ import annotations
 from collections import defaultdict
 
 import httpx
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.schemas.cryo_lens import (
@@ -17,7 +18,6 @@ from app.schemas.cryo_lens import (
     CryoLensExperimentRecord,
     CryoLensFinding,
     CryoLensFormulationMilestone,
-    CryoLensHypothesis,
     CryoLensMolecule,
     CryoLensSourceDocument,
     CryoLensStats,
@@ -25,6 +25,7 @@ from app.schemas.cryo_lens import (
     CryoLensStoryStats,
     CryoLensStoryYear,
 )
+from app.services.hypotheses import list_hypothesis_cards
 
 
 def _humanize(value: str) -> str:
@@ -214,7 +215,9 @@ async def _fetch_table(
     return payload
 
 
-async def fetch_cryo_lens_dataset() -> CryoLensDatasetResponse:
+async def fetch_cryo_lens_dataset(
+    session: AsyncSession | None = None,
+) -> CryoLensDatasetResponse:
     """Fetch and normalize the live cryoLens dataset from Supabase."""
     async with httpx.AsyncClient(timeout=20.0) as client:
         (
@@ -590,6 +593,8 @@ async def fetch_cryo_lens_dataset() -> CryoLensDatasetResponse:
             )
         )
 
+    saved_hypotheses = await list_hypothesis_cards(session) if session is not None else []
+
     return CryoLensDatasetResponse(
         appStats=CryoLensStats(
             papers=len(normalized_sources),
@@ -602,18 +607,7 @@ async def fetch_cryo_lens_dataset() -> CryoLensDatasetResponse:
         cocktails=normalized_cocktails,
         findings=normalized_findings,
         sources=normalized_sources,
-        hypotheses=[
-            CryoLensHypothesis(
-                id="hyp-1",
-                title="Reduce formamide burden in VS55 under 4 C loading",
-                status="prioritized",
-                benchmark="VS55",
-                target="formamide",
-                summary="Design a VS55-like follow-up that reduces formamide burden and increases glycerol support during 4 C loading.",
-                evidenceIds=["finding-1", "finding-2", "finding-3"],
-                nextStep="Prototype a VS55-inspired loading study with a lower formamide share and glycerol as the primary rescue partner.",
-            )
-        ],
+        hypotheses=saved_hypotheses,
         experiments=normalized_experiments,
         experimentDrafts=[
             CryoLensExperimentDraft(
