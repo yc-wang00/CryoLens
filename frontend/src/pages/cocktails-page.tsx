@@ -57,6 +57,18 @@ interface Protocol {
   }>;
 }
 
+interface ProtocolFinding {
+  id: number;
+  claim: string;
+  details: string | null;
+  confidence: string | null;
+  tissue_type: string | null;
+  organism: string | null;
+  paper_doi: string;
+  paper_title: string;
+  paper_year: number;
+}
+
 type ViewMode = "cocktails" | "protocols";
 
 const ROLE_COLORS: Record<string, string> = {
@@ -76,11 +88,27 @@ export function CocktailsPage() {
   const [expandedProtocol, setExpandedProtocol] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [search, setSearch] = useState("");
+  const [protoFindings, setProtoFindings] = useState<ProtocolFinding[]>([]);
+  const [protoTotal, setProtoTotal] = useState(0);
+  const [protoSearch, setProtoSearch] = useState("");
+  const [protoOffset, setProtoOffset] = useState(0);
+  const [protoLoading, setProtoLoading] = useState(false);
 
   useEffect(() => {
     fetch("/api/v1/library/cocktails").then((r) => r.json()).then(setFormulations).catch(() => {});
     fetch("/api/v1/library/protocols").then((r) => r.json()).then(setProtocols).catch(() => {});
+    fetchProtoFindings("", 0);
   }, []);
+
+  function fetchProtoFindings(q: string, offset: number) {
+    setProtoLoading(true);
+    const params = new URLSearchParams({ limit: "20", offset: String(offset) });
+    if (q) params.set("search", q);
+    fetch(`/api/v1/library/protocol-findings?${params}`)
+      .then((r) => r.json())
+      .then((d) => { setProtoFindings(d.items); setProtoTotal(d.total); setProtoLoading(false); })
+      .catch(() => setProtoLoading(false));
+  }
 
   const filtered = formulations.filter((f) =>
     !search || f.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -196,61 +224,138 @@ export function CocktailsPage() {
       )}
 
       {view === "protocols" && (
-        <div className="space-y-4">
-          {protocols.map((protocol) => {
-            const isExpanded = expandedProtocol === protocol.id;
-            return (
-              <div key={protocol.id} className="rounded-sm border border-border/60 bg-white overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setExpandedProtocol(isExpanded ? null : protocol.id)}
-                  className="w-full px-5 py-4 text-left flex items-start justify-between gap-4 hover:bg-muted/30 transition-colors"
-                >
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <Badge>{protocol.cell_type}</Badge>
-                      <Badge variant="outline">{protocol.organism}</Badge>
-                      <Badge variant="accent">{protocol.steps.length} steps</Badge>
-                    </div>
-                    <h3 className="font-headline text-sm font-bold text-hero">{protocol.name}</h3>
-                    {protocol.description && (
-                      <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">{protocol.description}</p>
+        <div className="space-y-6">
+          {/* Structured protocols */}
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Structured Protocols
+              </p>
+              <Badge>{protocols.length} protocols · {protocols.reduce((s, p) => s + p.steps.length, 0)} steps</Badge>
+            </div>
+            <div className="space-y-3">
+              {protocols.map((protocol) => {
+                const isExpanded = expandedProtocol === protocol.id;
+                return (
+                  <div key={protocol.id} className="rounded-sm border border-border/60 bg-white overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedProtocol(isExpanded ? null : protocol.id)}
+                      className="w-full px-5 py-4 text-left flex items-start justify-between gap-4 hover:bg-muted/30 transition-colors"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <Badge>{protocol.cell_type}</Badge>
+                          <Badge variant="outline">{protocol.organism}</Badge>
+                          <Badge variant="accent">{protocol.steps.length} steps</Badge>
+                        </div>
+                        <h3 className="font-headline text-sm font-bold text-hero">{protocol.name}</h3>
+                        {protocol.description && (
+                          <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">{protocol.description}</p>
+                        )}
+                      </div>
+                      <span className={`text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}>▾</span>
+                    </button>
+
+                    {isExpanded && (
+                      <div className="border-t border-border/60 px-5 py-4">
+                        <div className="relative ml-4 border-l-2 border-border/40 pl-6 space-y-0">
+                          {protocol.steps.map((step, i) => (
+                            <div key={step.step_order} className="relative pb-5 last:pb-0">
+                              <div className="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-white border-2 border-primary flex items-center justify-center">
+                                <span className="text-[7px] font-mono font-bold text-primary">{i + 1}</span>
+                              </div>
+                              <div>
+                                <p className="text-[12px] font-semibold text-hero">{step.action}</p>
+                                <div className="mt-1 flex flex-wrap gap-2 text-[10px] font-mono text-muted-foreground">
+                                  {step.temperature_c != null && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.temperature_c}°C</span>}
+                                  {step.duration_min != null && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.duration_min} min</span>}
+                                  {step.cpa_concentration != null && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.cpa_concentration} {step.concentration_unit}</span>}
+                                  {step.volume_ul != null && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.volume_ul} µL</span>}
+                                  {step.method && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.method}</span>}
+                                </div>
+                                {step.description && (
+                                  <p className="mt-1 text-[11px] text-muted-foreground">{step.description}</p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="mt-3 text-[10px] font-mono text-muted-foreground">{protocol.paper_doi}</p>
+                      </div>
                     )}
                   </div>
-                  <span className={`text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}>▾</span>
-                </button>
+                );
+              })}
+            </div>
+          </div>
 
-                {isExpanded && (
-                  <div className="border-t border-border/60 px-5 py-4">
-                    <div className="relative ml-4 border-l-2 border-border/40 pl-6 space-y-0">
-                      {protocol.steps.map((step, i) => (
-                        <div key={step.step_order} className="relative pb-5 last:pb-0">
-                          {/* Timeline dot */}
-                          <div className="absolute -left-[31px] top-0.5 w-4 h-4 rounded-full bg-white border-2 border-primary flex items-center justify-center">
-                            <span className="text-[7px] font-mono font-bold text-primary">{i + 1}</span>
-                          </div>
-                          <div>
-                            <p className="text-[12px] font-semibold text-hero">{step.action}</p>
-                            <div className="mt-1 flex flex-wrap gap-2 text-[10px] font-mono text-muted-foreground">
-                              {step.temperature_c != null && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.temperature_c}°C</span>}
-                              {step.duration_min != null && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.duration_min} min</span>}
-                              {step.cpa_concentration != null && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.cpa_concentration} {step.concentration_unit}</span>}
-                              {step.volume_ul != null && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.volume_ul} µL</span>}
-                              {step.method && <span className="rounded-sm bg-muted/50 px-1.5 py-0.5">{step.method}</span>}
-                            </div>
-                            {step.description && (
-                              <p className="mt-1 text-[11px] text-muted-foreground">{step.description}</p>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="mt-3 text-[10px] font-mono text-muted-foreground">{protocol.paper_doi}</p>
-                  </div>
-                )}
+          {/* Protocol innovation findings */}
+          <div>
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <div className="flex items-center gap-3">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Protocol Innovations from Literature
+                </p>
+                <Badge variant="accent">{protoTotal} findings</Badge>
               </div>
-            );
-          })}
+            </div>
+            <div className="flex gap-2 mb-3">
+              <input
+                className="flex-1 rounded-sm border border-border bg-white px-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+                placeholder="Search protocol innovations..."
+                value={protoSearch}
+                onChange={(e) => setProtoSearch(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { setProtoOffset(0); fetchProtoFindings(protoSearch, 0); } }}
+              />
+              <Button variant="outline" onClick={() => { setProtoOffset(0); fetchProtoFindings(protoSearch, 0); }}>Search</Button>
+            </div>
+
+            <div className="rounded-sm border border-border/60 bg-white">
+              {protoLoading ? (
+                <div className="px-4 py-8 text-center text-sm text-muted-foreground">Loading...</div>
+              ) : protoFindings.length === 0 ? (
+                <div className="px-4 py-8 text-center text-sm text-muted-foreground">No findings found.</div>
+              ) : (
+                protoFindings.map((f) => (
+                  <div key={f.id} className="border-b border-border/40 px-5 py-3.5 hover:bg-muted/20 transition-colors">
+                    <p className="text-[12px] font-medium text-hero leading-snug">{f.claim}</p>
+                    {f.details && (
+                      <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed line-clamp-2">{f.details}</p>
+                    )}
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-[10px] text-muted-foreground">
+                      <span className="font-mono">{f.paper_year}</span>
+                      {f.tissue_type && <Badge variant="outline">{f.tissue_type}</Badge>}
+                      {f.organism && <Badge variant="outline">{f.organism}</Badge>}
+                      {f.confidence && <Badge>{f.confidence}</Badge>}
+                      <span className="text-[9px] font-mono truncate max-w-[20rem]">{f.paper_title}</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Pagination */}
+            {protoTotal > 20 && (
+              <div className="flex items-center justify-between mt-3">
+                <p className="text-xs text-muted-foreground">
+                  {protoOffset + 1}–{Math.min(protoOffset + 20, protoTotal)} of {protoTotal}
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    disabled={protoOffset === 0}
+                    onClick={() => { const o = Math.max(0, protoOffset - 20); setProtoOffset(o); fetchProtoFindings(protoSearch, o); }}
+                    size="sm" variant="outline"
+                  >Previous</Button>
+                  <Button
+                    disabled={protoOffset + 20 >= protoTotal}
+                    onClick={() => { const o = protoOffset + 20; setProtoOffset(o); fetchProtoFindings(protoSearch, o); }}
+                    size="sm" variant="outline"
+                  >Next</Button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

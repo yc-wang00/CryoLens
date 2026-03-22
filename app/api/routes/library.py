@@ -125,3 +125,100 @@ async def cocktail_comparison(
         f["properties"] = [dict(r) for r in props_result.mappings().all()]
 
     return formulations
+
+
+@router.get("/coverage-matrix")
+async def coverage_matrix(
+    session: AsyncSession = Depends(get_async_session),
+):
+    """Compounds × metrics coverage grid for the gaps view."""
+    result = await session.execute(text("""
+        WITH metric_counts AS (
+            SELECT sc.compound_id,
+                   m.metric,
+                   COUNT(*) AS count
+            FROM measurements m
+            JOIN experiments e ON m.experiment_id = e.id
+            JOIN solutions s ON e.solution_id = s.id
+            JOIN solution_components sc ON sc.solution_id = s.id
+            GROUP BY sc.compound_id, m.metric
+        ),
+        finding_counts AS (
+            SELECT fc.compound_id, COUNT(DISTINCT f.id) AS count
+            FROM formulation_components fc
+            JOIN findings f ON f.formulation_id = fc.formulation_id
+            GROUP BY fc.compound_id
+        ),
+        paper_counts AS (
+            SELECT fc.compound_id, COUNT(DISTINCT f.paper_doi) AS count
+            FROM formulation_components fc
+            JOIN findings f ON f.formulation_id = fc.formulation_id
+            GROUP BY fc.compound_id
+        ),
+        tissue_counts AS (
+            SELECT fc.compound_id, COUNT(DISTINCT f.tissue_type) AS count
+            FROM formulation_components fc
+            JOIN findings f ON f.formulation_id = fc.formulation_id
+            WHERE f.tissue_type IS NOT NULL
+            GROUP BY fc.compound_id
+        )
+        SELECT c.id, c.name, c.abbreviation, c.role,
+               COALESCE(mc_v.count, 0) AS viability,
+               COALESCE(mc_p.count, 0) AS permeability,
+               COALESCE(mc_t.count, 0) AS tg,
+               COALESCE(fc.count, 0) AS findings,
+               COALESCE(pc.count, 0) AS papers,
+               COALESCE(tc.count, 0) AS tissues
+        FROM compounds c
+        LEFT JOIN metric_counts mc_v ON mc_v.compound_id = c.id AND mc_v.metric = 'viability'
+        LEFT JOIN metric_counts mc_p ON mc_p.compound_id = c.id AND mc_p.metric IN ('permeability_cpa', 'permeability_water')
+        LEFT JOIN metric_counts mc_t ON mc_t.compound_id = c.id AND mc_t.metric = 'tg'
+        LEFT JOIN finding_counts fc ON fc.compound_id = c.id
+        LEFT JOIN paper_counts pc ON pc.compound_id = c.id
+        LEFT JOIN tissue_counts tc ON tc.compound_id = c.id
+        WHERE c.role IN ('penetrating', 'non_penetrating', 'ice_blocker')
+        ORDER BY c.role, COALESCE(fc.count, 0) DESC, c.name
+    """))
+    return [dict(r) for r in result.mappings().all()]
+
+
+@router.get("/protocol-findings")
+async def protocol_findings(
+    limit: int = 50,
+    offset: int = 0,
+    search: str | None = None,
+    session: AsyncSession = Depends(get_async_session),
+):
+    conditions = ["f.category = 'protocol_innovation'"]
+    params: dict = {"limit": limit, "offset": offset}
+
+    if search:
+        conditions.append("""
+            (to_tsvector('english', f.claim) @@ plainto_tsquery('english', :search)
+             OR f.claim ILIKE :search_like)
+        """)
+        params["search"] = search
+        params["search_like"] = f"%{search}%"
+
+    where = "WHERE " + " AND ".join(conditions)
+
+    count_result = await session.execute(
+        text(f"SELECT COUNT(*) FROM findings f {where}"), params,
+    )
+    total = count_result.scalar()
+
+    result = await session.execute(text(f"""
+        SELECT f.id, f.claim, f.details, f.confidence,
+               f.tissue_type, f.organism, f.cell_type,
+               f.paper_doi, p.title AS paper_title, p.year AS paper_year
+        FROM findings f
+        JOIN papers p ON f.paper_doi = p.doi
+        {where}
+        ORDER BY p.year DESC, f.id DESC
+        LIMIT :limit OFFSET :offset
+    """), params)
+
+    return {
+        "total": total,
+        "items": [dict(r) for r in result.mappings().all()],
+    }
