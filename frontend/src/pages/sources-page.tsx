@@ -288,7 +288,7 @@ export function SourcesPage() {
               {" "}Open to every researcher and AI agent.
             </p>
             <div className="mt-4 flex items-center gap-3">
-              <Button onClick={() => setConnectOpen(true)}>
+              <Button onClick={() => setConnectOpen(true)} variant="highlight">
                 Connect your agent
               </Button>
               <a
