@@ -21,6 +21,7 @@ export interface LiveAgentSearchState {
   assistantText: string;
   errorMessage: string | null;
   finished: boolean;
+  phase: string;
   savedHypothesisCard: HypothesisCard | null;
   statusHistory: string[];
   statusMessage: string;
