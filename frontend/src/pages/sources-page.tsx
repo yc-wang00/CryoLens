@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { CryoProgressStory } from "../components/cryo-progress-story";
+import type { CryoLensStoryStats } from "../data/cryo-lens";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
@@ -22,8 +24,7 @@ interface PapersResponse {
 
 interface StatsResponse {
   counts: Record<string, number>;
-  papers_by_year: Array<{ year: number; papers: number; findings: number }>;
-  top_categories: Array<{ category: string; count: number }>;
+  story: CryoLensStoryStats;
   top_tags: Array<{ tag: string; count: number }>;
 }
 
@@ -78,14 +79,15 @@ export function SourcesPage() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="console-title">Sources</h1>
-          <p className="mt-1 console-subtitle">
-            {total.toLocaleString()} papers indexed in the CryoLens knowledge base.
-          </p>
-        </div>
+      <section>
+        <h1 className="console-title">Sources</h1>
+        <p className="mt-1 console-subtitle">
+          Provenance layer for every answer, ranking, and generated hypothesis.
+        </p>
       </section>
+
+      {/* Progress Story — timeline + milestones */}
+      {stats?.story ? <CryoProgressStory storyStats={stats.story} /> : null}
 
       {/* Stats cards */}
       {stats ? (
