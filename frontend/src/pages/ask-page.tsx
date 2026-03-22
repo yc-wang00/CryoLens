@@ -368,7 +368,7 @@ function ResearchToolStack({ search }: { search: LiveAgentSearchState }): JSX.El
           <Tool
             key={toolCall.id}
             className="shadow-[0_10px_26px_rgba(43,52,55,0.04)]"
-            defaultOpen={toolCall.state !== "output-available" || !search.finished}
+            defaultOpen={false}
           >
             <ToolHeader
               state={toolCall.state}
