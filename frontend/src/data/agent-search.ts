@@ -1,101 +1,43 @@
+/**
+ * Agent search — streams from the FastAPI /api/v1/chat endpoint
+ * which runs Claude Agent SDK with the CryoLens MCP server.
+ */
+
 import type { AgentToolCall } from "../types";
-import type { HypothesisCard } from "./cryo-lens";
-
-const AGENT_API_BASE_URL = import.meta.env.VITE_AGENT_API_BASE_URL ?? "";
-
-export type AgentProfile = "research" | "hypothesis";
 
 export type AgentSearchStreamEvent =
-  | { type: "status"; phase: string; message: string; sandboxId?: string }
-  | { type: "text_delta"; text: string }
-  | { type: "tool_start"; name: string }
-  | { type: "tool_input_delta"; text: string }
-  | { type: "tool_end"; name: string; input: string }
-  | { type: "tool_output"; output: string }
-  | { type: "result"; text: string }
-  | { type: "hypothesis_saved"; hypothesis: HypothesisCard }
-  | { type: "error"; message: string };
+  | { type: "status"; phase: string; message: string }
+  | { type: "text"; text: string }
+  | { type: "thinking"; thinking: string }
+  | { type: "tool_use"; id: string; name: string; input: Record<string, unknown> }
+  | { type: "tool_result"; tool_use_id: string; content: string; is_error: boolean }
+  | { type: "result"; duration_ms: number; total_cost_usd: number; num_turns: number }
+  | { type: "error"; message: string }
+  | { type: "done" };
 
 export interface LiveAgentSearchState {
   prompt: string;
-  profile: AgentProfile;
   assistantText: string;
   errorMessage: string | null;
   finished: boolean;
   phase: string;
-  savedHypothesisCard: HypothesisCard | null;
   statusHistory: string[];
   statusMessage: string;
   toolCalls: AgentToolCall[];
 }
 
-function buildCandidateUrls(path: string): string[] {
-  const candidates = new Set<string>();
-
-  if (AGENT_API_BASE_URL) {
-    candidates.add(`${AGENT_API_BASE_URL}${path}`);
-  }
-
-  candidates.add(path);
-
-  return Array.from(candidates);
-}
-
-function parseEventBlock(block: string): AgentSearchStreamEvent | null {
-  const data = block
-    .split("\n")
-    .filter((line) => line.startsWith("data:"))
-    .map((line) => line.slice(5).trim())
-    .join("\n");
-
-  if (!data) {
-    return null;
-  }
-
-  return JSON.parse(data) as AgentSearchStreamEvent;
-}
-
 export async function streamAgentSearch(
   prompt: string,
-  profile: AgentProfile,
   onEvent: (event: AgentSearchStreamEvent) => void,
 ): Promise<void> {
-  const requestInit: RequestInit = {
-    body: JSON.stringify({ prompt, profile }),
-    headers: {
-      "content-type": "application/json",
-    },
+  const response = await fetch("/api/v1/chat", {
     method: "POST",
-  };
-
-  let response: Response | null = null;
-  let lastError: Error | null = null;
-
-  for (const url of buildCandidateUrls("/api/agent-search")) {
-    try {
-      response = await fetch(url, requestInit);
-      break;
-    } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
-    }
-  }
-
-  if (!response) {
-    throw lastError ?? new Error("Agent search request failed before reaching the server.");
-  }
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ message: prompt }),
+  });
 
   if (!response.ok) {
-    const fallbackMessage = `Agent search failed with status ${response.status}.`;
-    let errorMessage = fallbackMessage;
-
-    try {
-      const payload = (await response.json()) as { error?: string };
-      errorMessage = payload.error ?? fallbackMessage;
-    } catch {
-      errorMessage = fallbackMessage;
-    }
-
-    throw new Error(errorMessage);
+    throw new Error(`Agent search failed with status ${response.status}.`);
   }
 
   if (!response.body) {
@@ -108,24 +50,25 @@ export async function streamAgentSearch(
 
   while (true) {
     const { done, value } = await reader.read();
-    if (done) {
-      break;
-    }
+    if (done) break;
 
     buffer += decoder.decode(value, { stream: true });
-    const chunks = buffer.split("\n\n");
-    buffer = chunks.pop() ?? "";
+    const lines = buffer.split("\n");
+    buffer = lines.pop() ?? "";
 
-    for (const chunk of chunks) {
-      const event = parseEventBlock(chunk);
-      if (event) {
-        onEvent(event);
+    let eventType = "";
+    for (const line of lines) {
+      if (line.startsWith("event: ")) {
+        eventType = line.slice(7);
+      } else if (line.startsWith("data: ") && eventType) {
+        try {
+          const data = JSON.parse(line.slice(6));
+          onEvent({ type: eventType, ...data } as AgentSearchStreamEvent);
+        } catch {
+          // skip malformed JSON
+        }
+        eventType = "";
       }
     }
-  }
-
-  const trailingEvent = parseEventBlock(buffer);
-  if (trailingEvent) {
-    onEvent(trailingEvent);
   }
 }

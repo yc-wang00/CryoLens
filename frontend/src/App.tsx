@@ -14,7 +14,7 @@ function App() {
   return (
     <AppShell currentPage={currentPage} onPageChange={setCurrentPage}>
       {currentPage === "ask" && (
-        <AskPage onOpenHypotheses={() => setCurrentPage("hypotheses")} />
+        <AskPage />
       )}
       {currentPage === "hypotheses" && <HypothesesPage />}
       {currentPage === "molecules" && <MoleculesPage />}

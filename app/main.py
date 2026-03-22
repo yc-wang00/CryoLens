@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import compounds, findings, formulations, health, hypotheses, insights, library, papers, stats
+from app.api.routes import chat, compounds, findings, formulations, health, hypotheses, insights, library, papers, stats
 from app.core.config import settings
 
 app = FastAPI(
@@ -30,3 +30,4 @@ app.include_router(stats.router)
 app.include_router(insights.router)
 app.include_router(library.router)
 app.include_router(hypotheses.router)
+app.include_router(chat.router)
