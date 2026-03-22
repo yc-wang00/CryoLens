@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     app_name: str = "CryoLens API"
     app_env: str = "development"
-    database_url: str = "postgresql://postgres:postgres@localhost:5433/cryolens"
+    database_url: str = "postgresql://localhost:5432/cryosight"
     supabase_url: str = "https://psbkprsjynqpclcfnmto.supabase.co"
     supabase_anon_key: str = (
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."

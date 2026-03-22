@@ -3,13 +3,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import cryo_lens, health, hypotheses, ingestion
+from app.api.routes import compounds, findings, formulations, health, papers, stats
 from app.core.config import settings
 
 app = FastAPI(
     title=settings.app_name,
     version="0.1.0",
-    description="CryoLens PDF ingestion and knowledge normalization backend.",
+    description="CryoLens cryopreservation knowledge base API.",
 )
 
 app.add_middleware(
@@ -22,6 +22,8 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
-app.include_router(ingestion.router)
-app.include_router(cryo_lens.router)
-app.include_router(hypotheses.router)
+app.include_router(papers.router)
+app.include_router(compounds.router)
+app.include_router(findings.router)
+app.include_router(formulations.router)
+app.include_router(stats.router)
