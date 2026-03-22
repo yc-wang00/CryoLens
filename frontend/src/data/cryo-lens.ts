@@ -93,7 +93,7 @@ function buildFallbackDataset(loadLog: string[] = []): CryoLensDataset {
       outcomeStatus: "planned",
       measurementSummary: "No live measurements linked",
       notes: draft.notes,
-      sourceLocation: "CryoSight demo draft",
+      sourceLocation: "CryoLens demo draft",
     })),
     experimentDrafts,
     savedPrompts: askResponses.map((response) => response.prompt),
@@ -224,8 +224,8 @@ export function searchCryoLensDataset(
   return {
     answer:
       topSignal !== undefined
-        ? `CryoSight found ${finalEvidence.length} matching findings. The strongest immediate signal is: ${topSignal.summary}`
-        : `CryoSight did not find a strong direct match, but the live dataset includes ${dataset.appStats.findings} findings across ${dataset.appStats.papers} papers.`,
+        ? `CryoLens found ${finalEvidence.length} matching findings. The strongest immediate signal is: ${topSignal.summary}`
+        : `CryoLens did not find a strong direct match, but the live dataset includes ${dataset.appStats.findings} findings across ${dataset.appStats.papers} papers.`,
     why: [
       `${finalEvidence.length} findings matched the query terms across claims, tags, and linked sources.`,
       `${linkedMolecules.length} molecules and ${linkedCocktails.length} formulations were linked from the same pass.`,

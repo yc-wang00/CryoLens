@@ -4,7 +4,7 @@ KNOWLEDGE MODELS
 Purpose
 
 Persist uploaded PDF documents, chunked text, and the normalized MVP knowledge
-records used by CryoSight.
+records used by CryoLens.
 
 KEY CONCEPTS:
 - raw documents and chunk vectors are stored separately from normalized facts

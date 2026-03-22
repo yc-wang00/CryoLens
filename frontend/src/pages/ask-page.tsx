@@ -221,9 +221,9 @@ export function AskPage({
         <div className="w-full max-w-4xl space-y-8">
           <div className="space-y-3 text-center">
             <Badge className="mx-auto w-fit" variant="accent">
-              CryoSight search
+              CryoLens search
             </Badge>
-            <h1 className="console-title">Search CryoSight</h1>
+            <h1 className="console-title">Search CryoLens</h1>
             <p className="mx-auto max-w-2xl console-subtitle">
               Launch a sandboxed Claude research run, inspect live Supabase evidence through read-only SQL, and stream the agent&apos;s reasoning trace back into the demo UI.
             </p>
@@ -241,7 +241,7 @@ export function AskPage({
                 <Textarea
                   className="min-h-32 border-none bg-transparent px-0 py-0 text-base leading-7 shadow-none focus:border-none"
                   onChange={(event) => setPrompt(event.target.value)}
-                  placeholder="Ask CryoSight to research the live cryoLens database..."
+                  placeholder="Ask CryoLens to research the live cryoLens database..."
                   value={prompt}
                 />
               </div>
@@ -286,7 +286,7 @@ export function AskPage({
                     Backend flow
                   </Badge>
                   <h2 className="mt-3 text-lg font-semibold uppercase tracking-[0.08em] text-hero">
-                    What CryoSight is doing
+                    What CryoLens is doing
                   </h2>
                 </div>
                 <div className="rounded-sm border border-border bg-white p-4 text-sm leading-6 text-foreground">
@@ -330,7 +330,7 @@ export function AskPage({
     <div className="mx-auto w-full max-w-5xl space-y-5">
       <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="console-title">CryoSight Search</h1>
+          <h1 className="console-title">CryoLens Search</h1>
           <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
             <span className={`h-2 w-2 rounded-full ${activeSearch.finished ? "bg-[#6a7f71]" : "bg-[#b68748]"}`} />
             {activeSearch.statusMessage}
@@ -373,7 +373,7 @@ export function AskPage({
                     <Bot className="h-4 w-4 text-primary" />
                   )}
                   <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-hero">
-                    {message.role === "user" ? "You" : "CryoSight"}
+                    {message.role === "user" ? "You" : "CryoLens"}
                   </span>
                   {message.role === "assistant" && !activeSearch.finished ? (
                     <Badge variant="accent">streaming</Badge>

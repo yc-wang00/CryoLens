@@ -1,97 +1,173 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap");
 @import "tailwindcss";
 
+/*
+ * CryoLens Design System — NeoLab
+ *
+ * Geist Sans (variable) — all text, Swiss precision
+ * Geist Mono (variable) — data, SMILES, DOIs, measurements
+ * M3-derived surface hierarchy + terracotta accent
+ * Blueprint-inspired: system font feel, operator aesthetic
+ */
+
+@font-face {
+  font-family: "Geist";
+  src: url("/node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  --font-sans: "Inter", sans-serif;
-  --font-headline: "Manrope", sans-serif;
-  --color-background: #f8f9fa;
-  --color-foreground: #4a565f;
+  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-headline: "Geist", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
+
+  --color-background: #f7f8f9;
+  --color-foreground: #3d464d;
   --color-card: #ffffff;
-  --color-card-foreground: #4a565f;
+  --color-card-foreground: #3d464d;
   --color-popover: #ffffff;
-  --color-popover-foreground: #4a565f;
+  --color-popover-foreground: #3d464d;
+
   --color-primary: #4f6073;
   --color-primary-foreground: #f5f8ff;
   --color-secondary: #cae9dd;
   --color-secondary-foreground: #3c574e;
-  --color-muted: #f1f4f6;
+  --color-muted: #f0f2f4;
   --color-muted-foreground: #6b7680;
   --color-accent: #e0f0fc;
   --color-accent-foreground: #4c5a64;
-  --color-border: #dbe4e7;
-  --color-input: #dbe4e7;
+
+  --color-border: #dde2e6;
+  --color-input: #dde2e6;
   --color-ring: #4f6073;
-  --color-panel: #eef3f5;
-  --color-surface-strong: #e3e9ec;
-  --color-hero: #1a2b3c;
-  --color-highlight: #ea7b4d;
+  --color-panel: #edf1f3;
+  --color-surface-strong: #e0e5e9;
+  --color-hero: #141c24;
+  --color-highlight: #c45b3d;
+  --color-highlight-muted: rgba(196, 91, 61, 0.07);
+  --color-highlight-hover: #a34931;
+  --color-data-positive: #2d7a4f;
+  --color-data-caution: #b07318;
+
   --radius-sm: 0.125rem;
   --radius-md: 0.25rem;
   --radius-lg: 0.5rem;
-  --shadow-panel: 0 8px 24px rgba(43, 52, 55, 0.035);
+  --shadow-panel: 0 1px 3px rgba(20, 28, 36, 0.04), 0 6px 16px rgba(20, 28, 36, 0.025);
+  --shadow-card-hover: 0 2px 8px rgba(20, 28, 36, 0.06), 0 8px 24px rgba(20, 28, 36, 0.035);
 }
 
 :root {
   color: var(--color-foreground);
-  background: linear-gradient(180deg, #f9fbfc 0%, #f3f6f8 100%);
+  background: var(--color-background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html,
-body,
-#root {
-  min-height: 100%;
-}
+html, body, #root { min-height: 100%; }
 
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background: #f8f9fa;
+  font-feature-settings: "ss01", "cv01";
+  background: var(--color-background);
   color: var(--color-foreground);
   font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.006em;
 }
 
-button,
-input,
-textarea {
-  font: inherit;
+button, input, textarea { font: inherit; }
+
+::placeholder { color: var(--color-muted-foreground); }
+
+::selection {
+  background: rgba(79, 96, 115, 0.12);
+  color: var(--color-hero);
 }
 
-::placeholder {
-  color: var(--color-muted-foreground);
-}
+/* --- Surfaces --- */
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid rgba(221, 226, 230, 0.6);
 }
 
 .grid-lines {
   background-image:
-    linear-gradient(rgba(171, 179, 183, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(171, 179, 183, 0.055) 1px, transparent 1px);
-  background-size: 32px 32px;
+    linear-gradient(rgba(160, 172, 180, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(160, 172, 180, 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
+/* --- Console typography --- */
+
 .table-header {
-  @apply text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground;
+  @apply text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground;
 }
 
 .console-title {
-  @apply font-headline text-[2rem] leading-none font-extrabold tracking-tight text-hero;
+  @apply font-headline text-[1.75rem] leading-[1.1] font-bold tracking-[-0.02em] text-hero;
 }
 
 .console-subtitle {
-  @apply text-sm leading-6 text-muted-foreground;
+  @apply text-[13px] leading-6 text-muted-foreground tracking-[-0.003em];
 }
 
 .console-panel-title {
-  @apply text-lg font-semibold uppercase tracking-[0.08em] text-hero;
+  @apply text-sm font-semibold uppercase tracking-[0.06em] text-hero;
+}
+
+/* --- Data values --- */
+
+.data-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* --- Scrollbar --- */
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted-foreground); }
+
+/* --- Micro-interactions --- */
+
+.card-interactive {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* --- Highlight accent --- */
+
+.highlight-bar {
+  position: relative;
+}
+.highlight-bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-highlight);
+  border-radius: 1px;
 }

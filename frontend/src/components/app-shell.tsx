@@ -53,7 +53,7 @@ export function AppShell({
       <header className="glass-panel fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-slate-50/90">
         <div className="flex h-14 items-center justify-between px-5 lg:px-6">
           <div className="font-headline text-[1.02rem] font-extrabold tracking-tight text-hero">
-            CryoSight
+            CryoLens
           </div>
           <div className="hidden items-center gap-6 lg:flex">
             <button
@@ -113,7 +113,7 @@ export function AppShell({
             </button>
             <button
               aria-label="Open account"
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-[#b8b699] text-white transition-transform hover:scale-[1.03]"
+              className="flex h-7 w-7 items-center justify-center rounded-full bg-highlight text-white transition-transform hover:scale-[1.03]"
               onClick={() => setShellModal("account")}
               type="button"
             >
@@ -123,14 +123,14 @@ export function AppShell({
         </div>
       </header>
 
-      <aside className="fixed left-0 top-14 hidden h-[calc(100vh-3.5rem)] w-56 flex-col border-r border-border/60 bg-[#eef3f5] p-5 lg:flex">
+      <aside className="fixed left-0 top-14 hidden h-[calc(100vh-3.5rem)] w-56 flex-col border-r border-border/60 bg-panel/80 p-5 lg:flex">
         <div className="border-b border-border/70 pb-5">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary text-primary-foreground">
               <LayoutGrid className="h-4 w-4" />
             </div>
             <div>
-              <div className="font-headline text-sm font-extrabold text-hero">CryoSight</div>
+              <div className="font-headline text-sm font-extrabold text-hero">CryoLens</div>
               <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                 knowledge engine
               </div>
@@ -185,7 +185,7 @@ export function AppShell({
       </aside>
 
       <main className="px-4 pb-8 pt-20 lg:ml-56 lg:px-6">
-        <div className="grid-lines min-h-[calc(100vh-6rem)] rounded-md border border-border/30 bg-white/45 p-4 sm:p-5 lg:p-6">
+        <div className="grid-lines min-h-[calc(100vh-6rem)] rounded-md border border-border/40 bg-white/55 p-4 sm:p-5 lg:p-6">
           {children}
         </div>
       </main>
@@ -197,7 +197,7 @@ export function AppShell({
               <DialogHeader>
                 <DialogTitle>Account</DialogTitle>
                 <DialogDescription>
-                  Local demo profile for the CryoSight operator workspace.
+                  Local demo profile for the CryoLens operator workspace.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 p-5">
@@ -207,7 +207,7 @@ export function AppShell({
                     Kenji Demo
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    CryoSight research operator · local mock session
+                    CryoLens research operator · local mock session
                   </p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -287,7 +287,7 @@ export function AppShell({
                 <div className="grid gap-3 sm:grid-cols-2">
                   <a
                     className="inline-flex h-10 items-center justify-between rounded-sm border border-border bg-white px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                    href="mailto:demo@cryosight.local?subject=CryoSight%20Hackathon%20Demo"
+                    href="mailto:demo@cryosight.local?subject=CryoLens%20Hackathon%20Demo"
                   >
                     Email support
                     <ExternalLink className="h-4 w-4 text-muted-foreground" />

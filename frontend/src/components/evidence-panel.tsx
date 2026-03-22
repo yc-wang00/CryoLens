@@ -29,7 +29,7 @@ export function EvidencePanel({ panel }: EvidencePanelProps) {
       <Card className="glass-panel overflow-hidden">
         <CardHeader className="border-b border-border/60 bg-panel/60">
           <Badge className="w-fit" variant="accent">
-            CryoSight Explorer
+            CryoLens Explorer
           </Badge>
           <CardTitle className="console-panel-title">Context panel</CardTitle>
           <CardDescription>
@@ -38,7 +38,7 @@ export function EvidencePanel({ panel }: EvidencePanelProps) {
         </CardHeader>
         <CardContent className="space-y-4 pt-5">
           <div className="rounded-sm border border-dashed border-border bg-muted/60 p-4 text-sm text-muted-foreground">
-            Start with CryoSight Search, then open a finding or entity to keep the story flowing.
+            Start with CryoLens Search, then open a finding or entity to keep the story flowing.
           </div>
           <ul className="space-y-3 text-sm text-muted-foreground">
             <li className="flex items-start gap-3">

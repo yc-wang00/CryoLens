@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This package contains the FastAPI application, database layer, and ingestion services for the CryoSight backend.
+This package contains the FastAPI application, database layer, and ingestion services for the CryoLens backend.
 
 ## Public API / Entrypoints
 

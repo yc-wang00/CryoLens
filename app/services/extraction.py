@@ -3,7 +3,7 @@ MOCK KNOWLEDGE EXTRACTION
 =========================
 Purpose
 
-Turn raw document text into the normalized CryoSight MVP knowledge payload.
+Turn raw document text into the normalized CryoLens MVP knowledge payload.
 
 KEY CONCEPTS:
 - the scaffold uses heuristics instead of an LLM provider

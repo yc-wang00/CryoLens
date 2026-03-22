@@ -3,7 +3,7 @@ CURATED SEED LOADER
 ===================
 Purpose
 
-Load a deterministic paper-derived bootstrap seed into the CryoSight database
+Load a deterministic paper-derived bootstrap seed into the CryoLens database
 before the full ingestion pipeline is ready.
 
 KEY CONCEPTS:

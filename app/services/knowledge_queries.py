@@ -284,7 +284,7 @@ def get_rescue_partners(
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Query the curated CryoSight database."
+        description="Query the curated CryoLens database."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 

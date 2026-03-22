@@ -466,7 +466,7 @@ export const askResponses: AskResponse[] = [
       "The benchmark is stored in the structured cocktail library rather than inferred from free text.",
       "Each component is flattened into concentration-aware rows for direct comparison against other cocktails.",
     ],
-    citations: ["CryoSight curated benchmark structure"],
+    citations: ["CryoLens curated benchmark structure"],
     linkedMolecules: ["dimethyl sulfoxide", "1,2-propanediol", "formamide"],
     linkedCocktails: ["VS55", "DP6", "M22"],
     evidenceIds: ["find-3"],

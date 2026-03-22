@@ -1,2 +1,2 @@
-"""CryoSight application package."""
+"""CryoLens application package."""
 
