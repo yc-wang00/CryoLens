@@ -4,7 +4,7 @@ import { AppShell } from "./components/app-shell";
 import { EvidencePanel, type PanelState } from "./components/evidence-panel";
 import { Dialog, DialogContent } from "./components/ui/dialog";
 import { Card, CardContent } from "./components/ui/card";
-import type { Cocktail, Molecule, PageKey, SourceDocument } from "./types";
+import type { Cocktail, Molecule, PageKey } from "./types";
 import { fetchCryoLensDataset, type CryoLensDataset, type ExperimentRecord, type HypothesisCard } from "./data/cryo-lens";
 import { AskPage } from "./pages/ask-page";
 import { CocktailsPage } from "./pages/cocktails-page";
@@ -44,10 +44,6 @@ function App() {
 
   function openCocktail(cocktail: Cocktail): void {
     setPanel({ kind: "cocktail", cocktail });
-  }
-
-  function openSource(source: SourceDocument): void {
-    setPanel({ kind: "source", source });
   }
 
   function openExperiment(experiment: ExperimentRecord): void {
@@ -110,12 +106,8 @@ function App() {
       {!loading && dataset && currentPage === "cocktails" ? (
         <CocktailsPage cocktails={dataset.cocktails} onOpenCocktail={openCocktail} />
       ) : null}
-      {!loading && dataset && currentPage === "sources" ? (
-        <SourcesPage
-          onOpenSource={openSource}
-          sources={dataset.sources}
-          storyStats={dataset.storyStats}
-        />
+      {currentPage === "sources" ? (
+        <SourcesPage />
       ) : null}
       <Dialog onOpenChange={(open) => (!open ? setPanel({ kind: "none" }) : null)} open={panel.kind !== "none"}>
         <DialogContent className="max-w-3xl" onClose={() => setPanel({ kind: "none" })}>
