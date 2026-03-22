@@ -10,9 +10,9 @@
  */
 
 @theme {
-  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-headline: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  --font-sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-headline: "Space Grotesk", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SF Mono", monospace;
 
   --color-background: #f7f8f9;
   --color-foreground: #3d464d;

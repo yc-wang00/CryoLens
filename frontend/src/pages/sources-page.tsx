@@ -1,13 +1,16 @@
+import { CryoProgressStory } from "../components/cryo-progress-story";
 import type { SourceDocument } from "../data/mock-data";
+import type { CryoLensStoryStats } from "../data/cryo-lens-contract";
 import { Badge } from "../components/ui/badge";
 import { ProgressBar } from "../components/ui/progress-bar";
 
 interface SourcesPageProps {
   sources: SourceDocument[];
+  storyStats: CryoLensStoryStats;
   onOpenSource: (source: SourceDocument) => void;
 }
 
-export function SourcesPage({ onOpenSource, sources }: SourcesPageProps) {
+export function SourcesPage({ onOpenSource, sources, storyStats }: SourcesPageProps) {
   return (
     <div className="space-y-5">
       <section>
@@ -16,6 +19,8 @@ export function SourcesPage({ onOpenSource, sources }: SourcesPageProps) {
           Provenance layer for every answer, ranking, and generated hypothesis.
         </p>
       </section>
+
+      <CryoProgressStory storyStats={storyStats} />
 
       <div className="rounded-sm border border-border/70 bg-white">
         <div className="grid grid-cols-[0.12fr_1.25fr_0.55fr] gap-5 border-b border-border bg-muted/80 px-4 py-3">
