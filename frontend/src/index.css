@@ -1,0 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-headline: "Manrope", sans-serif;
+  --color-background: #f8f9fa;
+  --color-foreground: #4a565f;
+  --color-card: #ffffff;
+  --color-card-foreground: #4a565f;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #4a565f;
+  --color-primary: #4f6073;
+  --color-primary-foreground: #f5f8ff;
+  --color-secondary: #cae9dd;
+  --color-secondary-foreground: #3c574e;
+  --color-muted: #f1f4f6;
+  --color-muted-foreground: #6b7680;
+  --color-accent: #e0f0fc;
+  --color-accent-foreground: #4c5a64;
+  --color-border: #dbe4e7;
+  --color-input: #dbe4e7;
+  --color-ring: #4f6073;
+  --color-panel: #eef3f5;
+  --color-surface-strong: #e3e9ec;
+  --color-hero: #1a2b3c;
+  --color-highlight: #ea7b4d;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --shadow-panel: 0 8px 24px rgba(43, 52, 55, 0.035);
+}
+
+:root {
+  color: var(--color-foreground);
+  background: linear-gradient(180deg, #f9fbfc 0%, #f3f6f8 100%);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: #f8f9fa;
+  color: var(--color-foreground);
+  font-size: 14px;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::placeholder {
+  color: var(--color-muted-foreground);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+}
+
+.grid-lines {
+  background-image:
+    linear-gradient(rgba(171, 179, 183, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(171, 179, 183, 0.055) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.table-header {
+  @apply text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground;
+}
+
+.console-title {
+  @apply font-headline text-[2rem] leading-none font-extrabold tracking-tight text-hero;
+}
+
+.console-subtitle {
+  @apply text-sm leading-6 text-muted-foreground;
+}
+
+.console-panel-title {
+  @apply text-lg font-semibold uppercase tracking-[0.08em] text-hero;
+}
