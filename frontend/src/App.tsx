@@ -4,7 +4,7 @@ import { AppShell } from "./components/app-shell";
 import { EvidencePanel, type PanelState } from "./components/evidence-panel";
 import { Dialog, DialogContent } from "./components/ui/dialog";
 import { Card, CardContent } from "./components/ui/card";
-import type { Cocktail, Molecule, PageKey } from "./types";
+import type { PageKey } from "./types";
 import { fetchCryoLensDataset, type CryoLensDataset, type ExperimentRecord, type HypothesisCard } from "./data/cryo-lens";
 import { AskPage } from "./pages/ask-page";
 import { CocktailsPage } from "./pages/cocktails-page";
@@ -37,14 +37,6 @@ function App() {
       active = false;
     };
   }, []);
-
-  function openMolecule(molecule: Molecule): void {
-    setPanel({ kind: "molecule", molecule });
-  }
-
-  function openCocktail(cocktail: Cocktail): void {
-    setPanel({ kind: "cocktail", cocktail });
-  }
 
   function openExperiment(experiment: ExperimentRecord): void {
     setCurrentPage("hypotheses");
@@ -100,11 +92,11 @@ function App() {
           onOpenHypothesis={openHypothesis}
         />
       ) : null}
-      {!loading && dataset && currentPage === "molecules" ? (
-        <MoleculesPage molecules={dataset.molecules} onOpenMolecule={openMolecule} />
+      {currentPage === "molecules" ? (
+        <MoleculesPage />
       ) : null}
-      {!loading && dataset && currentPage === "cocktails" ? (
-        <CocktailsPage cocktails={dataset.cocktails} onOpenCocktail={openCocktail} />
+      {currentPage === "cocktails" ? (
+        <CocktailsPage />
       ) : null}
       {currentPage === "sources" ? (
         <SourcesPage />
