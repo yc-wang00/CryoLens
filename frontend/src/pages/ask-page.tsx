@@ -17,10 +17,12 @@
  * - MEM-0009
  */
 
-import { ArrowUp, Bot, LoaderCircle, Search, Wrench } from "lucide-react";
+import { ArrowUp, Bot, LoaderCircle, Search } from "lucide-react";
 import { Fragment, useRef, useState, type JSX, type KeyboardEvent } from "react";
 import { Streamdown } from "streamdown";
 
+import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from "../components/ai-elements/tool";
+import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import {
   type AgentProfile,
@@ -55,6 +57,7 @@ function createInitialSearchState(prompt: string, profile: AgentProfile): LiveAg
     assistantText: "",
     errorMessage: null,
     finished: false,
+    phase: "queued",
     prompt,
     profile,
     savedHypothesisCard: null,
@@ -70,11 +73,19 @@ function appendToolCall(toolCalls: AgentToolCall[], toolName: string): AgentTool
     {
       id: `${toolName}-${toolCalls.length + 1}`,
       inputSummary: "Waiting for tool input...",
-      outputSummary: "Pending",
-      state: "running",
+      outputSummary: "Waiting for tool output...",
+      state: "input-streaming",
       toolName,
     },
   ];
+}
+
+function failLatestToolCall(toolCalls: AgentToolCall[], errorMessage: string): AgentToolCall[] {
+  return updateLatestToolCall(toolCalls, (toolCall) => ({
+    ...toolCall,
+    outputSummary: errorMessage,
+    state: "output-error",
+  }));
 }
 
 function updateLatestToolCall(
@@ -82,7 +93,7 @@ function updateLatestToolCall(
   updater: (toolCall: AgentToolCall) => AgentToolCall,
 ): AgentToolCall[] {
   for (let index = toolCalls.length - 1; index >= 0; index -= 1) {
-    if (toolCalls[index]?.state === "running") {
+    if (toolCalls[index] && toolCalls[index].state !== "output-available" && toolCalls[index].state !== "output-error") {
       return toolCalls.map((toolCall, toolIndex) => (
         toolIndex === index ? updater(toolCall) : toolCall
       ));
@@ -100,6 +111,7 @@ function applyStreamEvent(
     case "status":
       return {
         ...previousState,
+        phase: event.phase,
         statusHistory: [...previousState.statusHistory, event.message],
         statusMessage: event.message,
       };
@@ -120,6 +132,7 @@ function applyStreamEvent(
         toolCalls: updateLatestToolCall(previousState.toolCalls, (toolCall) => ({
           ...toolCall,
           inputSummary: `${toolCall.inputSummary === "Waiting for tool input..." ? "" : toolCall.inputSummary}${event.text}`,
+          state: "input-available",
         })),
       };
     case "tool_end":
@@ -129,8 +142,8 @@ function applyStreamEvent(
         toolCalls: updateLatestToolCall(previousState.toolCalls, (toolCall) => ({
           ...toolCall,
           inputSummary: event.input || toolCall.inputSummary,
-          outputSummary: "Completed in sandbox",
-          state: "completed",
+          outputSummary: "Invocation completed. Result is folded into the agent answer.",
+          state: "output-available",
         })),
       };
     case "result":
@@ -152,8 +165,10 @@ function applyStreamEvent(
         ...previousState,
         errorMessage: event.message,
         finished: true,
+        phase: "error",
         statusHistory: [...previousState.statusHistory, event.message],
         statusMessage: "Research failed.",
+        toolCalls: failLatestToolCall(previousState.toolCalls, event.message),
       };
     default:
       return previousState;
@@ -259,79 +274,103 @@ function ConversationMessage({
   );
 }
 
-function ResearchTrace({ search }: { search: LiveAgentSearchState }): JSX.Element | null {
-  const hasTrace = search.toolCalls.length > 0 || search.statusHistory.length > 1 || search.errorMessage;
+function formatPhaseLabel(phase: string, finished: boolean): string {
+  if (finished && phase !== "error") {
+    return "Complete";
+  }
 
-  if (!hasTrace) {
+  switch (phase) {
+    case "queued":
+      return "Queued";
+    case "mcp":
+      return "Connecting MCP";
+    case "cold-start":
+    case "prepare":
+    case "install-cli":
+    case "install-deps":
+    case "sandbox":
+      return "Preparing sandbox";
+    case "agent":
+      return "Running agent";
+    case "cleanup":
+      return "Cleaning up";
+    case "error":
+      return "Failed";
+    default:
+      return "Running";
+  }
+}
+
+function getPhaseBadgeVariant(phase: string, finished: boolean): "highlight" | "outline" | "muted" {
+  if (phase === "error") {
+    return "outline";
+  }
+
+  if (finished) {
+    return "muted";
+  }
+
+  return "highlight";
+}
+
+function ResearchPhaseBadge({ search }: { search: LiveAgentSearchState }): JSX.Element {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge className="gap-1" variant={getPhaseBadgeVariant(search.phase, search.finished)}>
+        {search.finished && search.phase !== "error" ? null : <LoaderCircle className={`h-3 w-3 ${search.finished || search.phase === "error" ? "" : "animate-spin"}`} />}
+        {formatPhaseLabel(search.phase, search.finished)}
+      </Badge>
+      <Badge variant="outline">
+        {search.profile === "hypothesis" ? "Hypothesis mode" : "Research mode"}
+      </Badge>
+    </div>
+  );
+}
+
+function ResearchToolStack({ search }: { search: LiveAgentSearchState }): JSX.Element | null {
+  if (search.toolCalls.length === 0) {
     return null;
   }
 
   return (
-    <details className="rounded-xl border border-border/70 bg-white/88" open={!search.finished}>
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <Wrench className="h-4 w-4 text-primary" />
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-hero">
-              Research trace
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {search.toolCalls.length} tool calls · {search.statusHistory.length} status events
-            </p>
-          </div>
+    <section className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-hero">
+            MCP activity
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {search.toolCalls.length} live tool call{search.toolCalls.length === 1 ? "" : "s"}
+          </p>
         </div>
-        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          {search.finished ? "Inspect" : "Live"}
-        </span>
-      </summary>
-      <div className="space-y-4 border-t border-border/70 px-4 py-4">
-        {search.toolCalls.length ? (
-          <div className="space-y-2">
-            {search.toolCalls.map((toolCall) => (
-              <div
-                key={toolCall.id}
-                className="rounded-lg border border-border/80 bg-[#f8fbfc] px-3 py-3"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-hero">
-                    {toolCall.toolName}
-                  </span>
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                    {toolCall.state}
-                  </span>
-                </div>
-                <p className="mt-2 text-sm leading-6 text-foreground">
-                  {toolCall.inputSummary.trim() || "Waiting for tool input..."}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {toolCall.outputSummary}
-                </p>
-              </div>
-            ))}
-          </div>
-        ) : null}
-
-        <div className="max-h-56 space-y-2 overflow-auto rounded-lg border border-border/80 bg-[#f8fbfc] p-3">
-          {search.statusHistory.map((entry, index) => (
-            <div
-              key={`${index}-${entry}`}
-              className="text-sm leading-6 text-foreground"
-            >
-              <span className="mr-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                {index + 1}
-              </span>
-              {entry}
-            </div>
-          ))}
-        </div>
-
-        {search.errorMessage ? (
-          <div className="rounded-lg border border-[#f0c7bf] bg-[#fdf3f1] px-3 py-3 text-sm leading-6 text-[#8d4b3e]">
-            {search.errorMessage}
-          </div>
-        ) : null}
+        <Badge variant="outline">
+          {search.finished ? "Trace complete" : "Tracing live"}
+        </Badge>
       </div>
-    </details>
+
+      <div className="space-y-3">
+        {search.toolCalls.map((toolCall) => (
+          <Tool
+            key={toolCall.id}
+            className="shadow-[0_10px_26px_rgba(43,52,55,0.04)]"
+            defaultOpen={toolCall.state !== "output-available" || !search.finished}
+          >
+            <ToolHeader
+              state={toolCall.state}
+              title={toolCall.toolName.replace(/^mcp__/, "").replaceAll("__", " / ").replaceAll("_", " ")}
+              type={`tool-${toolCall.toolName}`}
+            />
+            <ToolContent>
+              <ToolInput input={toolCall.inputSummary.trim() || "Waiting for tool input..."} />
+              <ToolOutput
+                errorText={toolCall.state === "output-error" ? toolCall.outputSummary : undefined}
+                output={toolCall.state === "output-error" ? undefined : toolCall.outputSummary}
+              />
+            </ToolContent>
+          </Tool>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -529,10 +568,12 @@ export function AskPage({
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             {activeSearch.profile === "hypothesis" ? "Generate Hypothesis" : "Ask CryoLens"}
           </p>
-          <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-            <span className={`h-2 w-2 rounded-full ${activeSearch.finished ? "bg-[#6a7f71]" : "bg-[#b68748]"}`} />
-            {activeSearch.statusMessage}
-          </p>
+          <div className="mt-2 space-y-2">
+            <ResearchPhaseBadge search={activeSearch} />
+            <p className="text-sm text-muted-foreground">
+              {activeSearch.statusMessage}
+            </p>
+          </div>
         </div>
         <Button
           className="h-9 px-3 text-[11px] font-semibold uppercase tracking-[0.14em]"
@@ -544,26 +585,24 @@ export function AskPage({
       </div>
 
       <div className="flex-1 space-y-6 pb-12">
-        {[
-          { id: "user", role: "user" as const, content: activeSearch.prompt },
-          {
-            id: "assistant",
-            role: "assistant" as const,
-            content: activeSearch.assistantText.trim()
+        <Fragment>
+          <ConversationMessage
+            content={activeSearch.prompt}
+            role="user"
+          />
+          <ResearchToolStack search={activeSearch} />
+          <ConversationMessage
+            content={activeSearch.assistantText.trim()
               ? activeSearch.assistantText
-              : activeSearch.profile === "hypothesis"
-                ? "Generating an evidence-backed hypothesis from the live cryoLens dataset..."
-                : "Researching the live cryoLens dataset...",
-          },
-        ].map((message) => (
-          <Fragment key={message.id}>
-            <ConversationMessage
-              content={message.content}
-              isStreaming={message.role === "assistant" && !activeSearch.finished}
-              role={message.role}
-            />
-          </Fragment>
-        ))}
+              : activeSearch.errorMessage
+                ? activeSearch.errorMessage
+                : activeSearch.profile === "hypothesis"
+                  ? "Generating an evidence-backed hypothesis from the live cryoLens dataset..."
+                  : "Researching the live cryoLens dataset..."}
+            isStreaming={!activeSearch.finished}
+            role="assistant"
+          />
+        </Fragment>
 
         {activeSearch.savedHypothesisCard ? (
           <HypothesisDraftCard
@@ -571,8 +610,6 @@ export function AskPage({
             onOpenHypotheses={onOpenHypotheses}
           />
         ) : null}
-
-        <ResearchTrace search={activeSearch} />
       </div>
 
       <div className="mt-auto pt-6">

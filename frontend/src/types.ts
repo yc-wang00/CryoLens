@@ -71,7 +71,7 @@ export interface Hypothesis {
 export interface AgentToolCall {
   id: string;
   toolName: string;
-  state: "queued" | "running" | "completed";
+  state: "input-streaming" | "input-available" | "output-available" | "output-error";
   inputSummary: string;
   outputSummary: string;
 }
