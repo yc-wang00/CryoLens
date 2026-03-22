@@ -30,6 +30,7 @@ export type AgentSearchEvent =
   | { type: "tool_start"; name: string }
   | { type: "tool_input_delta"; text: string }
   | { type: "tool_end"; name: string; input: string }
+  | { type: "tool_output"; output: string }
   | { type: "result"; text: string }
   | {
       type: "hypothesis_saved";
@@ -302,6 +303,28 @@ function extractResultText(message) {
   return answerText.trim() || preToolText.trim();
 }
 
+function formatToolResultPayload(payload) {
+  let value = payload;
+
+  if (typeof value === "string") {
+    try {
+      value = JSON.parse(value);
+    } catch {
+      return value;
+    }
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  try {
+    return JSON.stringify(value, null, 2);
+  } catch {
+    return String(value);
+  }
+}
+
 try {
   for await (const message of query({
     prompt,
@@ -350,6 +373,18 @@ try {
         currentTool = null;
         currentToolInput = "";
       }
+    }
+
+    if (
+      message &&
+      typeof message === "object" &&
+      "tool_use_result" in message &&
+      message.tool_use_result
+    ) {
+      emit({
+        type: "tool_output",
+        output: formatToolResultPayload(message.tool_use_result),
+      });
     }
 
     if ((message.type === "assistant" || message.type === "assistant_message") && !answerText.trim()) {
