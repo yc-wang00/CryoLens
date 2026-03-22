@@ -4,17 +4,17 @@ interface BadgeProps {
 }
 
 const variants = {
-  primary: "bg-primary-container text-on-primary-container",
-  secondary: "bg-secondary-container text-on-secondary-container",
-  tertiary: "bg-tertiary-container text-on-tertiary-container",
-  neutral: "bg-surface-highest text-on-surface-variant",
-  terracotta: "bg-terracotta/10 text-terracotta",
+  primary: "bg-primary-container/60 text-on-primary-container",
+  secondary: "bg-secondary-container/60 text-on-secondary-container",
+  tertiary: "bg-tertiary-container/60 text-on-tertiary-container",
+  neutral: "bg-surface-high text-on-surface-variant",
+  terracotta: "bg-terracotta-muted text-terracotta",
 };
 
 export function Badge({ children, variant = "neutral" }: BadgeProps) {
   return (
     <span
-      className={`${variants[variant]} text-[10px] font-label font-bold px-2 py-0.5 rounded-sm uppercase tracking-tighter`}
+      className={`${variants[variant]} text-[10px] font-medium px-1.5 py-0.5 rounded-xs uppercase tracking-[0.04em] leading-none inline-flex items-center`}
     >
       {children}
     </span>

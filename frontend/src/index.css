@@ -1,104 +1,106 @@
 @import "tailwindcss";
 
 /*
- * CryoLens Design System — Neo-Minimal
- * Derived from Stitch (Google Design LRM)
+ * CryoLens Design System — NeoLab
  *
- * Palette: Material Design 3 semantic surfaces
- * Fonts: Manrope (headlines), Inter (body/labels)
- * Accent: Terracotta — warm, distinctive, scientific
- * Radius: Tight, architectural (2px base)
+ * Inspired by Palantir Foundry / AIP aesthetic:
+ * - Geist Sans (variable) for all text
+ * - Geist Mono for data, SMILES, DOIs, code
+ * - M3 surface hierarchy for layered depth
+ * - Terracotta accent — warm against cool surfaces
+ * - Tight radius, editorial uppercase micro-labels
+ * - Data-dense but breathing, architectural precision
  */
 
+@font-face {
+  font-family: "Geist";
+  src: url("/node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  /* Primary — muted blue-grey */
+  /* Primary — slate blue instrument */
   --color-primary: #4f6073;
-  --color-primary-dim: #435467;
+  --color-primary-dim: #3d4d5e;
   --color-primary-container: #d2e4fb;
-  --color-primary-fixed: #d2e4fb;
-  --color-primary-fixed-dim: #c4d6ed;
   --color-on-primary: #f5f8ff;
   --color-on-primary-container: #425366;
-  --color-on-primary-fixed: #304153;
-  --color-inverse-primary: #d5e7fe;
 
-  /* Secondary — sage green */
+  /* Secondary — sage/viability green */
   --color-secondary: #49655b;
   --color-secondary-dim: #3d594f;
   --color-secondary-container: #cae9dd;
-  --color-secondary-fixed: #cae9dd;
-  --color-secondary-fixed-dim: #bddbcf;
-  --color-on-secondary: #e4fff3;
   --color-on-secondary-container: #3c574e;
-  --color-on-secondary-fixed: #29453c;
 
   /* Tertiary — cool steel */
   --color-tertiary: #52616b;
-  --color-tertiary-dim: #46555f;
   --color-tertiary-container: #e0f0fc;
-  --color-tertiary-fixed: #e0f0fc;
-  --color-on-tertiary: #f4f9ff;
   --color-on-tertiary-container: #4c5a64;
 
-  /* Accent — terracotta */
+  /* Accent — terracotta signal */
   --color-terracotta: #C45B3D;
   --color-terracotta-dim: #A34931;
+  --color-terracotta-muted: rgba(196, 91, 61, 0.08);
 
   /* Error */
   --color-error: #9f403d;
-  --color-error-dim: #4e0309;
   --color-error-container: #fe8983;
-  --color-on-error: #fff7f6;
-  --color-on-error-container: #752121;
 
-  /* Surface hierarchy — the depth system */
-  --color-surface: #f8f9fa;
+  /* Surface system — 8-level depth */
+  --color-surface: #f7f8f9;
   --color-surface-dim: #d1dce0;
-  --color-surface-bright: #f8f9fa;
   --color-surface-lowest: #ffffff;
-  --color-surface-low: #f1f4f6;
-  --color-surface-container: #eaeff1;
-  --color-surface-high: #e3e9ec;
-  --color-surface-highest: #dbe4e7;
+  --color-surface-low: #f0f2f4;
+  --color-surface-container: #e8ecee;
+  --color-surface-high: #dfe4e7;
+  --color-surface-highest: #d5dce0;
   --color-surface-variant: #dbe4e7;
-  --color-surface-tint: #4f6073;
-  --color-on-surface: #2b3437;
-  --color-on-surface-variant: #586064;
-  --color-on-background: #2b3437;
-  --color-background: #f8f9fa;
+  --color-on-surface: #1a1f23;
+  --color-on-surface-variant: #4e5559;
 
   /* Outline */
-  --color-outline: #737c7f;
-  --color-outline-variant: #abb3b7;
+  --color-outline: #6e767a;
+  --color-outline-variant: #a3adb2;
 
   /* Inverse */
   --color-inverse-surface: #0c0f10;
   --color-inverse-on-surface: #9b9d9e;
 
-  /* Typography */
-  --font-headline: "Manrope", sans-serif;
-  --font-body: "Inter", sans-serif;
-  --font-label: "Inter", sans-serif;
+  /* Fonts */
+  --font-sans: "Geist", system-ui, -apple-system, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
 
-  /* Radius — architectural, tight */
-  --radius-sm: 0.125rem;
-  --radius-DEFAULT: 0.125rem;
-  --radius-md: 0.25rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  /* Radius — architectural, intentionally tight */
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-DEFAULT: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
 }
 
+/* ---- Base ---- */
+
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "ss02", "cv01";
   background: var(--color-surface);
   color: var(--color-on-surface);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-headline);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.011em;
 }
 
 ::selection {
@@ -106,16 +108,36 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-on-secondary-container);
 }
 
+/* ---- Material Symbols ---- */
+
 .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" -25, "opsz" 20;
+  font-size: 18px;
   vertical-align: middle;
-  font-size: 1.25rem;
+  line-height: 1;
 }
+
+/* ---- Scrollbar ---- */
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-outline-variant); border-radius: 99px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--color-outline); }
+
+/* ---- Utilities ---- */
 
 .terracotta-gradient {
   background: linear-gradient(135deg, #C45B3D 0%, #A34931 100%);
 }
 
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-surface-highest); border-radius: 10px; }
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "ss01", "ss02";
+}
+
+/* Tabular nums for data alignment */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}

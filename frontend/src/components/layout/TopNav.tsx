@@ -9,24 +9,24 @@ const navItems = [
 
 export function TopNav() {
   return (
-    <nav className="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex items-center justify-between px-8 h-14 shadow-[0_1px_0_0_rgba(0,0,0,0.05)]">
-      <div className="flex items-center gap-8">
-        <NavLink
-          to="/"
-          className="text-lg font-extrabold tracking-tighter text-[#1A2B3C] uppercase font-headline"
-        >
-          CryoLens
+    <nav className="fixed top-0 w-full z-50 h-12 bg-surface-lowest/80 backdrop-blur-xl border-b border-outline-variant/15 flex items-center justify-between px-5">
+      <div className="flex items-center gap-7">
+        <NavLink to="/" className="flex items-center gap-2">
+          <div className="w-5 h-5 bg-terracotta rounded-xs" />
+          <span className="text-[13px] font-semibold tracking-[-0.04em] text-on-surface uppercase">
+            CryoLens
+          </span>
         </NavLink>
-        <div className="hidden md:flex gap-6 items-center">
+        <div className="hidden md:flex items-center gap-0.5">
           {navItems.map(({ to, label }) => (
             <NavLink
               key={to}
               to={to}
               className={({ isActive }) =>
-                `font-headline tracking-[-0.02em] font-medium text-sm transition-all duration-200 active:scale-[0.98] ${
+                `px-3 py-1 text-[12px] tracking-[-0.01em] font-medium transition-colors rounded-sm ${
                   isActive
-                    ? "text-[#1A2B3C] border-b border-[#1A2B3C] pb-1"
-                    : "text-slate-500 hover:text-[#1A2B3C]"
+                    ? "text-on-surface bg-surface-high/60"
+                    : "text-outline hover:text-on-surface"
                 }`
               }
             >
@@ -35,22 +35,19 @@ export function TopNav() {
           ))}
         </div>
       </div>
-      <div className="flex items-center gap-4">
-        <div className="relative flex items-center">
-          <span className="material-symbols-outlined absolute left-3 text-outline-variant text-sm">
+      <div className="flex items-center gap-2">
+        <div className="relative">
+          <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-outline-variant !text-[15px]">
             search
           </span>
           <input
-            className="bg-surface-low border-none border-b border-outline-variant focus:border-primary focus:ring-0 text-sm py-1.5 pl-10 pr-4 w-64 rounded-sm"
-            placeholder="Search archives..."
+            className="bg-surface-low border border-outline-variant/20 focus:border-outline focus:outline-none text-[12px] py-1.5 pl-8 pr-3 w-52 rounded-sm text-on-surface placeholder:text-outline-variant"
+            placeholder="Search..."
             type="text"
           />
         </div>
-        <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">
-          settings
-        </button>
-        <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">
-          account_circle
+        <button className="w-7 h-7 flex items-center justify-center text-outline hover:text-on-surface transition-colors">
+          <span className="material-symbols-outlined !text-[16px]">tune</span>
         </button>
       </div>
     </nav>

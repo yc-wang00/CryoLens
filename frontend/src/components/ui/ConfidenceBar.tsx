@@ -11,20 +11,18 @@ export function ConfidenceBar({ value, label }: ConfidenceBarProps) {
   const [barColor, textColor] = color.split(" ");
 
   return (
-    <div className="flex flex-col items-end gap-2">
-      <div className="flex items-center gap-1">
-        <span className={`text-xs font-headline font-bold ${textColor}`}>
-          {value}%
-        </span>
-        <div className="w-16 h-1 bg-surface-container">
-          <div
-            className={`h-full ${barColor}`}
-            style={{ width: `${value}%` }}
-          />
-        </div>
+    <div className="flex items-center gap-2">
+      <span className={`tabular-nums text-[11px] font-medium ${textColor}`}>
+        {value}%
+      </span>
+      <div className="w-14 h-[3px] bg-surface-container rounded-full overflow-hidden">
+        <div
+          className={`h-full rounded-full ${barColor}`}
+          style={{ width: `${value}%` }}
+        />
       </div>
       {label && (
-        <span className="text-[9px] font-label font-bold text-on-surface-variant uppercase">
+        <span className="text-[10px] text-outline-variant uppercase tracking-[0.04em]">
           {label}
         </span>
       )}
