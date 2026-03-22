@@ -1,13 +1,9 @@
 :{$PORT:3000}
 
-handle /api/agent-search {
-	reverse_proxy https://cryolens.vercel.app {
-		header_up Host cryolens.vercel.app
-	}
-}
-
 handle /api/* {
-	reverse_proxy {$API_URL:http://localhost:8000}
+	reverse_proxy {$API_URL:http://localhost:8000} {
+		flush_interval -1
+	}
 }
 
 handle {
