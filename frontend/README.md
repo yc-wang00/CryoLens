@@ -30,6 +30,7 @@ This package contains the Vite React hackathon frontend for CryoSight.
 - The Ask page still depends on the local frontend API proxy at `/api/cryo-lens-dataset`, which forwards to the FastAPI backend endpoint `/api/v1/cryo-lens/dataset` for the backend-owned research shell.
 - The Ask sandbox route at `/api/agent-search` remains server-owned and keeps SQL and agent credentials off the browser.
 - The Ask page now uses a Vercel Function at `/api/agent-search` to create a sandboxed Claude research run. That function owns the Anthropic API key, the remote MCP URL, and the Vercel Sandbox lifecycle.
+- For local Ask development, use the dedicated local agent API server instead of relying on `vercel dev` routing. The UI can call `VITE_AGENT_API_BASE_URL=http://127.0.0.1:3210` while the local server reuses the same sandbox orchestration code as the deployed route.
 - Override with:
   - `VITE_API_BASE_URL`
   - `VITE_AGENT_API_BASE_URL`
@@ -49,7 +50,7 @@ This package contains the Vite React hackathon frontend for CryoSight.
   - `VERCEL_OIDC_TOKEN`
 - Keep those values out of browser env files. Only `VITE_*` values belong in `frontend/.env.local`.
 - Vercel Sandbox auth requires `VERCEL_OIDC_TOKEN`, typically provisioned by `vercel env pull`.
-- Local full-stack development for the Ask page should use `vercel dev` from `frontend/` so the Vercel Function is available. `pnpm dev` still serves the client UI, but it does not run the sandbox function.
+- Local Ask development should use `pnpm run dev:ask`, which starts both the Vite UI and the standalone local Ask API server. `vercel dev` is still useful to emulate deployed routing, but it is not the primary local Ask workflow.
 - To prepare a reusable sandbox snapshot, run:
 
 ```bash
@@ -57,12 +58,18 @@ cd frontend
 pnpm sandbox:bootstrap
 ```
 
+## Agent Skills
+
+- Lightweight Claude SDK skills can live in `frontend/agent-skills/`.
+- The first starter skill is [`public-bio-research`](/home/kenjipcx/CryoSight/frontend/agent-skills/public-bio-research/SKILL.md), which is designed for public, no-key research against sources like PubChem, ChEMBL, AlphaFold DB, and ZINC before any heavy compute workflow is introduced.
+- Keep heavy chemistry and simulation work in separate skills later instead of expanding the lightweight research skill into a giant runtime contract.
+
 ## Minimal Example
 
 ```bash
 cd frontend
 pnpm install
-pnpm dev
+pnpm run dev:ask
 ```
 
 Browser env example:
