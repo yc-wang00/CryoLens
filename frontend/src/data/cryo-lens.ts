@@ -1,20 +1,24 @@
 /**
  * CRYOLENS DATA ADAPTER
  * =====================
- * Fetch the normalized cryoLens dataset from the FastAPI backend, with a
- * fallback to curated mock data.
+ * Merge backend-owned Ask data with browser-side read-only display data.
+ *
+ * KEY CONCEPTS:
+ * - Ask and agent search remain backend-owned
+ * - display pages can read directly from Supabase under RLS
+ * - fallback stays graceful when either live source is unavailable
  *
  * MEMORY REFERENCES:
  * - MEM-0004
  * - MEM-0005
- * - MEM-0006
+ * - MEM-0007
+ * - MEM-0008
  */
 
 import type {
   AgentToolCall,
   Cocktail,
   EvidenceFinding,
-  ExperimentDraft,
   Hypothesis,
   Molecule,
   SourceDocument,
@@ -29,22 +33,17 @@ import {
   molecules as fallbackMolecules,
   sources as fallbackSources,
 } from "./mock-data";
+import { fetchCryoLensBrowserDisplayData } from "./cryo-lens-browser";
+import type { CryoLensDataset, CryoLensStoryStats } from "./cryo-lens-contract";
 
-export interface ExperimentRecord {
-  id: string;
-  title: string;
-  paperTitle: string;
-  assayMethod: string;
-  organism: string;
-  cellType: string;
-  temperature: string;
-  exposure: string;
-  protocolName: string;
-  outcomeStatus: string;
-  measurementSummary: string;
-  notes: string;
-  sourceLocation: string;
-}
+export type { CryoLensDataset, ExperimentRecord } from "./cryo-lens-contract";
+
+const FALLBACK_MILESTONE_YEARS: Record<string, number> = {
+  DP6: 1984,
+  FA_GLY_12M_4C: 2025,
+  M22: 2004,
+  VS55: 1985,
+};
 
 export interface SearchResult {
   answer: string;
@@ -57,24 +56,101 @@ export interface SearchResult {
   suggestedHypothesis?: Hypothesis;
 }
 
-export interface CryoLensDataset {
-  appStats: typeof fallbackAppStats;
-  molecules: Molecule[];
-  cocktails: Cocktail[];
-  findings: EvidenceFinding[];
-  sources: SourceDocument[];
-  hypotheses: Hypothesis[];
-  experiments: ExperimentRecord[];
-  experimentDrafts: ExperimentDraft[];
-  savedPrompts: string[];
-  dataSource: "live" | "mock";
-  dataSourceLabel: string;
-  loadLog: string[];
+function buildFallbackStoryStats(): CryoLensStoryStats {
+  const sourcesById = new Map(fallbackSources.map((source) => [source.id, source]));
+  const categoryCounts = new Map<string, number>();
+  const paperCountsByYear = new Map<number, number>();
+  const findingCountsByYear = new Map<number, number>();
+  const experimentCountsByYear = new Map<number, number>();
+
+  for (const source of fallbackSources) {
+    paperCountsByYear.set(source.year, (paperCountsByYear.get(source.year) ?? 0) + 1);
+  }
+
+  for (const finding of fallbackFindings) {
+    const source = sourcesById.get(finding.sourceId);
+    if (source) {
+      findingCountsByYear.set(source.year, (findingCountsByYear.get(source.year) ?? 0) + 1);
+    }
+    categoryCounts.set(finding.modality, (categoryCounts.get(finding.modality) ?? 0) + 1);
+  }
+
+  const fallbackExperimentYear = Math.max(...fallbackSources.map((source) => source.year));
+  for (const draft of experimentDrafts) {
+    void draft;
+    experimentCountsByYear.set(
+      fallbackExperimentYear,
+      (experimentCountsByYear.get(fallbackExperimentYear) ?? 0) + 1,
+    );
+  }
+
+  const milestones = fallbackCocktails
+    .filter((cocktail) => FALLBACK_MILESTONE_YEARS[cocktail.name] !== undefined || FALLBACK_MILESTONE_YEARS[cocktail.id] !== undefined)
+    .map((cocktail) => {
+      const year = FALLBACK_MILESTONE_YEARS[cocktail.name] ?? FALLBACK_MILESTONE_YEARS[cocktail.id] ?? fallbackExperimentYear;
+      const linkedFindings = fallbackFindings.filter((finding) => (
+        cocktail.components.some((component) => finding.components.some((name) => name.toLowerCase() === component.name.toLowerCase()))
+      )).length;
+
+      return {
+        id: cocktail.id,
+        name: cocktail.name,
+        year,
+        type: cocktail.type,
+        note: cocktail.notes,
+        referenceDoi: null,
+        referenceTitle: null,
+        linkedFindings,
+        components: cocktail.components.map((component) => component.name),
+      };
+    })
+    .sort((left, right) => left.year - right.year || left.name.localeCompare(right.name));
+
+  const paperYears = fallbackSources.map((source) => source.year);
+  const milestoneYears = milestones.map((milestone) => milestone.year);
+  const firstYear = Math.min(...paperYears, ...milestoneYears);
+  const lastYear = Math.max(...paperYears, ...milestoneYears);
+
+  let cumulativePapers = 0;
+  let cumulativeFindings = 0;
+  const yearly = [];
+
+  for (let year = firstYear; year <= lastYear; year += 1) {
+    const papers = paperCountsByYear.get(year) ?? 0;
+    const findings = findingCountsByYear.get(year) ?? 0;
+    cumulativePapers += papers;
+    cumulativeFindings += findings;
+    yearly.push({
+      year,
+      papers,
+      findings,
+      experiments: experimentCountsByYear.get(year) ?? 0,
+      cumulativePapers,
+      cumulativeFindings,
+    });
+  }
+
+  return {
+    firstFormulationYear: Math.min(...milestoneYears),
+    firstPaperYear: Math.min(...paperYears),
+    lastYear,
+    yearly,
+    milestones,
+    topFindingCategories: [...categoryCounts.entries()]
+      .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
+      .slice(0, 5)
+      .map(([label, count]) => ({
+        label: label.replaceAll("_", " "),
+        count,
+        sharePct: Math.round((count / fallbackFindings.length) * 1000) / 10,
+      })),
+  };
 }
 
 function buildFallbackDataset(loadLog: string[] = []): CryoLensDataset {
   return {
     appStats: fallbackAppStats,
+    storyStats: buildFallbackStoryStats(),
     molecules: fallbackMolecules,
     cocktails: fallbackCocktails,
     findings: fallbackFindings,
@@ -114,27 +190,19 @@ function buildCandidateBaseUrls(): string[] {
   return [...new Set(candidates)];
 }
 
-export async function fetchCryoLensDataset(
-  onLog?: (message: string) => void,
-): Promise<CryoLensDataset> {
-  const attemptedBaseUrls = buildCandidateBaseUrls();
-  const loadLog: string[] = [];
-  let lastError: unknown = null;
-  const pushLog = (message: string): void => {
-    loadLog.push(message);
-    onLog?.(message);
-  };
-
-  for (const baseUrl of attemptedBaseUrls) {
+async function fetchBackendCryoLensDataset(
+  pushLog: (message: string) => void,
+): Promise<Omit<CryoLensDataset, "dataSource" | "dataSourceLabel" | "loadLog">> {
+  for (const baseUrl of buildCandidateBaseUrls()) {
     try {
       const url =
         baseUrl === "/api/cryo-lens-dataset"
           ? baseUrl
           : `${baseUrl}/api/v1/cryo-lens/dataset`;
-      pushLog(`Trying dataset source: ${url}`);
+      pushLog(`Trying backend Ask dataset source: ${url}`);
       const response = await fetch(url);
       if (!response.ok) {
-        pushLog(`Dataset request failed with status ${response.status}: ${url}`);
+        pushLog(`Backend Ask dataset request failed with status ${response.status}: ${url}`);
         throw new Error(`Failed to fetch backend cryoLens dataset: ${response.status}`);
       }
 
@@ -144,28 +212,85 @@ export async function fetchCryoLensDataset(
       >;
       const backendBaseUrl = response.headers.get("x-cryo-backend-base-url");
       pushLog(
-        `Dataset request succeeded via ${url}${backendBaseUrl ? ` -> backend ${backendBaseUrl}` : ""}`,
+        `Backend Ask dataset succeeded via ${url}${backendBaseUrl ? ` -> backend ${backendBaseUrl}` : ""}`,
       );
-      return {
-        ...dataset,
-        dataSource: "live",
-        dataSourceLabel: `Live backend dataset · ${baseUrl || "same-origin proxy"}`,
-        loadLog,
-      };
+      return dataset;
     } catch (error) {
-      pushLog(`Dataset request error for ${baseUrl}: ${error instanceof Error ? error.message : String(error)}`);
-      lastError = error;
+      pushLog(`Backend Ask dataset error: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
-  console.error(
-    "Failed to fetch cryoLens dataset from backend, falling back to mock data.",
-    lastError,
-  );
-  pushLog(
-    `Falling back to mock dataset: ${lastError instanceof Error ? lastError.message : String(lastError)}`,
-  );
-  return buildFallbackDataset(loadLog);
+  throw new Error("Backend Ask dataset is unavailable.");
+}
+
+export async function fetchCryoLensDataset(
+  onLog?: (message: string) => void,
+): Promise<CryoLensDataset> {
+  const loadLog: string[] = [];
+  const pushLog = (message: string): void => {
+    loadLog.push(message);
+    onLog?.(message);
+  };
+  const [browserDisplayResult, backendDatasetResult] = await Promise.allSettled([
+    fetchCryoLensBrowserDisplayData(pushLog),
+    fetchBackendCryoLensDataset(pushLog),
+  ]);
+
+  const fallbackDataset = buildFallbackDataset(loadLog);
+
+  const baseDataset = backendDatasetResult.status === "fulfilled"
+    ? backendDatasetResult.value
+    : fallbackDataset;
+
+  if (backendDatasetResult.status === "rejected") {
+    console.error(
+      "Failed to fetch backend Ask dataset, falling back to the curated mock shell.",
+      backendDatasetResult.reason,
+    );
+    pushLog(
+      `Backend Ask dataset fell back to mock: ${backendDatasetResult.reason instanceof Error ? backendDatasetResult.reason.message : String(backendDatasetResult.reason)}`,
+    );
+  }
+
+  const mergedDataset = browserDisplayResult.status === "fulfilled"
+    ? {
+        ...baseDataset,
+        appStats: browserDisplayResult.value.appStats,
+        storyStats: browserDisplayResult.value.storyStats,
+        molecules: browserDisplayResult.value.molecules,
+        cocktails: browserDisplayResult.value.cocktails,
+        sources: browserDisplayResult.value.sources,
+        experiments: browserDisplayResult.value.experiments,
+      }
+    : baseDataset;
+
+  if (browserDisplayResult.status === "rejected") {
+    console.error(
+      "Failed to fetch browser-side cryoLens display data, preserving backend/mock display data.",
+      browserDisplayResult.reason,
+    );
+    pushLog(
+      `Browser display data fell back to backend/mock: ${browserDisplayResult.reason instanceof Error ? browserDisplayResult.reason.message : String(browserDisplayResult.reason)}`,
+    );
+  }
+
+  const isAnyLiveSourceAvailable =
+    browserDisplayResult.status === "fulfilled" || backendDatasetResult.status === "fulfilled";
+
+  const dataSourceLabel = browserDisplayResult.status === "fulfilled" && backendDatasetResult.status === "fulfilled"
+    ? "Hybrid live data · browser Supabase display + backend Ask"
+    : browserDisplayResult.status === "fulfilled"
+      ? "Live browser display · backend Ask fallback"
+      : backendDatasetResult.status === "fulfilled"
+        ? "Live backend dataset"
+        : fallbackDataset.dataSourceLabel;
+
+  return {
+    ...mergedDataset,
+    dataSource: isAnyLiveSourceAvailable ? "live" : "mock",
+    dataSourceLabel,
+    loadLog,
+  };
 }
 
 export function searchCryoLensDataset(
@@ -229,7 +354,7 @@ export function searchCryoLensDataset(
     why: [
       `${finalEvidence.length} findings matched the query terms across claims, tags, and linked sources.`,
       `${linkedMolecules.length} molecules and ${linkedCocktails.length} formulations were linked from the same pass.`,
-      "Results are coming from the live cryoLens dataset through the FastAPI backend adapter.",
+      "Results are coming from the live CryoSight hybrid dataset, with browser display reads and backend-owned research flows.",
     ],
     evidence: finalEvidence,
     linkedMolecules,

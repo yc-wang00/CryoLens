@@ -16,10 +16,14 @@ from app.schemas.cryo_lens import (
     CryoLensExperimentDraft,
     CryoLensExperimentRecord,
     CryoLensFinding,
+    CryoLensFormulationMilestone,
     CryoLensHypothesis,
     CryoLensMolecule,
     CryoLensSourceDocument,
     CryoLensStats,
+    CryoLensStoryCategory,
+    CryoLensStoryStats,
+    CryoLensStoryYear,
 )
 
 
@@ -33,6 +37,160 @@ def _confidence_to_number(value: str | None) -> float:
     if value == "low":
         return 0.58
     return 0.95
+
+
+def _is_benchmark_formulation(name: str) -> bool:
+    lower_name = name.lower()
+    return lower_name.startswith(("vs", "m22", "dp", "pvs", "a", "b"))
+
+
+def _dedupe_component_names(
+    component_rows: list[dict[str, object]],
+    compound_by_id: dict[object, dict[str, object]],
+) -> list[str]:
+    return list(
+        dict.fromkeys(
+            str(compound["name"])
+            for component in component_rows
+            if (
+                compound := compound_by_id.get(str(component["compound_id"]))
+            ) is not None
+        )
+    )
+
+
+def _build_story_stats(
+    formulations: list[dict[str, object]],
+    papers: list[dict[str, object]],
+    findings: list[dict[str, object]],
+    experiments: list[dict[str, object]],
+    findings_by_formulation: dict[str, list[dict[str, object]]],
+    components_by_formulation: dict[str, list[dict[str, object]]],
+    compound_by_id: dict[object, dict[str, object]],
+    paper_by_doi: dict[object, dict[str, object]],
+) -> CryoLensStoryStats:
+    paper_counts_by_year: dict[int, int] = defaultdict(int)
+    finding_counts_by_year: dict[int, int] = defaultdict(int)
+    experiment_counts_by_year: dict[int, int] = defaultdict(int)
+    category_counts: dict[str, int] = defaultdict(int)
+
+    paper_years: list[int] = []
+    formulation_years: list[int] = []
+
+    for paper in papers:
+        year = int(paper["year"])
+        paper_years.append(year)
+        paper_counts_by_year[year] += 1
+
+    for finding in findings:
+        paper = paper_by_doi.get(str(finding["paper_doi"]))
+        if paper is not None:
+            finding_counts_by_year[int(paper["year"])] += 1
+        category_counts[str(finding["category"])] += 1
+
+    for experiment in experiments:
+        paper = paper_by_doi.get(str(experiment["paper_doi"]))
+        if paper is not None:
+            experiment_counts_by_year[int(paper["year"])] += 1
+
+    milestones: list[CryoLensFormulationMilestone] = []
+    for formulation in formulations:
+        year_value = formulation.get("year_introduced")
+        if year_value is None:
+            continue
+
+        year = int(year_value)
+        formulation_years.append(year)
+        formulation_id = str(formulation["id"])
+        reference_doi = (
+            str(formulation["reference_doi"])
+            if formulation.get("reference_doi")
+            else None
+        )
+        reference_paper = (
+            paper_by_doi.get(reference_doi)
+            if reference_doi is not None
+            else None
+        )
+        component_names = _dedupe_component_names(
+            components_by_formulation.get(formulation_id, []),
+            compound_by_id,
+        )
+        milestones.append(
+            CryoLensFormulationMilestone(
+                id=formulation_id,
+                name=str(formulation["name"]),
+                year=year,
+                type=(
+                    "benchmark"
+                    if _is_benchmark_formulation(str(formulation["name"]))
+                    else "mixture"
+                ),
+                note=str(
+                    formulation.get("description")
+                    or formulation.get("notes")
+                    or (
+                        ", ".join(component_names[:3])
+                        if component_names
+                        else "Formulation milestone in cryoLens."
+                    )
+                ),
+                referenceDoi=reference_doi,
+                referenceTitle=(
+                    str(reference_paper["title"])
+                    if reference_paper is not None
+                    else None
+                ),
+                linkedFindings=len(findings_by_formulation.get(formulation_id, [])),
+                components=component_names,
+            )
+        )
+
+    years = [*paper_years, *formulation_years]
+    if not years:
+        return CryoLensStoryStats()
+
+    first_year = min(years)
+    last_year = max(years)
+
+    cumulative_papers = 0
+    cumulative_findings = 0
+    yearly = []
+    for year in range(first_year, last_year + 1):
+        cumulative_papers += paper_counts_by_year[year]
+        cumulative_findings += finding_counts_by_year[year]
+        yearly.append(
+            CryoLensStoryYear(
+                year=year,
+                papers=paper_counts_by_year[year],
+                findings=finding_counts_by_year[year],
+                experiments=experiment_counts_by_year[year],
+                cumulativePapers=cumulative_papers,
+                cumulativeFindings=cumulative_findings,
+            )
+        )
+
+    total_findings = len(findings)
+    top_finding_categories = [
+        CryoLensStoryCategory(
+            label=_humanize(category),
+            count=count,
+            sharePct=round((count / total_findings) * 100, 1) if total_findings else 0.0,
+        )
+        for category, count in sorted(
+            category_counts.items(),
+            key=lambda item: (-item[1], item[0]),
+        )[:5]
+    ]
+
+    return CryoLensStoryStats(
+        firstFormulationYear=min(formulation_years) if formulation_years else None,
+        firstPaperYear=min(paper_years) if paper_years else None,
+        lastYear=last_year,
+        yearly=yearly,
+        milestones=sorted(milestones, key=lambda item: (item.year, item.name)),
+        topFindingCategories=top_finding_categories,
+    )
 
 
 async def _fetch_table(
@@ -88,7 +246,7 @@ async def fetch_cryo_lens_dataset() -> CryoLensDatasetResponse:
             ),
             _fetch_table(
                 client,
-                "formulations?select=id,name,full_name,total_concentration,concentration_unit,description,notes&limit=200",
+                "formulations?select=id,name,full_name,total_concentration,concentration_unit,description,notes,year_introduced,reference_doi&limit=200",
             ),
             _fetch_table(
                 client,
@@ -338,9 +496,7 @@ async def fetch_cryo_lens_dataset() -> CryoLensDatasetResponse:
             CryoLensCocktail(
                 id=formulation_id,
                 name=str(formulation["name"]),
-                type="benchmark"
-                if str(formulation["name"]).lower().startswith(("vs", "m22", "dp", "pvs", "a", "b"))
-                else "mixture",
+                type="benchmark" if _is_benchmark_formulation(str(formulation["name"])) else "mixture",
                 tissueTags=tissue_tags,
                 notes=(
                     str(formulation["description"])
@@ -366,6 +522,17 @@ async def fetch_cryo_lens_dataset() -> CryoLensDatasetResponse:
                 ],
             )
         )
+
+    story_stats = _build_story_stats(
+        formulations=formulations,
+        papers=papers,
+        findings=findings,
+        experiments=experiments,
+        findings_by_formulation=findings_by_formulation,
+        components_by_formulation=components_by_formulation,
+        compound_by_id=compound_by_id,
+        paper_by_doi=paper_by_doi,
+    )
 
     measurements_by_experiment: dict[int, list[dict[str, object]]] = defaultdict(list)
     for measurement in measurements:
@@ -430,6 +597,7 @@ async def fetch_cryo_lens_dataset() -> CryoLensDatasetResponse:
             molecules=len(normalized_molecules),
             structures=len(normalized_cocktails),
         ),
+        storyStats=story_stats,
         molecules=normalized_molecules,
         cocktails=normalized_cocktails,
         findings=normalized_findings,

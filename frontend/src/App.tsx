@@ -110,7 +110,11 @@ function App() {
         <CocktailsPage cocktails={dataset.cocktails} onOpenCocktail={openCocktail} />
       ) : null}
       {!loading && dataset && currentPage === "sources" ? (
-        <SourcesPage onOpenSource={openSource} sources={dataset.sources} />
+        <SourcesPage
+          onOpenSource={openSource}
+          sources={dataset.sources}
+          storyStats={dataset.storyStats}
+        />
       ) : null}
       <Dialog onOpenChange={(open) => (!open ? setPanel({ kind: "none" }) : null)} open={panel.kind !== "none"}>
         <DialogContent className="max-w-3xl" onClose={() => setPanel({ kind: "none" })}>
