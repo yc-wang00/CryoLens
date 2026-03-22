@@ -29,12 +29,16 @@ export interface LiveAgentSearchState {
   toolCalls: AgentToolCall[];
 }
 
-function buildUrl(path: string): string {
-  if (!AGENT_API_BASE_URL) {
-    return path;
+function buildCandidateUrls(path: string): string[] {
+  const candidates = new Set<string>();
+
+  if (AGENT_API_BASE_URL) {
+    candidates.add(`${AGENT_API_BASE_URL}${path}`);
   }
 
-  return `${AGENT_API_BASE_URL}${path}`;
+  candidates.add(path);
+
+  return Array.from(candidates);
 }
 
 function parseEventBlock(block: string): AgentSearchStreamEvent | null {
@@ -56,13 +60,29 @@ export async function streamAgentSearch(
   profile: AgentProfile,
   onEvent: (event: AgentSearchStreamEvent) => void,
 ): Promise<void> {
-  const response = await fetch(buildUrl("/api/agent-search"), {
+  const requestInit: RequestInit = {
     body: JSON.stringify({ prompt, profile }),
     headers: {
       "content-type": "application/json",
     },
     method: "POST",
-  });
+  };
+
+  let response: Response | null = null;
+  let lastError: Error | null = null;
+
+  for (const url of buildCandidateUrls("/api/agent-search")) {
+    try {
+      response = await fetch(url, requestInit);
+      break;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+    }
+  }
+
+  if (!response) {
+    throw lastError ?? new Error("Agent search request failed before reaching the server.");
+  }
 
   if (!response.ok) {
     const fallbackMessage = `Agent search failed with status ${response.status}.`;
