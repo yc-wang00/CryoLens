@@ -4,3 +4,4 @@
 2026-03-22 11:48 UTC | CHANGE | ask,api,cors | Made `/api/agent-search` explicitly handle `OPTIONS` and return permissive CORS headers on JSON and SSE responses so other browser UIs can call the Vercel Ask endpoint directly.
 2026-03-22 12:02 UTC | CHANGE | ask,ui,trace | Replaced the Ask page’s bottom trace drawer with an inline MCP activity stack, added a compact top phase badge, and introduced local AI Elements-style Tool primitives for streamed tool state.
 2026-03-22 12:15 UTC | CHANGE | ask,ui,tools | Captured `tool_use_result` payloads from the Claude Agent SDK bridge and surfaced real MCP result bodies in the Ask tool cards instead of generic completion text.
+2026-03-22 12:38 UTC | CHANGE | ask,vercel,streaming | Switched the deployed Vercel Ask entrypoint to explicit Node SSE writes, restored reliable local `vercel dev` streaming, and made the browser fall back to same-origin `/api/agent-search` when a dead `VITE_AGENT_API_BASE_URL` override is configured.

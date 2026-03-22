@@ -7,6 +7,8 @@ This directory holds server-support modules that should resolve against `fronten
 ## Public API / Entrypoints
 
 - `claude-sandbox.ts`: sandbox orchestration for `api/agent-search.ts`
+- `agent-search-route.ts`: deployed/shared Ask route handler
+- `agent-search-route-local.ts`: local Ask route handler for `node --experimental-strip-types`
 
 ## Minimal Example
 
