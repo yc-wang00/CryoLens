@@ -3,6 +3,7 @@ import { ExternalLink, FlaskConical, Microscope, Quote } from "lucide-react";
 import type {
   Cocktail,
   EvidenceFinding,
+  Hypothesis,
   Molecule,
   SourceDocument,
 } from "../data/mock-data";
@@ -16,6 +17,7 @@ export type PanelState =
   | { kind: "finding"; finding: EvidenceFinding }
   | { kind: "molecule"; molecule: Molecule }
   | { kind: "cocktail"; cocktail: Cocktail }
+  | { kind: "hypothesis"; hypothesis: Hypothesis }
   | { kind: "experiment"; experiment: ExperimentRecord }
   | { kind: "source"; source: SourceDocument };
 
@@ -162,6 +164,51 @@ export function EvidencePanel({ panel }: EvidencePanelProps) {
               </div>
             </div>
           ))}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (panel.kind === "hypothesis") {
+    const { hypothesis } = panel;
+    return (
+      <Card className="glass-panel overflow-hidden">
+        <CardHeader className="border-b border-border/60 bg-panel/60">
+          <Badge className="w-fit" variant="accent">
+            Hypothesis
+          </Badge>
+          <CardTitle className="console-panel-title">{hypothesis.title}</CardTitle>
+          <CardDescription>
+            {hypothesis.benchmark} · {hypothesis.target}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4 pt-5">
+          <div className="rounded-sm border border-border bg-white/80 p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Summary
+            </p>
+            <p className="mt-1 text-sm leading-6 text-foreground">{hypothesis.summary}</p>
+          </div>
+          <div className="rounded-sm border border-border bg-white/80 p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Next step
+            </p>
+            <p className="mt-1 text-sm leading-6 text-foreground">{hypothesis.nextStep}</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-sm border border-border bg-white/80 p-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Status
+              </p>
+              <p className="mt-1 text-sm text-foreground">{hypothesis.status}</p>
+            </div>
+            <div className="rounded-sm border border-border bg-white/80 p-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Linked evidence
+              </p>
+              <p className="mt-1 text-sm text-foreground">{hypothesis.evidenceIds.length}</p>
+            </div>
+          </div>
         </CardContent>
       </Card>
     );

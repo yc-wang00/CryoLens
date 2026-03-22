@@ -33,7 +33,10 @@ export type AgentSearchEvent =
   | { type: "result"; text: string }
   | { type: "error"; message: string };
 
+export type AgentProfile = "research" | "hypothesis";
+
 interface RunSandboxedAgentSearchParams {
+  profile: AgentProfile;
   prompt: string;
   onEvent: (event: AgentSearchEvent) => void;
 }
@@ -106,7 +109,7 @@ function requireEnv(name: string): string {
   return value;
 }
 
-function buildSandboxPackageJson(): string {
+function buildSandboxPackageJsonText(): string {
   return JSON.stringify(
     {
       name: "cryosight-agent-sandbox",
@@ -122,10 +125,10 @@ function buildSandboxPackageJson(): string {
   );
 }
 
-function buildSandboxSkill(): string {
+function buildSandboxSkill(profile: AgentProfile): string {
   return `---
 name: cryo-sql-research
-description: Use when answering CryoSight Ask-page research prompts against the live cryoLens dataset exported from the backend. Inspect the dataset summary first, use the bounded search tools, and cite exact result counts and entities.
+description: Use when answering CryoSight Ask-page ${profile} prompts against the live cryoLens dataset exported from the backend. Inspect the dataset summary first, use the bounded search tools, and cite exact result counts and entities.
 ---
 
 # CryoSight Dataset Research
@@ -135,15 +138,52 @@ description: Use when answering CryoSight Ask-page research prompts against the 
 3. Use \`search_molecules\`, \`search_cocktails\`, and \`search_sources\` for supporting context.
 4. Keep searches bounded and focused on the user question.
 5. In the final answer, cite the tool names, query terms, and result counts that support your conclusion.
+6. ${profile === "hypothesis"
+    ? "When generating a hypothesis, produce one structured draft only and keep the recommendation experimentally tractable."
+    : "When researching, prefer direct evidence-backed answers over speculation."}
 `;
 }
 
-function buildSandboxQueryScript(prompt: string): string {
+function buildSandboxUserPrompt(profile: AgentProfile, prompt: string): string {
+  if (profile === "hypothesis") {
+    return `${prompt}
+
+Return ONLY valid JSON with this exact shape:
+{
+  "title": string,
+  "status": "draft" | "prioritized" | "planned",
+  "benchmark": string,
+  "target": string,
+  "summary": string,
+  "evidenceIds": string[],
+  "nextStep": string
+}
+
+Rules:
+- Start from an existing benchmark or working recipe if one is named.
+- Keep the hypothesis experimentally tractable.
+- Use evidenceIds that match the finding ids returned by the dataset tools.
+- Do not wrap the JSON in markdown fences.
+- Do not include any prose before or after the JSON.`;
+  }
+
+  return prompt;
+}
+
+function buildSystemPrompt(profile: AgentProfile): string {
+  if (profile === "hypothesis") {
+    return "You are CryoSight's hypothesis generation agent. Use the supplied read-only dataset tools over the live CryoSight knowledge payload to design one evidence-backed experimental hypothesis. Search first, reason from findings, and finish with only the required JSON object.";
+  }
+
+  return "You are CryoSight's research agent. Answer the user's cryobiology question using the supplied read-only dataset tools over the live CryoSight knowledge payload. Start by summarizing the dataset when the available evidence surface is unclear. Use the bounded search tools to gather findings, molecules, cocktails, and sources, then explain what evidence actually supports the conclusion.";
+}
+
+function buildSandboxQueryScript(profile: AgentProfile, prompt: string): string {
   return `import { readFile } from "node:fs/promises";
 import { createSdkMcpServer, query, tool } from "@anthropic-ai/claude-agent-sdk";
 import { z } from "zod";
 
-const prompt = ${JSON.stringify(prompt)};
+const prompt = ${JSON.stringify(buildSandboxUserPrompt(profile, prompt))};
 const model = process.env.CLAUDE_AGENT_MODEL;
 const dataset = JSON.parse(await readFile(${JSON.stringify(SANDBOX_DATASET_PATH)}, "utf8"));
 
@@ -341,7 +381,7 @@ try {
       permissionMode: "bypassPermissions",
       persistSession: false,
       settingSources: ["project"],
-      systemPrompt: "You are CryoSight's research agent. Answer the user's cryobiology question using the supplied read-only dataset tools over the live CryoSight knowledge payload. Start by summarizing the dataset when the available evidence surface is unclear. Use the bounded search tools to gather findings, molecules, cocktails, and sources, then explain what evidence actually supports the conclusion.",
+      systemPrompt: ${JSON.stringify(buildSystemPrompt(profile))},
       tools: ["Skill"],
     },
   })) {
@@ -422,7 +462,11 @@ async function fetchDatasetPayload(
   throw new Error(`Failed to fetch backend dataset from all candidates. Last failure: ${lastStatus}`);
 }
 
-async function prepareSandbox(sandbox: Sandbox, onEvent: RunSandboxedAgentSearchParams["onEvent"]): Promise<void> {
+async function prepareSandbox(
+  sandbox: Sandbox,
+  profile: AgentProfile,
+  onEvent: RunSandboxedAgentSearchParams["onEvent"],
+): Promise<void> {
   const prepareStartedAt = Date.now();
 
   onEvent({
@@ -434,11 +478,11 @@ async function prepareSandbox(sandbox: Sandbox, onEvent: RunSandboxedAgentSearch
   await sandbox.writeFiles([
     {
       path: SANDBOX_PACKAGE_JSON_PATH,
-      content: Buffer.from(buildSandboxPackageJson()),
+      content: Buffer.from(buildSandboxPackageJsonText()),
     },
     {
       path: SANDBOX_SKILL_PATH,
-      content: Buffer.from(buildSandboxSkill()),
+      content: Buffer.from(buildSandboxSkill(profile)),
     },
   ]);
 
@@ -596,6 +640,7 @@ async function ensureDir(sandbox: Sandbox, dirPath: string): Promise<void> {
 }
 
 export async function runSandboxedAgentSearch({
+  profile,
   prompt,
   onEvent,
 }: RunSandboxedAgentSearchParams): Promise<void> {
@@ -631,13 +676,13 @@ export async function runSandboxedAgentSearch({
     await ensureDir(sandbox, `${SANDBOX_PROJECT_DIR}/.claude/skills/cryo-sql-research`);
 
     if (!usedSnapshot) {
-      await prepareSandbox(sandbox, onEvent);
+      await prepareSandbox(sandbox, profile, onEvent);
     }
 
     await sandbox.writeFiles([
       {
         path: SANDBOX_SKILL_PATH,
-        content: Buffer.from(buildSandboxSkill()),
+        content: Buffer.from(buildSandboxSkill(profile)),
       },
       {
         path: SANDBOX_DATASET_PATH,
@@ -645,14 +690,17 @@ export async function runSandboxedAgentSearch({
       },
       {
         path: SANDBOX_QUERY_PATH,
-        content: Buffer.from(buildSandboxQueryScript(prompt)),
+        content: Buffer.from(buildSandboxQueryScript(profile, prompt)),
       },
     ]);
 
     onEvent({
       type: "status",
       phase: "agent",
-      message: "Running Claude research in the sandbox.",
+      message:
+        profile === "hypothesis"
+          ? "Running Claude hypothesis generation in the sandbox."
+          : "Running Claude research in the sandbox.",
     });
 
     const stdout = new PassThrough();
