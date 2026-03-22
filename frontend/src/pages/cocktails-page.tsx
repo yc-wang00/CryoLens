@@ -67,16 +67,27 @@ const ROLE_COLORS: Record<string, string> = {
   other: "#999",
 };
 
+const PAGE_SIZE = 20;
+
 export function CocktailsPage() {
   const [view, setView] = useState<ViewMode>("cocktails");
   const [formulations, setFormulations] = useState<Formulation[]>([]);
   const [protocols, setProtocols] = useState<Protocol[]>([]);
   const [expandedProtocol, setExpandedProtocol] = useState<number | null>(null);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch("/api/v1/library/cocktails").then((r) => r.json()).then(setFormulations).catch(() => {});
     fetch("/api/v1/library/protocols").then((r) => r.json()).then(setProtocols).catch(() => {});
   }, []);
+
+  const filtered = formulations.filter((f) =>
+    !search || f.name.toLowerCase().includes(search.toLowerCase()) ||
+    f.components.some((c) => c.name.toLowerCase().includes(search.toLowerCase()))
+  );
+  const visible = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
 
   return (
     <div className="space-y-5">
@@ -84,7 +95,7 @@ export function CocktailsPage() {
         <div>
           <h1 className="console-title">Formulations & Protocols</h1>
           <p className="mt-1 console-subtitle">
-            {formulations.length} multi-component cocktails · {protocols.length} step-by-step protocols
+            {formulations.length} cocktails with extracted components · {protocols.length} step-by-step protocols · {formulations.reduce((s, f) => s + f.component_count, 0)} total components
           </p>
         </div>
         <div className="flex gap-1">
@@ -94,8 +105,20 @@ export function CocktailsPage() {
       </section>
 
       {view === "cocktails" && (
-        <div className="grid gap-3 lg:grid-cols-2">
-          {formulations.map((f) => {
+        <div className="space-y-4">
+          <div className="flex gap-2">
+            <input
+              className="flex-1 rounded-sm border border-border bg-white px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+              placeholder="Search formulations or compounds..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setVisibleCount(PAGE_SIZE); }}
+            />
+            <span className="flex items-center px-3 text-xs text-muted-foreground">
+              {filtered.length} of {formulations.length}
+            </span>
+          </div>
+          <div className="grid gap-3 lg:grid-cols-2">
+          {visible.map((f) => {
             const maxConc = Math.max(...f.components.map((c) => c.concentration ?? 0), 0.01);
             return (
               <div key={f.id} className="rounded-sm border border-border/60 bg-white p-4 space-y-3 transition-shadow hover:shadow-sm">
@@ -161,6 +184,14 @@ export function CocktailsPage() {
               </div>
             );
           })}
+          </div>
+          {hasMore && (
+            <div className="flex justify-center pt-2">
+              <Button variant="outline" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
+                Show more ({filtered.length - visibleCount} remaining)
+              </Button>
+            </div>
+          )}
         </div>
       )}
 

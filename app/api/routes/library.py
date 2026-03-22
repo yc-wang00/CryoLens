@@ -102,9 +102,8 @@ async def cocktail_comparison(
         LEFT JOIN formulation_components fc ON fc.formulation_id = f.id
         LEFT JOIN findings fi ON fi.formulation_id = f.id
         GROUP BY f.id
-        HAVING COUNT(DISTINCT fc.compound_id) >= 2
-        ORDER BY COUNT(DISTINCT fi.id) DESC, f.name
-        LIMIT 50
+        HAVING COUNT(DISTINCT fc.compound_id) >= 1
+        ORDER BY COUNT(DISTINCT fi.id) DESC, COUNT(DISTINCT fc.compound_id) DESC, f.name
     """))
     formulations = [dict(r) for r in result.mappings().all()]
 
