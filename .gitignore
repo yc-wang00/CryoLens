@@ -1,13 +1,16 @@
 .venv/
 __pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
 *.pyc
-.DS_Store
-.db_password
+*.pyo
+*.pyd
 .env
+docs/
 
-# Large data files
-corpus/papers/
-corpus/manifest.json
-corpus/all_pmids.json
-corpus/pmc_oa_index.json
-*.pdf
+test-results/
+papers/
+tickets/

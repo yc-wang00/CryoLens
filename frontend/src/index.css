@@ -3,141 +3,155 @@
 /*
  * CryoLens Design System — NeoLab
  *
- * Inspired by Palantir Foundry / AIP aesthetic:
- * - Geist Sans (variable) for all text
- * - Geist Mono for data, SMILES, DOIs, code
- * - M3 surface hierarchy for layered depth
- * - Terracotta accent — warm against cool surfaces
- * - Tight radius, editorial uppercase micro-labels
- * - Data-dense but breathing, architectural precision
+ * IBM Plex Sans — engineered for data-heavy professional interfaces
+ * IBM Plex Mono — measurements, SMILES, DOIs, compound IDs
+ * M3-derived surface hierarchy + terracotta accent
+ * Aesthetic: scientific instrument, research-grade precision
  */
 
-@font-face {
-  font-family: "Geist";
-  src: url("/node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Geist Mono";
-  src: url("/node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 @theme {
-  /* Primary — slate blue instrument */
+  --font-sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-headline: "Space Grotesk", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SF Mono", monospace;
+
+  --color-background: #f7f8f9;
+  --color-foreground: #3d464d;
+  --color-card: #ffffff;
+  --color-card-foreground: #3d464d;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #3d464d;
+
   --color-primary: #4f6073;
-  --color-primary-dim: #3d4d5e;
-  --color-primary-container: #d2e4fb;
-  --color-on-primary: #f5f8ff;
-  --color-on-primary-container: #425366;
+  --color-primary-foreground: #f5f8ff;
+  --color-secondary: #cae9dd;
+  --color-secondary-foreground: #3c574e;
+  --color-muted: #f0f2f4;
+  --color-muted-foreground: #6b7680;
+  --color-accent: #e0f0fc;
+  --color-accent-foreground: #4c5a64;
 
-  /* Secondary — sage/viability green */
-  --color-secondary: #49655b;
-  --color-secondary-dim: #3d594f;
-  --color-secondary-container: #cae9dd;
-  --color-on-secondary-container: #3c574e;
+  --color-border: #dde2e6;
+  --color-input: #dde2e6;
+  --color-ring: #4f6073;
+  --color-panel: #edf1f3;
+  --color-surface-strong: #e0e5e9;
+  --color-hero: #141c24;
+  --color-highlight: #c45b3d;
+  --color-highlight-muted: rgba(196, 91, 61, 0.07);
+  --color-highlight-hover: #a34931;
+  --color-data-positive: #2d7a4f;
+  --color-data-caution: #b07318;
 
-  /* Tertiary — cool steel */
-  --color-tertiary: #52616b;
-  --color-tertiary-container: #e0f0fc;
-  --color-on-tertiary-container: #4c5a64;
-
-  /* Accent — terracotta signal */
-  --color-terracotta: #C45B3D;
-  --color-terracotta-dim: #A34931;
-  --color-terracotta-muted: rgba(196, 91, 61, 0.08);
-
-  /* Error */
-  --color-error: #9f403d;
-  --color-error-container: #fe8983;
-
-  /* Surface system — 8-level depth */
-  --color-surface: #f7f8f9;
-  --color-surface-dim: #d1dce0;
-  --color-surface-lowest: #ffffff;
-  --color-surface-low: #f0f2f4;
-  --color-surface-container: #e8ecee;
-  --color-surface-high: #dfe4e7;
-  --color-surface-highest: #d5dce0;
-  --color-surface-variant: #dbe4e7;
-  --color-on-surface: #1a1f23;
-  --color-on-surface-variant: #4e5559;
-
-  /* Outline */
-  --color-outline: #6e767a;
-  --color-outline-variant: #a3adb2;
-
-  /* Inverse */
-  --color-inverse-surface: #0c0f10;
-  --color-inverse-on-surface: #9b9d9e;
-
-  /* Fonts */
-  --font-sans: "Geist", system-ui, -apple-system, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
-
-  /* Radius — architectural, intentionally tight */
-  --radius-xs: 2px;
-  --radius-sm: 3px;
-  --radius-DEFAULT: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --shadow-panel: 0 1px 3px rgba(20, 28, 36, 0.04), 0 6px 16px rgba(20, 28, 36, 0.025);
+  --shadow-card-hover: 0 2px 8px rgba(20, 28, 36, 0.06), 0 8px 24px rgba(20, 28, 36, 0.035);
 }
 
-/* ---- Base ---- */
-
-body {
-  font-family: var(--font-sans);
-  font-feature-settings: "ss01", "ss02", "cv01";
-  background: var(--color-surface);
-  color: var(--color-on-surface);
+:root {
+  color: var(--color-foreground);
+  background: var(--color-background);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { min-height: 100%; }
+
+body {
   margin: 0;
+  font-family: var(--font-sans);
+  font-feature-settings: "kern", "liga";
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-size: 14px;
   line-height: 1.5;
-  letter-spacing: -0.011em;
+  letter-spacing: -0.006em;
 }
+
+button, input, textarea { font: inherit; }
+
+::placeholder { color: var(--color-muted-foreground); }
 
 ::selection {
-  background: var(--color-secondary-container);
-  color: var(--color-on-secondary-container);
+  background: rgba(79, 96, 115, 0.12);
+  color: var(--color-hero);
 }
 
-/* ---- Material Symbols ---- */
+/* --- Surfaces --- */
 
-.material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" -25, "opsz" 20;
-  font-size: 18px;
-  vertical-align: middle;
-  line-height: 1;
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid rgba(221, 226, 230, 0.6);
 }
 
-/* ---- Scrollbar ---- */
-
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-outline-variant); border-radius: 99px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--color-outline); }
-
-/* ---- Utilities ---- */
-
-.terracotta-gradient {
-  background: linear-gradient(135deg, #C45B3D 0%, #A34931 100%);
+.grid-lines {
+  background-image:
+    linear-gradient(rgba(160, 172, 180, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(160, 172, 180, 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-.font-mono {
+/* --- Console typography --- */
+
+.table-header {
+  @apply text-[10px] font-medium uppercase tracking-[0.1em] text-muted-foreground;
+}
+
+.console-title {
+  @apply font-headline text-[1.75rem] leading-[1.1] font-bold tracking-[-0.02em] text-hero;
+}
+
+.console-subtitle {
+  @apply text-[13px] leading-6 text-muted-foreground tracking-[-0.003em];
+}
+
+.console-panel-title {
+  @apply text-sm font-semibold uppercase tracking-[0.06em] text-hero;
+}
+
+/* --- Data values --- */
+
+.data-value {
   font-family: var(--font-mono);
-  font-feature-settings: "ss01", "ss02";
-}
-
-/* Tabular nums for data alignment */
-.tabular-nums {
   font-variant-numeric: tabular-nums;
-  font-family: var(--font-mono);
   letter-spacing: -0.02em;
+}
+
+/* --- Scrollbar --- */
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted-foreground); }
+
+/* --- Micro-interactions --- */
+
+.card-interactive {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* --- Highlight accent --- */
+
+.highlight-bar {
+  position: relative;
+}
+.highlight-bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-highlight);
+  border-radius: 1px;
 }

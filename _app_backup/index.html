@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CryoLens</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0a0a0a; color: #e0e0e0; height: 100vh; display: flex; flex-direction: column; }
+  header { padding: 16px 24px; border-bottom: 1px solid #1a1a2e; display: flex; align-items: center; gap: 12px; }
+  header h1 { font-size: 18px; font-weight: 600; color: #7dd3fc; }
+  header span { font-size: 12px; color: #666; }
+  #chat { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .msg { max-width: 800px; width: 100%; margin: 0 auto; line-height: 1.6; }
+  .msg.user { background: #1a1a2e; padding: 12px 16px; border-radius: 12px; color: #c0c0c0; }
+  .msg.assistant { padding: 4px 0; }
+  .msg.assistant p { margin-bottom: 8px; }
+  .thinking { background: #111827; border-left: 3px solid #6366f1; padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 8px 0; font-size: 13px; color: #9ca3af; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+  .thinking summary { cursor: pointer; font-weight: 500; color: #818cf8; }
+  .tool-call { background: #0f172a; border: 1px solid #1e3a5f; border-radius: 8px; padding: 10px 14px; margin: 8px 0; font-size: 13px; }
+  .tool-call .tool-name { color: #38bdf8; font-weight: 600; font-family: monospace; }
+  .tool-call .tool-input { color: #94a3b8; font-family: monospace; font-size: 12px; margin-top: 4px; white-space: pre-wrap; max-height: 150px; overflow-y: auto; }
+  .tool-result { background: #0a1628; border: 1px solid #1e3a5f; border-radius: 8px; padding: 10px 14px; margin: 4px 0 8px 0; font-size: 12px; color: #64748b; font-family: monospace; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+  .tool-result.error { border-color: #dc2626; color: #ef4444; }
+  .result-meta { font-size: 12px; color: #475569; margin-top: 12px; padding-top: 8px; border-top: 1px solid #1a1a2e; }
+  .error-msg { color: #ef4444; background: #1a0000; padding: 10px 14px; border-radius: 8px; }
+  #input-area { padding: 16px 24px; border-top: 1px solid #1a1a2e; background: #0f0f0f; }
+  #input-wrap { max-width: 800px; margin: 0 auto; display: flex; gap: 8px; }
+  #input { flex: 1; background: #1a1a2e; border: 1px solid #2a2a3e; border-radius: 10px; padding: 12px 16px; color: #e0e0e0; font-size: 15px; outline: none; resize: none; font-family: inherit; }
+  #input:focus { border-color: #7dd3fc; }
+  #send { background: #7dd3fc; color: #0a0a0a; border: none; border-radius: 10px; padding: 12px 20px; font-weight: 600; cursor: pointer; font-size: 14px; white-space: nowrap; }
+  #send:disabled { opacity: 0.4; cursor: not-allowed; }
+  #send:hover:not(:disabled) { background: #38bdf8; }
+  .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid #444; border-top-color: #7dd3fc; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 6px; vertical-align: middle; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>CryoLens</h1>
+  <span>Cryopreservation Knowledge Engine</span>
+</header>
+
+<div id="chat">
+  <div class="msg assistant">
+    <p>Welcome to CryoLens. I have access to a database of 100+ cryobiology papers with structured data on compounds, formulations, viability measurements, and protocols.</p>
+    <p>Try asking me something like:</p>
+    <ul style="margin:8px 0 0 20px;color:#9ca3af">
+      <li>Compare VS55 vs M22 formulations</li>
+      <li>What compounds have the best viability at 4°C?</li>
+      <li>What do we know about kidney vitrification?</li>
+    </ul>
+  </div>
+</div>
+
+<div id="input-area">
+  <div id="input-wrap">
+    <textarea id="input" rows="1" placeholder="Ask about cryopreservation..." autofocus></textarea>
+    <button id="send" onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+const chat = document.getElementById('chat');
+const input = document.getElementById('input');
+const sendBtn = document.getElementById('send');
+let busy = false;
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+input.addEventListener('input', () => {
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+});
+
+async function sendMessage() {
+  const text = input.value.trim();
+  if (!text || busy) return;
+  busy = true;
+  sendBtn.disabled = true;
+  input.value = '';
+  input.style.height = 'auto';
+
+  // User message
+  const userDiv = document.createElement('div');
+  userDiv.className = 'msg user';
+  userDiv.textContent = text;
+  chat.appendChild(userDiv);
+
+  // Assistant container
+  const assistantDiv = document.createElement('div');
+  assistantDiv.className = 'msg assistant';
+  assistantDiv.innerHTML = '<span class="spinner"></span> Thinking...';
+  chat.appendChild(assistantDiv);
+  chat.scrollTop = chat.scrollHeight;
+
+  let started = false;
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text }),
+    });
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      let lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      let eventType = '';
+      for (const line of lines) {
+        if (line.startsWith('event: ')) {
+          eventType = line.slice(7);
+        } else if (line.startsWith('data: ')) {
+          const data = JSON.parse(line.slice(6));
+          if (!started) { assistantDiv.innerHTML = ''; started = true; }
+          renderEvent(assistantDiv, eventType, data);
+          chat.scrollTop = chat.scrollHeight;
+        }
+      }
+    }
+  } catch (err) {
+    if (!started) assistantDiv.innerHTML = '';
+    assistantDiv.innerHTML += `<div class="error-msg">Connection error: ${err.message}</div>`;
+  }
+
+  busy = false;
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+function renderEvent(container, type, data) {
+  switch (type) {
+    case 'text':
+      // Append to existing text or create new
+      let textEl = container.querySelector('.text-content:last-child');
+      if (!textEl) { textEl = document.createElement('div'); textEl.className = 'text-content'; container.appendChild(textEl); }
+      textEl.innerHTML = formatMarkdown(textEl.getAttribute('data-raw') ? textEl.getAttribute('data-raw') + data.text : data.text);
+      textEl.setAttribute('data-raw', (textEl.getAttribute('data-raw') || '') + data.text);
+      break;
+    case 'thinking':
+      const details = document.createElement('details');
+      details.className = 'thinking';
+      details.innerHTML = `<summary>Thinking</summary>${escapeHtml(data.thinking)}`;
+      container.appendChild(details);
+      break;
+    case 'tool_use':
+      const tc = document.createElement('div');
+      tc.className = 'tool-call';
+      tc.innerHTML = `<span class="tool-name">${escapeHtml(data.name)}</span><div class="tool-input">${escapeHtml(JSON.stringify(data.input, null, 2))}</div>`;
+      container.appendChild(tc);
+      break;
+    case 'tool_result':
+      const tr = document.createElement('div');
+      tr.className = 'tool-result' + (data.is_error ? ' error' : '');
+      tr.textContent = data.content || '(empty)';
+      container.appendChild(tr);
+      break;
+    case 'result':
+      if (data.total_cost_usd != null) {
+        const meta = document.createElement('div');
+        meta.className = 'result-meta';
+        meta.textContent = `${data.num_turns} turns · ${(data.duration_ms/1000).toFixed(1)}s · $${data.total_cost_usd.toFixed(4)}`;
+        container.appendChild(meta);
+      }
+      break;
+    case 'error':
+      container.innerHTML += `<div class="error-msg">${escapeHtml(data.message)}</div>`;
+      break;
+  }
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function formatMarkdown(text) {
+  // Minimal markdown: bold, code blocks, inline code, line breaks
+  return escapeHtml(text)
+    .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre style="background:#111827;padding:10px;border-radius:6px;overflow-x:auto;margin:8px 0"><code>$2</code></pre>')
+    .replace(/`([^`]+)`/g, '<code style="background:#1e293b;padding:2px 6px;border-radius:4px;font-size:13px">$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
+</script>
+</body>
+</html>
