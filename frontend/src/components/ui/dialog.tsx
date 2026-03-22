@@ -74,7 +74,7 @@ export function DialogContent({
     >
       <div
         className={cn(
-          "relative w-full max-w-2xl rounded-md border border-border/80 bg-white shadow-[0_24px_60px_rgba(33,40,44,0.12)]",
+          "relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-md border border-border/80 bg-white shadow-[0_24px_60px_rgba(33,40,44,0.12)]",
           className,
         )}
         onClick={(event) => event.stopPropagation()}
