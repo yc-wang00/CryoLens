@@ -137,7 +137,15 @@ export function ToolOutput({
         Output
       </p>
       <div className="mt-2 text-sm leading-6">
-        {hasError ? errorText : output ?? "Tool completed."}
+        {hasError ? (
+          errorText
+        ) : typeof output === "string" ? (
+          <pre className="overflow-x-auto whitespace-pre-wrap break-words font-mono text-[12px] leading-6 text-foreground">
+            {output}
+          </pre>
+        ) : (
+          output ?? "Tool completed."
+        )}
       </div>
     </div>
   );

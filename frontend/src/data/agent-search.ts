@@ -11,6 +11,7 @@ export type AgentSearchStreamEvent =
   | { type: "tool_start"; name: string }
   | { type: "tool_input_delta"; text: string }
   | { type: "tool_end"; name: string; input: string }
+  | { type: "tool_output"; output: string }
   | { type: "result"; text: string }
   | { type: "hypothesis_saved"; hypothesis: HypothesisCard }
   | { type: "error"; message: string };

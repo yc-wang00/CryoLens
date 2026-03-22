@@ -142,7 +142,16 @@ function applyStreamEvent(
         toolCalls: updateLatestToolCall(previousState.toolCalls, (toolCall) => ({
           ...toolCall,
           inputSummary: event.input || toolCall.inputSummary,
-          outputSummary: "Invocation completed. Result is folded into the agent answer.",
+          outputSummary: "Waiting for tool result...",
+          state: "input-available",
+        })),
+      };
+    case "tool_output":
+      return {
+        ...previousState,
+        toolCalls: updateLatestToolCall(previousState.toolCalls, (toolCall) => ({
+          ...toolCall,
+          outputSummary: event.output,
           state: "output-available",
         })),
       };
