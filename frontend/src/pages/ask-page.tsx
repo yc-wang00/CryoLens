@@ -92,15 +92,33 @@ function applyStreamEvent(
         ],
       };
     case "tool_result": {
-      const toolCalls = prev.toolCalls.map((tc) =>
-        tc.id === event.tool_use_id
-          ? {
-              ...tc,
+      // Match by tool_use_id first, fall back to first unresolved tool
+      let matched = false;
+      const toolCalls = prev.toolCalls.map((tc) => {
+        if (tc.id === event.tool_use_id) {
+          matched = true;
+          return {
+            ...tc,
+            outputSummary: event.content || "(empty)",
+            state: (event.is_error ? "output-error" : "output-available") as AgentToolCall["state"],
+          };
+        }
+        return tc;
+      });
+      if (!matched) {
+        // Fallback: resolve first tool still in running state
+        let resolved = false;
+        for (let i = 0; i < toolCalls.length; i++) {
+          if (!resolved && toolCalls[i].state !== "output-available" && toolCalls[i].state !== "output-error") {
+            toolCalls[i] = {
+              ...toolCalls[i],
               outputSummary: event.content || "(empty)",
               state: (event.is_error ? "output-error" : "output-available") as AgentToolCall["state"],
-            }
-          : tc,
-      );
+            };
+            resolved = true;
+          }
+        }
+      }
       return {
         ...prev,
         statusMessage: event.is_error ? "Tool error" : "Tool completed.",
