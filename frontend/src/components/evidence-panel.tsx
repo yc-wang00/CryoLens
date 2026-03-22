@@ -3,11 +3,10 @@ import { ExternalLink, FlaskConical, Microscope, Quote } from "lucide-react";
 import type {
   Cocktail,
   EvidenceFinding,
-  Hypothesis,
   Molecule,
   SourceDocument,
-} from "../data/mock-data";
-import type { ExperimentRecord } from "../data/cryo-lens";
+} from "../types";
+import type { ExperimentRecord, HypothesisCard } from "../data/cryo-lens";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
@@ -17,7 +16,7 @@ export type PanelState =
   | { kind: "finding"; finding: EvidenceFinding }
   | { kind: "molecule"; molecule: Molecule }
   | { kind: "cocktail"; cocktail: Cocktail }
-  | { kind: "hypothesis"; hypothesis: Hypothesis }
+  | { kind: "hypothesis"; hypothesis: HypothesisCard }
   | { kind: "experiment"; experiment: ExperimentRecord }
   | { kind: "source"; source: SourceDocument };
 

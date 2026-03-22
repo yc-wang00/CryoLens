@@ -1,6 +1,6 @@
 import { ChevronRight, FlaskConical, Microscope } from "lucide-react";
 
-import type { Hypothesis } from "../data/mock-data";
+import type { HypothesisCard } from "../data/cryo-lens";
 import type { ExperimentRecord } from "../data/cryo-lens";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
@@ -8,8 +8,8 @@ import { Card, CardContent } from "../components/ui/card";
 
 interface HypothesesPageProps {
   experiments: ExperimentRecord[];
-  hypotheses: Hypothesis[];
-  onOpenHypothesis: (hypothesis: Hypothesis) => void;
+  hypotheses: HypothesisCard[];
+  onOpenHypothesis: (hypothesis: HypothesisCard) => void;
   onOpenExperiment: (experiment: ExperimentRecord) => void;
 }
 

@@ -28,8 +28,8 @@ import {
   streamAgentSearch,
   type LiveAgentSearchState,
 } from "../data/agent-search";
-import type { CryoLensDataset } from "../data/cryo-lens";
-import type { AgentToolCall, Hypothesis } from "../data/mock-data";
+import type { CryoLensDataset, HypothesisCard } from "../data/cryo-lens";
+import type { AgentToolCall } from "../types";
 
 interface AskPageProps {
   dataset: CryoLensDataset;
@@ -57,7 +57,7 @@ function createInitialSearchState(prompt: string, profile: AgentProfile): LiveAg
     finished: false,
     prompt,
     profile,
-    savedHypothesis: null,
+    savedHypothesisCard: null,
     statusHistory: [profile === "hypothesis" ? "Starting hypothesis run." : "Starting research run."],
     statusMessage: profile === "hypothesis" ? "Starting hypothesis run." : "Starting research run.",
     toolCalls: [],
@@ -143,7 +143,7 @@ function applyStreamEvent(
     case "hypothesis_saved":
       return {
         ...previousState,
-        savedHypothesis: event.hypothesis,
+        savedHypothesisCard: event.hypothesis,
         statusHistory: [...previousState.statusHistory, `Saved hypothesis draft: ${event.hypothesis.title}`],
         statusMessage: "Hypothesis saved.",
       };
@@ -339,7 +339,7 @@ function HypothesisDraftCard({
   hypothesis,
   onOpenHypotheses,
 }: {
-  hypothesis: Hypothesis;
+  hypothesis: HypothesisCard;
   onOpenHypotheses: () => void;
 }): JSX.Element {
   return (
@@ -565,9 +565,9 @@ export function AskPage({
           </Fragment>
         ))}
 
-        {activeSearch.savedHypothesis ? (
+        {activeSearch.savedHypothesisCard ? (
           <HypothesisDraftCard
-            hypothesis={activeSearch.savedHypothesis}
+            hypothesis={activeSearch.savedHypothesisCard}
             onOpenHypotheses={onOpenHypotheses}
           />
         ) : null}

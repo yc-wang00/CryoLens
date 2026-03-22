@@ -1,6 +1,6 @@
 import { CryoProgressStory } from "../components/cryo-progress-story";
-import type { SourceDocument } from "../data/mock-data";
-import type { CryoLensStoryStats } from "../data/cryo-lens-contract";
+import type { SourceDocument } from "../types";
+import type { CryoLensStoryStats } from "../data/cryo-lens";
 import { Badge } from "../components/ui/badge";
 import { ProgressBar } from "../components/ui/progress-bar";
 

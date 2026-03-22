@@ -1,4 +1,4 @@
-import type { Cocktail } from "../data/mock-data";
+import type { Cocktail } from "../types";
 import { Badge } from "../components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 
