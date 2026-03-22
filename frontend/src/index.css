@@ -3,32 +3,16 @@
 /*
  * CryoLens Design System — NeoLab
  *
- * Geist Sans (variable) — all text, Swiss precision
- * Geist Mono (variable) — data, SMILES, DOIs, measurements
+ * IBM Plex Sans — engineered for data-heavy professional interfaces
+ * IBM Plex Mono — measurements, SMILES, DOIs, compound IDs
  * M3-derived surface hierarchy + terracotta accent
- * Blueprint-inspired: system font feel, operator aesthetic
+ * Aesthetic: scientific instrument, research-grade precision
  */
 
-@font-face {
-  font-family: "Geist";
-  src: url("/node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Geist Mono";
-  src: url("/node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
 @theme {
-  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-headline: "Geist", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
+  --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-headline: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
 
   --color-background: #f7f8f9;
   --color-foreground: #3d464d;
@@ -81,7 +65,7 @@ html, body, #root { min-height: 100%; }
 body {
   margin: 0;
   font-family: var(--font-sans);
-  font-feature-settings: "ss01", "cv01";
+  font-feature-settings: "kern", "liga";
   background: var(--color-background);
   color: var(--color-foreground);
   font-size: 14px;
