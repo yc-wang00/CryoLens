@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
+import { CardSkeleton } from "../components/ui/skeleton";
 
 interface Component {
   id: string;
@@ -85,6 +86,7 @@ export function CocktailsPage() {
   const [view, setView] = useState<ViewMode>("cocktails");
   const [formulations, setFormulations] = useState<Formulation[]>([]);
   const [protocols, setProtocols] = useState<Protocol[]>([]);
+  const [loading, setLoading] = useState(true);
   const [expandedProtocol, setExpandedProtocol] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [search, setSearch] = useState("");
@@ -95,8 +97,14 @@ export function CocktailsPage() {
   const [protoLoading, setProtoLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/api/v1/library/cocktails").then((r) => r.json()).then(setFormulations).catch(() => {});
-    fetch("/api/v1/library/protocols").then((r) => r.json()).then(setProtocols).catch(() => {});
+    Promise.all([
+      fetch("/api/v1/library/cocktails").then((r) => r.json()),
+      fetch("/api/v1/library/protocols").then((r) => r.json()),
+    ]).then(([f, p]) => {
+      setFormulations(f);
+      setProtocols(p);
+      setLoading(false);
+    }).catch(() => setLoading(false));
     fetchProtoFindings("", 0);
   }, []);
 
@@ -117,8 +125,20 @@ export function CocktailsPage() {
   const visible = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
 
+  if (loading) {
+    return (
+      <div className="space-y-5 page-enter">
+        <section>
+          <div className="skeleton h-8 w-72 mb-2" />
+          <div className="skeleton h-4 w-96" />
+        </section>
+        <CardSkeleton count={6} />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 page-enter">
       <section className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="console-title">Formulations & Protocols</h1>
@@ -145,11 +165,11 @@ export function CocktailsPage() {
               {filtered.length} of {formulations.length}
             </span>
           </div>
-          <div className="grid gap-3 lg:grid-cols-2">
+          <div className="grid gap-3 lg:grid-cols-2 list-stagger">
           {visible.map((f) => {
             const maxConc = Math.max(...f.components.map((c) => c.concentration ?? 0), 0.01);
             return (
-              <div key={f.id} className="rounded-sm border border-border/60 bg-white p-4 space-y-3 transition-shadow hover:shadow-sm">
+              <div key={f.id} className="rounded-sm border border-border/60 bg-white p-4 space-y-3 card-interactive">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2 mb-1">

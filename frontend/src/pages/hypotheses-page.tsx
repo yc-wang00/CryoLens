@@ -21,7 +21,7 @@ export function HypothesesPage() {
   }, []);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 page-enter">
       <section>
         <div>
           <h1 className="console-title">Hypotheses</h1>

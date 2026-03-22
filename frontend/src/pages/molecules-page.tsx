@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
+import { CardSkeleton } from "../components/ui/skeleton";
 import { CompoundDetailPanel } from "../components/compound-detail-panel";
 
 interface ViabilityPoint {
@@ -95,14 +96,22 @@ export function MoleculesPage() {
   const [viability, setViability] = useState<ViabilityPoint[]>([]);
   const [compounds, setCompounds] = useState<CompoundRow[]>([]);
   const [coverage, setCoverage] = useState<CoverageRow[]>([]);
+  const [loading, setLoading] = useState(true);
   const [hoveredPoint, setHoveredPoint] = useState<ViabilityPoint | null>(null);
   const [selectedCompound, setSelectedCompound] = useState<string | null>(null);
   const [detailCompoundId, setDetailCompoundId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/v1/library/viability").then((r) => r.json()).then(setViability).catch(() => {});
-    fetch("/api/v1/compounds?limit=100").then((r) => r.json()).then((d) => setCompounds(d.items)).catch(() => {});
-    fetch("/api/v1/library/coverage-matrix").then((r) => r.json()).then((d) => { if (Array.isArray(d)) setCoverage(d); }).catch(() => {});
+    Promise.all([
+      fetch("/api/v1/library/viability").then((r) => r.json()),
+      fetch("/api/v1/compounds?limit=100").then((r) => r.json()),
+      fetch("/api/v1/library/coverage-matrix").then((r) => r.json()),
+    ]).then(([v, c, m]) => {
+      setViability(v);
+      setCompounds(c.items);
+      if (Array.isArray(m)) setCoverage(m);
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, []);
 
   const compoundNames = [...new Set(viability.map((p) => p.compound_name))].sort();
@@ -126,8 +135,20 @@ export function MoleculesPage() {
   const totalGaps = coverage.reduce((s, c) =>
     s + (c.viability === 0 ? 1 : 0) + (c.permeability === 0 ? 1 : 0) + (c.tg === 0 ? 1 : 0), 0);
 
+  if (loading) {
+    return (
+      <div className="space-y-5 page-enter">
+        <section>
+          <div className="skeleton h-8 w-56 mb-2" />
+          <div className="skeleton h-4 w-72" />
+        </section>
+        <CardSkeleton count={4} />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 page-enter">
       <section className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="console-title">Compound Library</h1>

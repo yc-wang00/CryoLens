@@ -9,6 +9,7 @@ import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../components/ui/dialog";
 import { ProgressBar } from "../components/ui/progress-bar";
+import { Skeleton } from "../components/ui/skeleton";
 
 interface Paper {
   doi: string;
@@ -268,7 +269,7 @@ export function SourcesPage() {
   const maxFindings = papers.length ? Math.max(...papers.map((p) => p.finding_count)) : 1;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 page-enter">
       {/* Hero banner */}
       <section className="rounded-sm border border-border/60 bg-white p-6">
         <div className="flex flex-wrap items-start justify-between gap-6">
@@ -301,9 +302,9 @@ export function SourcesPage() {
               </a>
             </div>
           </div>
-          {stats ? (
-            <div className="grid grid-cols-2 gap-2 text-center shrink-0">
-              {[
+          <div className="grid grid-cols-2 gap-2 text-center shrink-0">
+            {stats ? (
+              [
                 { label: "Papers", value: stats.counts.papers },
                 { label: "Findings", value: stats.counts.findings },
                 { label: "Compounds", value: stats.counts.compounds },
@@ -313,9 +314,16 @@ export function SourcesPage() {
                   <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{s.label}</p>
                   <p className="mt-0.5 font-headline text-xl font-bold text-hero">{(s.value ?? 0).toLocaleString()}</p>
                 </div>
-              ))}
-            </div>
-          ) : null}
+              ))
+            ) : (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="rounded-sm border border-border/50 bg-muted/30 px-4 py-2.5">
+                  <Skeleton className="h-3 w-14 mx-auto mb-1.5" />
+                  <Skeleton className="h-6 w-12 mx-auto" />
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </section>
 
@@ -373,7 +381,20 @@ export function SourcesPage() {
             </div>
 
             {loading ? (
-              <div className="px-4 py-8 text-center text-sm text-muted-foreground">Loading...</div>
+              <div className="space-y-0">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="grid grid-cols-[3rem_1fr_8rem_6rem] gap-4 border-b border-border px-4 py-4">
+                    <Skeleton className="h-4 w-8" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-16" />
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3 w-1/3" />
+                    </div>
+                    <Skeleton className="h-6 w-10" />
+                    <div className="flex justify-end"><Skeleton className="h-5 w-12" /></div>
+                  </div>
+                ))}
+              </div>
             ) : papers.length === 0 ? (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground">No papers found.</div>
             ) : (
