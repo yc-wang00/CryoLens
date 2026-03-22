@@ -6,13 +6,13 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, actions }: PageHeaderProps) {
   return (
-    <header className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-      <div>
-        <h1 className="text-[28px] font-headline font-bold tracking-tight text-text-primary">
+    <header className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+      <div className="max-w-2xl">
+        <h1 className="text-4xl font-extrabold font-headline tracking-tight text-on-surface mb-2">
           {title}
         </h1>
         {description && (
-          <p className="text-[14px] text-text-secondary mt-1 max-w-xl leading-relaxed">
+          <p className="text-on-surface-variant text-sm leading-relaxed font-body">
             {description}
           </p>
         )}

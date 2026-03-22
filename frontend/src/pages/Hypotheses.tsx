@@ -1,116 +1,198 @@
 import { Layout } from "../components/layout/Layout";
-import { Badge } from "../components/ui/Badge";
 import { Icon } from "../components/ui/Icon";
 import { PageHeader } from "../components/ui/PageHeader";
 
 const HYPOTHESES = [
   {
-    id: "HYP-001",
-    title: "Cold-Optimized Ternary Cocktail",
+    id: "HYP-0422",
+    title: "Cold-Optimized PA/BD/EG Ternary Cocktail",
+    status: "Novel",
+    statusColor: "bg-terracotta/10 text-terracotta",
+    confidence: 87,
     compounds: ["Propionamide", "2,3-Butanediol", "Ethylene Glycol"],
     rationale:
-      "Propionamide permeates 2x faster than DMSO with zero toxicity at 3M/4°C. Combined with 2,3-butanediol (Tg-enhancing) and EG (proven glass-former).",
-    status: "Novel",
-    confidence: "high",
+      "Propionamide permeates 2× faster than DMSO with zero toxicity at 3M/4°C. 2,3-Butanediol enhances Tg. EG provides proven glass-forming backbone.",
+    mechanism: "Amide-diol synergy at subambient temperature",
     papers: 4,
+    temperature: "4°C",
+    viability: "94%",
   },
   {
-    id: "HYP-002",
-    title: "Toxicity Neutralization via FA+GLY",
+    id: "HYP-0388",
+    title: "FA/GLY Toxicity Neutralization Cocktail",
+    status: "Data-Backed",
+    statusColor: "bg-secondary-container text-on-secondary-container",
+    confidence: 92,
     compounds: ["Formamide", "Glycerol", "Ethylene Glycol"],
     rationale:
-      "FA/GLY binary at 12 mol/kg 4°C achieves 97% viability — the strongest toxicity neutralization effect in the database.",
-    status: "Data-backed",
-    confidence: "high",
+      "FA/GLY binary at 12 mol/kg 4°C achieves 97% viability — the strongest toxicity neutralization in the database. Adding EG for glass-forming stability.",
+    mechanism: "Preferential exclusion + hydrogen bond saturation",
     papers: 3,
+    temperature: "4°C",
+    viability: "97%",
   },
   {
-    id: "HYP-003",
+    id: "HYP-0291",
     title: "DHA Membrane Anchor Formulation",
+    status: "Novel",
+    statusColor: "bg-terracotta/10 text-terracotta",
+    confidence: 72,
     compounds: ["1,3-Dihydroxyacetone", "DMSO", "Trehalose"],
     rationale:
-      "DHA is a natural metabolite with membrane-anchoring properties. At 3M/4°C shows 85% viability. Paired with low-dose DMSO + extracellular trehalose.",
-    status: "Novel",
-    confidence: "medium",
+      "DHA is a natural metabolite with membrane-anchoring properties. At 3M/4°C shows 85% viability. Low-dose DMSO + extracellular trehalose for stabilization.",
+    mechanism: "Metabolite-membrane interaction + osmotic buffering",
     papers: 2,
+    temperature: "4°C",
+    viability: "85%",
   },
   {
-    id: "HYP-004",
-    title: "NMA Replacement for M22",
-    compounds: ["Propionamide", "Formamide", "DMSO", "EG"],
-    rationale:
-      "Replace N-methylacetamide in M22 with propionamide — similar amide structure but 2x faster permeation and lower toxicity.",
+    id: "HYP-0156",
+    title: "NMA Replacement for M22 Cocktail",
     status: "Theoretical",
-    confidence: "medium",
+    statusColor: "bg-surface-highest text-on-surface-variant",
+    confidence: 65,
+    compounds: ["Propionamide", "Formamide", "DMSO", "Ethylene Glycol"],
+    rationale:
+      "Replace N-methylacetamide in M22 with propionamide — similar amide structure but 2× faster permeation and lower toxicity profile.",
+    mechanism: "Structural analog substitution with improved kinetics",
     papers: 5,
+    temperature: "0°C",
+    viability: "—",
   },
 ];
 
-const statusVariant: Record<string, "accent" | "success" | "default"> = {
-  "Novel": "accent",
-  "Data-backed": "success",
-  "Theoretical": "default",
-};
+function HypothesisDetailSidebar() {
+  const hyp = HYPOTHESES[0];
+  return (
+    <div className="flex flex-col p-6 space-y-6">
+      <header>
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-[10px] font-bold text-terracotta uppercase tracking-[0.1em]">
+            Selected Hypothesis
+          </span>
+          <button className="material-symbols-outlined text-on-surface-variant text-sm">
+            close
+          </button>
+        </div>
+        <h2 className="text-lg font-bold tracking-tight text-on-surface leading-tight">
+          {hyp.id}
+        </h2>
+      </header>
 
-const confidenceLabel: Record<string, { text: string; color: string }> = {
-  high: { text: "High confidence", color: "text-success" },
-  medium: { text: "Medium confidence", color: "text-warning" },
-  low: { text: "Low confidence", color: "text-error" },
-};
+      <div className="space-y-4">
+        <div>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+            Mechanism
+          </span>
+          <p className="text-sm text-on-surface font-medium mt-1">
+            {hyp.mechanism}
+          </p>
+        </div>
+        <div>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+            Compounds
+          </span>
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {hyp.compounds.map((c) => (
+              <span
+                key={c}
+                className="px-2 py-1 bg-surface-highest text-on-surface-variant text-[9px] font-label font-bold uppercase border border-outline-variant/10"
+              >
+                {c}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+              Temperature
+            </span>
+            <p className="text-sm font-bold text-on-surface mt-1">{hyp.temperature}</p>
+          </div>
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+              Viability
+            </span>
+            <p className="text-sm font-bold text-secondary mt-1">{hyp.viability}</p>
+          </div>
+        </div>
+      </div>
+
+      <button className="w-full text-on-surface py-3 rounded-sm font-label text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-surface-low transition-colors border border-outline-variant/20">
+        <Icon name="science" className="text-sm" />
+        Generate Protocol
+      </button>
+    </div>
+  );
+}
 
 export function HypothesesPage() {
   return (
-    <Layout>
-      <div className="p-8 max-w-5xl mx-auto">
+    <Layout sidebar={<HypothesisDetailSidebar />}>
+      <div className="p-8">
         <PageHeader
-          title="Hypotheses"
-          description="AI-generated hypotheses for novel CPA formulations, grounded in structured experimental data."
+          title="CPA Hypotheses"
+          description="AI-generated hypotheses for novel cryoprotective agent formulations, grounded in structured experimental data from the CryoLens database."
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="space-y-4">
           {HYPOTHESES.map((hyp) => (
-            <article
+            <div
               key={hyp.id}
-              className="bg-surface border border-border rounded-lg p-6 hover:shadow-md hover:border-border-hover transition-all cursor-pointer group"
+              className="group bg-surface-lowest border-b border-outline-variant/10 hover:bg-white transition-all p-6 flex items-start gap-6 cursor-pointer"
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-[12px] font-headline font-bold text-text-tertiary">
-                    {hyp.id}
+              {/* ID + Confidence */}
+              <div className="w-20 pt-1 shrink-0">
+                <span className="font-headline font-bold text-outline-variant text-sm block">
+                  {hyp.id}
+                </span>
+                <div className="flex items-center gap-1 mt-2">
+                  <span className="text-xs font-headline font-bold text-secondary">
+                    {hyp.confidence}%
                   </span>
-                  <Badge variant={statusVariant[hyp.status]}>{hyp.status}</Badge>
+                  <div className="w-12 h-1 bg-surface-container">
+                    <div
+                      className="bg-secondary h-full"
+                      style={{ width: `${hyp.confidence}%` }}
+                    />
+                  </div>
                 </div>
-                <span className={`text-[12px] font-medium ${confidenceLabel[hyp.confidence].color}`}>
-                  {confidenceLabel[hyp.confidence].text}
-                </span>
               </div>
 
-              <h3 className="text-[16px] font-headline font-bold text-text-primary leading-snug mb-2 group-hover:text-accent transition-colors">
-                {hyp.title}
-              </h3>
-
-              <p className="text-[13px] text-text-secondary leading-relaxed mb-5">
-                {hyp.rationale}
-              </p>
-
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {hyp.compounds.map((c) => (
-                  <span
-                    key={c}
-                    className="px-2 py-1 bg-surface-muted text-text-secondary text-[11px] font-medium rounded-md"
-                  >
-                    {c}
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className={`text-[10px] font-label font-bold px-2 py-0.5 rounded-sm uppercase tracking-tighter ${hyp.statusColor}`}>
+                    {hyp.status}
                   </span>
-                ))}
+                  <span className="text-[10px] font-label text-on-surface-variant tracking-widest uppercase">
+                    {hyp.papers} papers
+                  </span>
+                </div>
+                <h3 className="text-lg font-headline font-bold text-on-surface leading-snug group-hover:text-primary transition-colors mb-2">
+                  {hyp.title}
+                </h3>
+                <p className="text-xs text-on-surface-variant leading-relaxed mb-3">
+                  {hyp.rationale}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {hyp.compounds.map((c) => (
+                    <span
+                      key={c}
+                      className="px-2 py-0.5 bg-surface-highest text-on-surface-variant text-[9px] font-label font-bold uppercase border border-outline-variant/10"
+                    >
+                      {c}
+                    </span>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex items-center gap-1.5 text-text-tertiary">
-                <Icon name="description" className="!text-[14px]" />
-                <span className="text-[12px]">
-                  {hyp.papers} supporting papers
-                </span>
-              </div>
-            </article>
+              {/* Arrow */}
+              <span className="material-symbols-outlined text-outline-variant group-hover:text-terracotta transition-colors shrink-0 pt-2">
+                arrow_forward
+              </span>
+            </div>
           ))}
         </div>
       </div>

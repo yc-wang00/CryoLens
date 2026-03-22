@@ -5,25 +5,28 @@ interface ConfidenceBarProps {
 
 export function ConfidenceBar({ value, label }: ConfidenceBarProps) {
   const color =
-    value >= 80 ? "bg-success text-success"
-    : value >= 50 ? "bg-accent text-accent"
-    : "bg-text-tertiary text-text-tertiary";
-
+    value >= 80 ? "bg-secondary text-secondary"
+    : value >= 50 ? "bg-primary text-primary"
+    : "bg-outline text-outline";
   const [barColor, textColor] = color.split(" ");
 
   return (
-    <div className="flex items-center gap-2.5">
-      <div className="w-20 h-1.5 bg-border rounded-full overflow-hidden">
-        <div
-          className={`h-full rounded-full transition-all ${barColor}`}
-          style={{ width: `${value}%` }}
-        />
+    <div className="flex flex-col items-end gap-2">
+      <div className="flex items-center gap-1">
+        <span className={`text-xs font-headline font-bold ${textColor}`}>
+          {value}%
+        </span>
+        <div className="w-16 h-1 bg-surface-container">
+          <div
+            className={`h-full ${barColor}`}
+            style={{ width: `${value}%` }}
+          />
+        </div>
       </div>
-      <span className={`text-xs font-headline font-bold tabular-nums ${textColor}`}>
-        {value}%
-      </span>
       {label && (
-        <span className="text-[11px] text-text-tertiary">{label}</span>
+        <span className="text-[9px] font-label font-bold text-on-surface-variant uppercase">
+          {label}
+        </span>
       )}
     </div>
   );

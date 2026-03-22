@@ -1,19 +1,20 @@
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: "default" | "accent" | "success" | "warning";
+  variant?: "primary" | "secondary" | "tertiary" | "neutral" | "terracotta";
 }
 
 const variants = {
-  default: "bg-surface-muted text-text-secondary",
-  accent: "bg-accent-subtle text-accent",
-  success: "bg-success-subtle text-success",
-  warning: "bg-warning-subtle text-warning",
+  primary: "bg-primary-container text-on-primary-container",
+  secondary: "bg-secondary-container text-on-secondary-container",
+  tertiary: "bg-tertiary-container text-on-tertiary-container",
+  neutral: "bg-surface-highest text-on-surface-variant",
+  terracotta: "bg-terracotta/10 text-terracotta",
 };
 
-export function Badge({ children, variant = "default" }: BadgeProps) {
+export function Badge({ children, variant = "neutral" }: BadgeProps) {
   return (
     <span
-      className={`${variants[variant]} text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide`}
+      className={`${variants[variant]} text-[10px] font-label font-bold px-2 py-0.5 rounded-sm uppercase tracking-tighter`}
     >
       {children}
     </span>

@@ -1,52 +1,97 @@
 @import "tailwindcss";
 
 /*
- * CryoLens Design System
+ * CryoLens Design System — Neo-Minimal
+ * Derived from Stitch (Google Design LRM)
  *
- * Principles: scientific clarity, content-forward, restrained palette
- * Fonts: Manrope (headlines), Inter (body)
- * Palette: near-white + near-black + one accent blue
+ * Palette: Material Design 3 semantic surfaces
+ * Fonts: Manrope (headlines), Inter (body/labels)
+ * Accent: Terracotta — warm, distinctive, scientific
+ * Radius: Tight, architectural (2px base)
  */
 
 @theme {
-  --color-bg: #FAFAFA;
-  --color-surface: #FFFFFF;
-  --color-surface-muted: #F4F5F7;
-  --color-border: #E8EAED;
-  --color-border-hover: #D0D4DA;
+  /* Primary — muted blue-grey */
+  --color-primary: #4f6073;
+  --color-primary-dim: #435467;
+  --color-primary-container: #d2e4fb;
+  --color-primary-fixed: #d2e4fb;
+  --color-primary-fixed-dim: #c4d6ed;
+  --color-on-primary: #f5f8ff;
+  --color-on-primary-container: #425366;
+  --color-on-primary-fixed: #304153;
+  --color-inverse-primary: #d5e7fe;
 
-  --color-text-primary: #1A1D21;
-  --color-text-secondary: #5F6368;
-  --color-text-tertiary: #9AA0A6;
+  /* Secondary — sage green */
+  --color-secondary: #49655b;
+  --color-secondary-dim: #3d594f;
+  --color-secondary-container: #cae9dd;
+  --color-secondary-fixed: #cae9dd;
+  --color-secondary-fixed-dim: #bddbcf;
+  --color-on-secondary: #e4fff3;
+  --color-on-secondary-container: #3c574e;
+  --color-on-secondary-fixed: #29453c;
 
-  --color-accent: #2563EB;
-  --color-accent-hover: #1D4ED8;
-  --color-accent-subtle: #EFF6FF;
+  /* Tertiary — cool steel */
+  --color-tertiary: #52616b;
+  --color-tertiary-dim: #46555f;
+  --color-tertiary-container: #e0f0fc;
+  --color-tertiary-fixed: #e0f0fc;
+  --color-on-tertiary: #f4f9ff;
+  --color-on-tertiary-container: #4c5a64;
 
-  --color-success: #16A34A;
-  --color-success-subtle: #F0FDF4;
-  --color-warning: #D97706;
-  --color-warning-subtle: #FFFBEB;
-  --color-error: #DC2626;
-  --color-error-subtle: #FEF2F2;
+  /* Accent — terracotta */
+  --color-terracotta: #C45B3D;
+  --color-terracotta-dim: #A34931;
 
-  --font-headline: "Manrope", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
+  /* Error */
+  --color-error: #9f403d;
+  --color-error-dim: #4e0309;
+  --color-error-container: #fe8983;
+  --color-on-error: #fff7f6;
+  --color-on-error-container: #752121;
 
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-full: 9999px;
+  /* Surface hierarchy — the depth system */
+  --color-surface: #f8f9fa;
+  --color-surface-dim: #d1dce0;
+  --color-surface-bright: #f8f9fa;
+  --color-surface-lowest: #ffffff;
+  --color-surface-low: #f1f4f6;
+  --color-surface-container: #eaeff1;
+  --color-surface-high: #e3e9ec;
+  --color-surface-highest: #dbe4e7;
+  --color-surface-variant: #dbe4e7;
+  --color-surface-tint: #4f6073;
+  --color-on-surface: #2b3437;
+  --color-on-surface-variant: #586064;
+  --color-on-background: #2b3437;
+  --color-background: #f8f9fa;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+  /* Outline */
+  --color-outline: #737c7f;
+  --color-outline-variant: #abb3b7;
+
+  /* Inverse */
+  --color-inverse-surface: #0c0f10;
+  --color-inverse-on-surface: #9b9d9e;
+
+  /* Typography */
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+
+  /* Radius — architectural, tight */
+  --radius-sm: 0.125rem;
+  --radius-DEFAULT: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
 }
 
 body {
   font-family: var(--font-body);
-  background: var(--color-bg);
-  color: var(--color-text-primary);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
@@ -54,24 +99,23 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-headline);
-  color: var(--color-text-primary);
 }
 
 ::selection {
-  background: var(--color-accent-subtle);
-  color: var(--color-accent);
+  background: var(--color-secondary-container);
+  color: var(--color-on-secondary-container);
 }
 
-/* Material Symbols */
 .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20;
-  font-size: 20px;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
   vertical-align: middle;
-  line-height: 1;
+  font-size: 1.25rem;
 }
 
-/* Scrollbar */
-.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.terracotta-gradient {
+  background: linear-gradient(135deg, #C45B3D 0%, #A34931 100%);
+}
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: var(--radius-full); }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--color-border-hover); }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-surface-highest); border-radius: 10px; }
