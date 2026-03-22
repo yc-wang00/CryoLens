@@ -18,8 +18,6 @@ import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 
-const API = "";
-
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
@@ -635,7 +633,7 @@ export function HypothesesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API}/api/v1/hypotheses`)
+    fetch("/api/v1/hypotheses")
       .then((r) => r.json())
       .then((data) => {
         setHypotheses(data);
@@ -645,7 +643,7 @@ export function HypothesesPage() {
   }, []);
 
   function openDetail(id: string) {
-    fetch(`${API}/api/v1/hypotheses/${id}`)
+    fetch(`/api/v1/hypotheses/${id}`)
       .then((r) => r.json())
       .then((data) => setDetail(data))
       .catch(() => {});
