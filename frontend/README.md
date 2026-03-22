@@ -18,16 +18,25 @@ This package contains the Vite React hackathon frontend for CryoSight.
 - Path alias: `@/* -> src/*`
 - Note: `src/components/ai-elements` contains upstream example code and is currently excluded from the active lint/build path until it is properly adapted to this app's single UI layer.
 
+## Page Structure
+
+- The desktop shell uses a single persistent left rail; mobile falls back to a lightweight top bar plus slide-over nav.
+- The Ask page is intentionally minimal: centered composer before first query, single answer thread after a run, and collapsible research trace below the answer.
+
 ## Live Data
 
-- The frontend reads the live `cryoLens` dataset through the local frontend API proxy at `/api/cryo-lens-dataset`, which forwards to the FastAPI backend endpoint `/api/v1/cryo-lens/dataset`.
-- The FastAPI backend is responsible for talking to Supabase and normalizing the raw tables into CryoSight page entities.
+- The frontend now uses a hybrid live-data model.
+- Read-only display pages can fetch cryoLens data directly from Supabase in the browser with a publishable key and RLS-safe read policies.
+- The Ask page still depends on the local frontend API proxy at `/api/cryo-lens-dataset`, which forwards to the FastAPI backend endpoint `/api/v1/cryo-lens/dataset` for the backend-owned research shell.
+- The Ask sandbox route at `/api/agent-search` remains server-owned and keeps SQL and agent credentials off the browser.
 - The Ask page now uses a Vercel Function at `/api/agent-search` to create a sandboxed Claude research run. That function owns the Anthropic API key, the Supabase pooled connection string, and the Vercel Sandbox lifecycle.
 - Override with:
   - `VITE_API_BASE_URL`
   - `VITE_AGENT_API_BASE_URL`
+  - `VITE_SUPABASE_URL`
+  - `VITE_SUPABASE_PUBLISHABLE_KEY`
 - See `frontend/.env.example` for browser-visible envs and `frontend/.env.server.example` for server-only Vercel Function envs.
-- If live fetch fails, the app falls back to the curated mock dataset so the demo still works.
+- If either live source fails, the app falls back gracefully to the remaining live source or the curated mock dataset so the demo still works.
 
 ## Agent Search Backend
 

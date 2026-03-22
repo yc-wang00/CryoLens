@@ -14,6 +14,50 @@ class CryoLensStats(BaseModel):
     structures: int
 
 
+class CryoLensStoryYear(BaseModel):
+    """Yearly evidence-growth point for the story chart."""
+
+    year: int
+    papers: int
+    findings: int
+    experiments: int
+    cumulativePapers: int
+    cumulativeFindings: int
+
+
+class CryoLensStoryCategory(BaseModel):
+    """Ranked finding-category slice used in the story sidebar."""
+
+    label: str
+    count: int
+    sharePct: float
+
+
+class CryoLensFormulationMilestone(BaseModel):
+    """Formulation milestone marker for the story chart."""
+
+    id: str
+    name: str
+    year: int
+    type: str
+    note: str
+    referenceDoi: str | None = None
+    referenceTitle: str | None = None
+    linkedFindings: int
+    components: list[str] = Field(default_factory=list)
+
+
+class CryoLensStoryStats(BaseModel):
+    """Chart-ready story payload for chronology and category coverage."""
+
+    firstFormulationYear: int | None = None
+    firstPaperYear: int | None = None
+    lastYear: int | None = None
+    yearly: list[CryoLensStoryYear] = Field(default_factory=list)
+    milestones: list[CryoLensFormulationMilestone] = Field(default_factory=list)
+    topFindingCategories: list[CryoLensStoryCategory] = Field(default_factory=list)
+
+
 class CryoLensSourceDocument(BaseModel):
     """Source document card payload."""
 
@@ -126,6 +170,7 @@ class CryoLensDatasetResponse(BaseModel):
     """Normalized frontend dataset returned by the backend."""
 
     appStats: CryoLensStats
+    storyStats: CryoLensStoryStats
     molecules: list[CryoLensMolecule] = Field(default_factory=list)
     cocktails: list[CryoLensCocktail] = Field(default_factory=list)
     findings: list[CryoLensFinding] = Field(default_factory=list)

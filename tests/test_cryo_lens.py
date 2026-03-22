@@ -14,10 +14,14 @@ from app.schemas.cryo_lens import (
     CryoLensExperimentDraft,
     CryoLensExperimentRecord,
     CryoLensFinding,
+    CryoLensFormulationMilestone,
     CryoLensHypothesis,
     CryoLensMolecule,
     CryoLensSourceDocument,
     CryoLensStats,
+    CryoLensStoryCategory,
+    CryoLensStoryStats,
+    CryoLensStoryYear,
 )
 
 
@@ -32,6 +36,41 @@ def client() -> AsyncIterator[TestClient]:
 def _build_dataset() -> CryoLensDatasetResponse:
     return CryoLensDatasetResponse(
         appStats=CryoLensStats(papers=1, findings=1, molecules=1, structures=1),
+        storyStats=CryoLensStoryStats(
+            firstFormulationYear=1985,
+            firstPaperYear=2025,
+            lastYear=2025,
+            yearly=[
+                CryoLensStoryYear(
+                    year=2025,
+                    papers=1,
+                    findings=1,
+                    experiments=1,
+                    cumulativePapers=1,
+                    cumulativeFindings=1,
+                )
+            ],
+            milestones=[
+                CryoLensFormulationMilestone(
+                    id="vs55",
+                    name="VS55",
+                    year=1985,
+                    type="benchmark",
+                    note="Benchmark milestone",
+                    referenceDoi="10.1000/test",
+                    referenceTitle="Test Paper",
+                    linkedFindings=1,
+                    components=["Dimethyl Sulfoxide"],
+                )
+            ],
+            topFindingCategories=[
+                CryoLensStoryCategory(
+                    label="toxicity",
+                    count=1,
+                    sharePct=100.0,
+                )
+            ],
+        ),
         molecules=[
             CryoLensMolecule(
                 id="dmso",
@@ -141,7 +180,8 @@ def test_cryo_lens_dataset_route(
 ) -> None:
     """The cryoLens dataset route should return the normalized backend payload."""
 
-    async def fake_fetch() -> CryoLensDatasetResponse:
+    async def fake_fetch(*, session: object | None = None) -> CryoLensDatasetResponse:
+        del session
         return _build_dataset()
 
     monkeypatch.setattr(cryo_lens_route, "fetch_cryo_lens_dataset", fake_fetch)
@@ -160,3 +200,5 @@ def test_cryo_lens_dataset_route(
     assert payload["cocktails"][0]["name"] == "VS55"
     assert payload["findings"][0]["sourceTitle"] == "Test Paper"
     assert payload["experiments"][0]["title"] == "Test experiment"
+    assert payload["storyStats"]["yearly"][0]["year"] == 2025
+    assert payload["storyStats"]["milestones"][0]["name"] == "VS55"

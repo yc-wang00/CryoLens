@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import cryo_lens, health, ingestion
+from app.api.routes import cryo_lens, health, hypotheses, ingestion
 from app.core.config import settings
 
 app = FastAPI(
@@ -24,3 +24,4 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(ingestion.router)
 app.include_router(cryo_lens.router)
+app.include_router(hypotheses.router)

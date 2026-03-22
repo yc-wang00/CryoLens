@@ -69,6 +69,14 @@ class FindingSourceType(str, enum.Enum):
     experiment = "experiment"
 
 
+class HypothesisStatus(str, enum.Enum):
+    """Lifecycle states for saved hypothesis drafts."""
+
+    draft = "draft"
+    prioritized = "prioritized"
+    planned = "planned"
+
+
 class Document(Base):
     """Uploaded document and raw text storage."""
 
@@ -335,6 +343,44 @@ class Finding(Base):
     source_document: Mapped["Document | None"] = relationship(back_populates="findings")
 
 
+class Hypothesis(Base):
+    """Saved hypothesis drafts generated from Ask runs."""
+
+    __tablename__ = "hypotheses"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    status: Mapped[HypothesisStatus] = mapped_column(
+        Enum(HypothesisStatus, name="hypothesis_status"),
+        default=HypothesisStatus.draft,
+        nullable=False,
+    )
+    benchmark: Mapped[str | None] = mapped_column(String(255))
+    target: Mapped[str | None] = mapped_column(String(255))
+    summary: Mapped[str] = mapped_column(Text, nullable=False)
+    evidence_ids_json: Mapped[list[str]] = mapped_column(
+        JSONB,
+        default=list,
+        nullable=False,
+    )
+    next_step: Mapped[str | None] = mapped_column(Text)
+    source_prompt: Mapped[str | None] = mapped_column(Text)
+    agent_profile: Mapped[str] = mapped_column(
+        String(64),
+        nullable=False,
+        default="hypothesis",
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+
+
 Index(
     "ix_document_chunks_document_chunk",
     DocumentChunk.document_id,
@@ -346,3 +392,5 @@ Index("ix_findings_metric_type", Finding.metric_type)
 Index("ix_findings_tissue", Finding.tissue)
 Index("ix_findings_modality", Finding.modality)
 Index("ix_findings_year", Finding.year)
+Index("ix_hypotheses_status", Hypothesis.status)
+Index("ix_hypotheses_benchmark", Hypothesis.benchmark)

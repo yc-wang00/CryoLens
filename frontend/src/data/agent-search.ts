@@ -1,6 +1,9 @@
 import type { AgentToolCall } from "./mock-data";
+import type { Hypothesis } from "./mock-data";
 
 const AGENT_API_BASE_URL = import.meta.env.VITE_AGENT_API_BASE_URL ?? "";
+
+export type AgentProfile = "research" | "hypothesis";
 
 export type AgentSearchStreamEvent =
   | { type: "status"; phase: string; message: string; sandboxId?: string }
@@ -9,13 +12,16 @@ export type AgentSearchStreamEvent =
   | { type: "tool_input_delta"; text: string }
   | { type: "tool_end"; name: string; input: string }
   | { type: "result"; text: string }
+  | { type: "hypothesis_saved"; hypothesis: Hypothesis }
   | { type: "error"; message: string };
 
 export interface LiveAgentSearchState {
   prompt: string;
+  profile: AgentProfile;
   assistantText: string;
   errorMessage: string | null;
   finished: boolean;
+  savedHypothesis: Hypothesis | null;
   statusHistory: string[];
   statusMessage: string;
   toolCalls: AgentToolCall[];
@@ -45,10 +51,11 @@ function parseEventBlock(block: string): AgentSearchStreamEvent | null {
 
 export async function streamAgentSearch(
   prompt: string,
+  profile: AgentProfile,
   onEvent: (event: AgentSearchStreamEvent) => void,
 ): Promise<void> {
   const response = await fetch(buildUrl("/api/agent-search"), {
-    body: JSON.stringify({ prompt }),
+    body: JSON.stringify({ prompt, profile }),
     headers: {
       "content-type": "application/json",
     },

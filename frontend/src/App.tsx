@@ -4,7 +4,7 @@ import { AppShell } from "./components/app-shell";
 import { EvidencePanel, type PanelState } from "./components/evidence-panel";
 import { Dialog, DialogContent } from "./components/ui/dialog";
 import { Card, CardContent } from "./components/ui/card";
-import { type Cocktail, type EvidenceFinding, type Molecule, type PageKey, type SourceDocument } from "./data/mock-data";
+import { type Cocktail, type Hypothesis, type Molecule, type PageKey, type SourceDocument } from "./data/mock-data";
 import { fetchCryoLensDataset, type CryoLensDataset, type ExperimentRecord } from "./data/cryo-lens";
 import { AskPage } from "./pages/ask-page";
 import { CocktailsPage } from "./pages/cocktails-page";
@@ -16,20 +16,13 @@ function App() {
   const [currentPage, setCurrentPage] = useState<PageKey>("ask");
   const [panel, setPanel] = useState<PanelState>({ kind: "none" });
   const [dataset, setDataset] = useState<CryoLensDataset | null>(null);
-  const [datasetLog, setDatasetLog] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     let active = true;
 
     async function loadDataset(): Promise<void> {
-      setDatasetLog([]);
-      const nextDataset = await fetchCryoLensDataset((message) => {
-        if (!active) {
-          return;
-        }
-        setDatasetLog((previous) => [...previous, message]);
-      });
+      const nextDataset = await fetchCryoLensDataset();
       if (!active) {
         return;
       }
@@ -44,10 +37,6 @@ function App() {
       active = false;
     };
   }, []);
-
-  function openFinding(finding: EvidenceFinding): void {
-    setPanel({ kind: "finding", finding });
-  }
 
   function openMolecule(molecule: Molecule): void {
     setPanel({ kind: "molecule", molecule });
@@ -64,6 +53,16 @@ function App() {
   function openExperiment(experiment: ExperimentRecord): void {
     setCurrentPage("hypotheses");
     setPanel({ kind: "experiment", experiment });
+  }
+
+  function openHypothesis(hypothesis: Hypothesis): void {
+    setCurrentPage("hypotheses");
+    setPanel({ kind: "hypothesis", hypothesis });
+  }
+
+  async function refreshDataset(): Promise<void> {
+    const nextDataset = await fetchCryoLensDataset();
+    setDataset(nextDataset);
   }
 
   return (
@@ -84,7 +83,7 @@ function App() {
                 Connecting to cryoLens
               </h1>
               <p className="text-sm leading-6 text-muted-foreground">
-                Fetching the normalized cryoLens dataset from the FastAPI backend.
+                Loading the hybrid cryoLens dataset from browser-safe Supabase reads and backend Ask services.
               </p>
             </CardContent>
           </Card>
@@ -93,14 +92,16 @@ function App() {
       {!loading && dataset && currentPage === "ask" ? (
         <AskPage
           dataset={dataset}
-          datasetLog={dataset.loadLog.length ? dataset.loadLog : datasetLog}
+          onHypothesisSaved={refreshDataset}
+          onOpenHypotheses={() => setCurrentPage("hypotheses")}
         />
       ) : null}
       {!loading && dataset && currentPage === "hypotheses" ? (
         <HypothesesPage
           experiments={dataset.experiments}
-          onOpenFinding={openFinding}
+          hypotheses={dataset.hypotheses}
           onOpenExperiment={openExperiment}
+          onOpenHypothesis={openHypothesis}
         />
       ) : null}
       {!loading && dataset && currentPage === "molecules" ? (
@@ -110,7 +111,11 @@ function App() {
         <CocktailsPage cocktails={dataset.cocktails} onOpenCocktail={openCocktail} />
       ) : null}
       {!loading && dataset && currentPage === "sources" ? (
-        <SourcesPage onOpenSource={openSource} sources={dataset.sources} />
+        <SourcesPage
+          onOpenSource={openSource}
+          sources={dataset.sources}
+          storyStats={dataset.storyStats}
+        />
       ) : null}
       <Dialog onOpenChange={(open) => (!open ? setPanel({ kind: "none" }) : null)} open={panel.kind !== "none"}>
         <DialogContent className="max-w-3xl" onClose={() => setPanel({ kind: "none" })}>
