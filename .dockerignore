@@ -8,4 +8,5 @@ extracted_data/
 database/seed_*.sql
 .DS_Store
 *.md
+!README.md
 !pyproject.toml
