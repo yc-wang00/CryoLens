@@ -1,0 +1,7 @@
+Okay, now could you make sure we finish our task here? Please make sure you don't forget what we were doing before.
+
+You can check what's inside the engine folder. We have extraction-skill.md and extraction-tracker, which essentially I would like you, Claude, to use as the brain to extract information from the PDF paper and inject it into the database. That's what we're going to do. This extraction-skill is basically to tell you, as the Claude code, how to do it.
+
+We need to do it at scale, so you can spawn a swarm of agents that can extract papers in parallel. We need to do this really fast:
+1. Use probably 20 to 50 agents at the same time.
+2. Ensure we iterate and evaluate really fast because we are hitting the deadline.
