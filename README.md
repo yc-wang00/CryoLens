@@ -1,37 +1,54 @@
-# CryoSight
+# CryoLens
 
-CryoSight is a FastAPI backend for an AI-assisted cryopreservation knowledge base.
+The world's first structured, AI-queryable knowledge engine for cryopreservation — turning 1,200+ papers into a live database that any researcher or AI agent can query through natural language or the Model Context Protocol (MCP).
 
-The current scaffold focuses on:
+Built at the [Defeating Entropy Hackathon](https://www.defeatingentropy.com/), London, March 2026.
 
-- PDF ingestion
-- raw text storage and chunking
-- pgvector-ready chunk storage
-- mocked metadata extraction into the MVP knowledge tables
-- curated manual seeding from CPA screening papers
-- a Vite React hackathon frontend with mock data
-- Alembic-managed schema changes
+## What it does
 
-## Stack
+1. **Mine** — A custom data-mining AI agent extracts structured data from 1,200+ cryobiology papers into a normalized Postgres database (compounds, formulations, viability measurements, protocols, findings).
 
-- FastAPI
-- SQLAlchemy 2.x
-- PostgreSQL + pgvector
-- Alembic
-- `uv` for local environment management
+2. **Structure** — An MCP server exposes 8 tools that let any AI agent (Claude, Cursor, Codex) query the entire field's knowledge in seconds.
 
-## Quickstart
+3. **Design** — A hypothesis engine synthesizes that evidence to design novel CPA formulations, with every component justified by specific findings traceable to source papers.
 
-```bash
-cp .env.example .env
-uv sync --extra dev
-docker compose up -d db
-uv run alembic upgrade head
-uv run python -m app.services.curated_seed
-uv run uvicorn app.main:app --reload
+## Architecture
+
+```
+Frontend (React)  →  FastAPI Backend  →  PostgreSQL (15 tables)
+                  →  Claude Agent SDK  →  CryoLens MCP Server
 ```
 
-Frontend:
+- **Database**: 1,210 papers, 6,210 findings, 538 formulations, 72 compounds, 292 experiments
+- **MCP Server**: 8 tools via FastMCP SDK, streamable-http transport
+- **Agent Chat**: Claude Agent SDK streaming SSE through FastAPI, connected to CryoLens MCP
+- **Frontend**: React + TypeScript + Vite + Tailwind v4, custom NeoLab design system
+
+## Connect your AI agent
+
+```json
+{
+  "mcpServers": {
+    "cryolens": {
+      "url": "https://mcp.cryolens.io/mcp"
+    }
+  }
+}
+```
+
+Works with Claude Desktop, Claude Code, Cursor, Windsurf, Codex, or any MCP-compatible client.
+
+## Local development
+
+**Backend:**
+
+```bash
+uv sync
+export ANTHROPIC_API_KEY=your-key
+uv run uvicorn app.main:app --port 8000
+```
+
+**Frontend:**
 
 ```bash
 cd frontend
@@ -39,41 +56,39 @@ pnpm install
 pnpm dev
 ```
 
-Sandboxed Ask-page backend:
+The frontend dev server runs on `localhost:5173` and proxies `/api/v1/*` to `localhost:8000`.
+
+**MCP Server (standalone):**
 
 ```bash
-cd frontend
-vercel env pull
-vercel dev
+uv run uvicorn engine.asgi:app --port 8001
 ```
 
-Environment ownership:
+## Deployment
 
-- Root `.env` is for the Railway/FastAPI backend.
-- `frontend/.env.local` should contain only browser-visible `VITE_*` settings.
-- Vercel Function secrets for `api/agent-search.ts` should come from Vercel project envs or a local server-only env file patterned after `frontend/.env.local`.
+Three services on Railway:
 
-## Useful Commands
+| Service | Dockerfile | Port |
+|---------|-----------|------|
+| MCP Server | `Dockerfile.mcp` | 8000 |
+| Backend API | `Dockerfile.api` | 8000 |
+| Frontend | `Dockerfile.frontend` | 3000 |
 
-```bash
-uv run pytest
-uv run ruff check .
-uv run alembic revision --autogenerate -m "describe change"
-uv run alembic upgrade head
-uv run python -m app.services.curated_seed
-uv run python -m app.services.knowledge_queries head findings
-uv run python -m app.services.knowledge_queries head cpa_structures
-uv run python -m app.services.knowledge_queries findings --component formamide --temperature 4
-uv run python -m app.services.knowledge_queries rescue-partners formamide --temperature 4
-cd frontend && pnpm lint
-cd frontend && pnpm build
-```
+Frontend uses Caddy to serve static files and reverse proxy `/api/*` to the backend.
 
-## Notes
+## Tech stack
 
-- `docs/` is intentionally gitignored and treated as local operator state.
-- The ingestion flow currently uses a mocked structured-extraction step. The handoff point for a real LLM extractor is already isolated in `app/services/extraction.py`.
-- `app/bootstrap_cpa_seed.json` is the curated MVP bootstrap payload derived from the four CPA screening papers and can be loaded directly into Postgres with `app.services.curated_seed`.
-- `app.services.knowledge_queries` provides a thin SQL-backed helper CLI for live prototyping against the seeded database.
-- `frontend/` contains the hackathon demo UI built with React/Vite and mock data aligned to the backend schema.
-- `api/agent-search.ts` creates a sandboxed Claude Agent SDK run for Ask-page research and streams the result back to the UI over SSE.
+- **Extraction**: Custom data-mining AI agent (Claude Sonnet, one agent per paper)
+- **Database**: PostgreSQL with 15 normalized tables
+- **MCP Server**: Python FastMCP SDK, deployed on Railway
+- **Backend**: FastAPI + SQLAlchemy async + Claude Agent SDK
+- **Frontend**: React, TypeScript, Vite, Tailwind v4
+- **Deployment**: Railway (services + Postgres), Caddy reverse proxy
+
+## Team
+
+Built by **Yicheng Wang** and **Kenji Phang**.
+
+## License
+
+MIT
