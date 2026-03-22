@@ -3,40 +3,22 @@
 Provides two asyncpg pools:
 - Primary pool: used by all tools
 - Read-only pool: used by query_database (defense-in-depth)
-
-Supabase-compatible: disables prepared statement caching for
-transaction-mode connection poolers (Supavisor/PgBouncer).
 """
 
 import logging
 import os
-import ssl as ssl_module
 from urllib.parse import urlparse
 
 import asyncpg
 
 logger = logging.getLogger("cryolens.db")
 
-# Sanitize connection URLs in logs
+
 def _sanitize_url(url: str) -> str:
     parsed = urlparse(url)
     if parsed.password:
         return url.replace(parsed.password, "***")
     return url
-
-
-def _needs_ssl(url: str) -> ssl_module.SSLContext | bool:
-    """Return SSL context if connecting to a remote host (e.g. Supabase)."""
-    parsed = urlparse(url)
-    host = parsed.hostname or ""
-    if host in ("localhost", "127.0.0.1", "::1", ""):
-        return False
-    ctx = ssl_module.create_default_context()
-    # Supabase pooler (Supavisor) uses its own CA — skip verification
-    if "supabase" in host:
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl_module.CERT_NONE
-    return ctx
 
 
 async def create_pool(
@@ -45,15 +27,11 @@ async def create_pool(
     min_size: int = 1,
     max_size: int = 5,
 ) -> asyncpg.Pool:
-    """Create an asyncpg connection pool with Supabase compatibility."""
-    ssl = _needs_ssl(dsn)
+    """Create an asyncpg connection pool."""
     pool = await asyncpg.create_pool(
         dsn,
         min_size=min_size,
         max_size=max_size,
-        # Disable prepared statement cache for Supavisor/PgBouncer compatibility
-        statement_cache_size=0,
-        ssl=ssl,
     )
     logger.info("Connected to %s (pool %d-%d)", _sanitize_url(dsn), min_size, max_size)
     return pool
@@ -98,7 +76,7 @@ def validate_readonly_sql(sql: str) -> str | None:
 def get_dsn() -> str:
     return os.environ.get(
         "CRYOLENS_DB_URL",
-        "postgresql://localhost/cryolens",
+        os.environ.get("DATABASE_URL", "postgresql://localhost/cryolens"),
     )
 
 
