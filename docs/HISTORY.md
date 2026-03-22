@@ -1,0 +1,2 @@
+2026-03-22 10:43 UTC | CHANGE | sandbox,agent,mcp | Simplified the Ask sandbox path to use a single remote CryoLens MCP server, added richer smoke instrumentation, and tightened the research prompt around early stopping, inference labeling, counterpoints, and researcher-style decision outputs.
+2026-03-22 10:43 UTC | CHANGE | sandbox,agent,mcp | Updated the default CryoLens MCP endpoint from the Railway URL to `https://mcp.cryolens.io/mcp`.

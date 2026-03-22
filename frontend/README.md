@@ -29,7 +29,7 @@ This package contains the Vite React hackathon frontend for CryoSight.
 - Read-only display pages can fetch cryoLens data directly from Supabase in the browser with a publishable key and RLS-safe read policies.
 - The Ask page still depends on the local frontend API proxy at `/api/cryo-lens-dataset`, which forwards to the FastAPI backend endpoint `/api/v1/cryo-lens/dataset` for the backend-owned research shell.
 - The Ask sandbox route at `/api/agent-search` remains server-owned and keeps SQL and agent credentials off the browser.
-- The Ask page now uses a Vercel Function at `/api/agent-search` to create a sandboxed Claude research run. That function owns the Anthropic API key, the Supabase pooled connection string, and the Vercel Sandbox lifecycle.
+- The Ask page now uses a Vercel Function at `/api/agent-search` to create a sandboxed Claude research run. That function owns the Anthropic API key, the remote MCP URL, and the Vercel Sandbox lifecycle.
 - Override with:
   - `VITE_API_BASE_URL`
   - `VITE_AGENT_API_BASE_URL`
@@ -42,9 +42,11 @@ This package contains the Vite React hackathon frontend for CryoSight.
 
 - Required server env vars:
   - `ANTHROPIC_API_KEY`
-  - `SUPABASE_DB_URL`
+  - `CRYOSIGHT_RESEARCH_MCP_URL`
+  - `CRYOSIGHT_RESEARCH_MCP_NAME` optional; defaults to `cryosight-knowledge`
   - `CLAUDE_AGENT_MODEL`
   - `CLAUDE_AGENT_SANDBOX_SNAPSHOT_ID` optional but recommended after bootstrapping
+  - `VERCEL_OIDC_TOKEN`
 - Keep those values out of browser env files. Only `VITE_*` values belong in `frontend/.env.local`.
 - Vercel Sandbox auth requires `VERCEL_OIDC_TOKEN`, typically provisioned by `vercel env pull`.
 - Local full-stack development for the Ask page should use `vercel dev` from `frontend/` so the Vercel Function is available. `pnpm dev` still serves the client UI, but it does not run the sandbox function.
