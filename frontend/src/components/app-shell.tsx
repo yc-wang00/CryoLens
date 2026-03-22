@@ -11,7 +11,6 @@ import {
   BookOpenText,
   FlaskConical,
   Github,
-  LayoutGrid,
   Lightbulb,
   Menu,
   Search,
@@ -84,9 +83,7 @@ function SidebarContent({
     <>
       <div className="border-b border-border/70 pb-5">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary text-primary-foreground">
-            <LayoutGrid className="h-4 w-4" />
-          </div>
+          <img src="/logo.svg" alt="CryoLens" className="h-10 w-10" />
           <div className="min-w-0">
             <div className="font-headline text-sm font-extrabold text-hero">CryoLens</div>
             <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
