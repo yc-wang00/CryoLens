@@ -1,0 +1,2977 @@
+<!-- Sources (Neo-Minimal) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed": "#3a4852",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#e0f0fc",
+                        "tertiary-container": "#e0f0fc",
+                        "primary-fixed-dim": "#c4d6ed",
+                        "on-primary": "#f5f8ff",
+                        "error-container": "#fe8983",
+                        "on-secondary-container": "#3c574e",
+                        "surface-container-high": "#e3e9ec",
+                        "surface-dim": "#d1dce0",
+                        "on-primary-fixed": "#304153",
+                        "on-primary-fixed-variant": "#4c5d70",
+                        "surface-container-low": "#f1f4f6",
+                        "primary-fixed": "#d2e4fb",
+                        "on-tertiary-container": "#4c5a64",
+                        "error-dim": "#4e0309",
+                        "secondary-container": "#cae9dd",
+                        "on-secondary-fixed-variant": "#456157",
+                        "tertiary-fixed-dim": "#d2e2ee",
+                        "inverse-primary": "#d5e7fe",
+                        "surface-tint": "#4f6073",
+                        "surface-variant": "#dbe4e7",
+                        "secondary-fixed-dim": "#bddbcf",
+                        "on-error": "#fff7f6",
+                        "tertiary-dim": "#46555f",
+                        "error": "#9f403d",
+                        "surface": "#f8f9fa",
+                        "tertiary": "#52616b",
+                        "on-secondary": "#e4fff3",
+                        "on-background": "#2b3437",
+                        "surface-container": "#eaeff1",
+                        "primary-container": "#d2e4fb",
+                        "on-error-container": "#752121",
+                        "secondary-dim": "#3d594f",
+                        "on-tertiary": "#f4f9ff",
+                        "on-surface-variant": "#586064",
+                        "secondary": "#49655b",
+                        "outline": "#737c7f",
+                        "surface-container-highest": "#dbe4e7",
+                        "inverse-on-surface": "#9b9d9e",
+                        "on-surface": "#2b3437",
+                        "on-primary-container": "#425366",
+                        "inverse-surface": "#0c0f10",
+                        "outline-variant": "#abb3b7",
+                        "primary": "#4f6073",
+                        "on-tertiary-fixed-variant": "#56656f",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#cae9dd",
+                        "primary-dim": "#435467",
+                        "surface-bright": "#f8f9fa",
+                        "on-secondary-fixed": "#29453c"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .scrolling-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container">
+    <!-- TopNavBar -->
+    <nav
+        class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex items-center justify-between px-8 h-14 w-full shadow-[0_1px_0_0_rgba(0,0,0,0.05)]">
+        <div class="flex items-center gap-8">
+            <span
+                class="text-lg font-extrabold tracking-tighter text-[#1A2B3C] uppercase font-headline">ARCHITECT</span>
+            <div class="hidden md:flex gap-6 items-center h-full">
+                <a class="text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 font-headline tracking-[-0.02em] font-medium text-sm"
+                    href="#">Ask</a>
+                <a class="text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 font-headline tracking-[-0.02em] font-medium text-sm"
+                    href="#">Hypotheses</a>
+                <a class="text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 font-headline tracking-[-0.02em] font-medium text-sm"
+                    href="#">Molecules</a>
+                <a class="text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 font-headline tracking-[-0.02em] font-medium text-sm"
+                    href="#">Cocktails</a>
+                <a class="text-[#1A2B3C] border-b border-[#1A2B3C] pb-1 font-headline tracking-[-0.02em] font-medium text-sm"
+                    href="#">Sources</a>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3 text-outline-variant text-sm">search</span>
+                <input
+                    class="bg-surface-container-low border-none border-b border-outline-variant focus:border-primary focus:ring-0 text-sm py-1.5 pl-10 pr-4 w-64 rounded-sm"
+                    placeholder="Search archives..." type="text" />
+            </div>
+            <button
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+            <button
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+        </div>
+    </nav>
+    <!-- SideNavBar (Used for Contextual Info) -->
+    <aside
+        class="fixed right-0 top-14 bottom-0 w-64 border-l border-slate-200/50 bg-slate-100 flex flex-col p-4 space-y-2 z-40">
+        <div class="mb-6 px-2">
+            <span class="text-sm font-bold text-orange-700 font-body uppercase tracking-wider">Evidence Explorer</span>
+            <p class="text-[10px] text-on-surface-variant font-label uppercase tracking-widest mt-1">Clinical Data
+                Stream</p>
+        </div>
+        <div class="space-y-1">
+            <div
+                class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors cursor-pointer rounded-sm group">
+                <span class="material-symbols-outlined text-lg">menu_book</span>
+                <span class="font-label text-xs font-semibold uppercase tracking-widest">Citations</span>
+            </div>
+            <div
+                class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors cursor-pointer rounded-sm group">
+                <span class="material-symbols-outlined text-lg">biotech</span>
+                <span class="font-label text-xs font-semibold uppercase tracking-widest">Findings</span>
+            </div>
+            <div
+                class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-colors cursor-pointer rounded-sm group">
+                <span class="material-symbols-outlined text-lg">edit_note</span>
+                <span class="font-label text-xs font-semibold uppercase tracking-widest">Lab Notes</span>
+            </div>
+            <div class="flex items-center gap-3 px-3 py-2 bg-white text-orange-700 shadow-sm rounded-sm cursor-pointer">
+                <span class="material-symbols-outlined text-lg">history_edu</span>
+                <span class="font-label text-xs font-semibold uppercase tracking-widest">Sources</span>
+            </div>
+        </div>
+        <div class="mt-auto pt-6 border-t border-outline-variant/20">
+            <button
+                class="w-full bg-primary-dim text-white py-2 px-4 rounded-sm text-xs font-label uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-sm">export_notes</span>
+                Export Analysis
+            </button>
+        </div>
+    </aside>
+    <!-- Main Content Canvas -->
+    <main class="mt-14 mr-64 min-h-screen p-8 bg-surface">
+        <!-- Header Section -->
+        <header class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+            <div class="max-w-2xl">
+                <h1 class="text-4xl font-extrabold font-headline tracking-tight text-on-surface mb-2">Evidence Source
+                    Repository</h1>
+                <p class="text-on-surface-variant body-md leading-relaxed">Systematic provenance layer for all extracted
+                    biomolecular insights. Filter by peer-review impact and confidence score.</p>
+            </div>
+            <div class="flex gap-3">
+                <div class="bg-surface-container-low px-4 py-2 border-b border-outline-variant flex items-center gap-2">
+                    <span
+                        class="text-[10px] font-label font-bold uppercase tracking-widest text-on-surface-variant">Journal</span>
+                    <select
+                        class="bg-transparent border-none text-xs font-semibold focus:ring-0 p-0 text-on-surface cursor-pointer">
+                        <option>All Publications</option>
+                        <option>Nature Bio</option>
+                        <option>Cryobiology</option>
+                        <option>Cell Stem Cell</option>
+                    </select>
+                </div>
+                <div class="bg-surface-container-low px-4 py-2 border-b border-outline-variant flex items-center gap-2">
+                    <span
+                        class="text-[10px] font-label font-bold uppercase tracking-widest text-on-surface-variant">Year</span>
+                    <select
+                        class="bg-transparent border-none text-xs font-semibold focus:ring-0 p-0 text-on-surface cursor-pointer">
+                        <option>2020—2024</option>
+                        <option>2015—2019</option>
+                        <option>Archival</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+        <!-- Bento Layout for Library -->
+        <div class="grid grid-cols-12 gap-6">
+            <!-- List View (Spans 8 columns) -->
+            <section class="col-span-12 lg:col-span-8 space-y-4">
+                <!-- Table Header Mock -->
+                <div class="flex items-center px-6 py-2 bg-surface-container-high rounded-sm mb-2">
+                    <span
+                        class="w-12 text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest">ID</span>
+                    <span
+                        class="flex-1 text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest">Source
+                        Document</span>
+                    <span
+                        class="w-32 text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest">Confidence</span>
+                </div>
+                <!-- Paper Card 1 -->
+                <div
+                    class="group bg-surface-container-lowest border-b border-outline-variant/10 hover:bg-white transition-all p-6 flex items-start gap-4 cursor-pointer relative">
+                    <div class="w-12 pt-1">
+                        <span class="font-headline font-bold text-outline-variant text-sm">01</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span
+                                class="bg-secondary-container text-on-secondary-container text-[10px] font-label font-bold px-2 py-0.5 rounded-sm uppercase tracking-tighter">Cryobiology</span>
+                            <span
+                                class="text-[10px] font-label text-on-surface-variant tracking-widest uppercase">2023</span>
+                        </div>
+                        <h3
+                            class="text-lg font-headline font-bold text-on-surface leading-snug group-hover:text-primary transition-colors">
+                            Vitrification kinetics of human oocytes under varying cooling gradients</h3>
+                        <p class="text-xs text-on-surface-variant mt-2 font-body italic">Authors: Schmidt, L., et al.
+                        </p>
+                    </div>
+                    <div class="w-32 flex flex-col items-end gap-2">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs font-headline font-bold text-secondary">98%</span>
+                            <div class="w-16 h-1 bg-surface-container">
+                                <div class="bg-secondary h-full w-[98%]"></div>
+                            </div>
+                        </div>
+                        <span class="text-[9px] font-label font-bold text-on-surface-variant uppercase">Extracted</span>
+                    </div>
+                </div>
+                <!-- Paper Card 2 -->
+                <div
+                    class="group bg-surface-container-low border-b border-outline-variant/10 hover:bg-white transition-all p-6 flex items-start gap-4 cursor-pointer relative">
+                    <div class="w-12 pt-1">
+                        <span class="font-headline font-bold text-outline-variant text-sm">02</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span
+                                class="bg-tertiary-container text-on-tertiary-container text-[10px] font-label font-bold px-2 py-0.5 rounded-sm uppercase tracking-tighter">Nature
+                                Bio</span>
+                            <span
+                                class="text-[10px] font-label text-on-surface-variant tracking-widest uppercase">2024</span>
+                        </div>
+                        <h3
+                            class="text-lg font-headline font-bold text-on-surface leading-snug group-hover:text-primary transition-colors">
+                            CRISPR-Cas9 metabolic engineering for enhanced cellular resilience</h3>
+                        <p class="text-xs text-on-surface-variant mt-2 font-body italic">Authors: Zhang, W., Chen, Y.
+                        </p>
+                    </div>
+                    <div class="w-32 flex flex-col items-end gap-2">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs font-headline font-bold text-primary">82%</span>
+                            <div class="w-16 h-1 bg-surface-container">
+                                <div class="bg-primary h-full w-[82%]"></div>
+                            </div>
+                        </div>
+                        <span
+                            class="text-[9px] font-label font-bold text-on-surface-variant uppercase">Processing</span>
+                    </div>
+                </div>
+                <!-- Paper Card 3 -->
+                <div
+                    class="group bg-surface-container-lowest border-b border-outline-variant/10 hover:bg-white transition-all p-6 flex items-start gap-4 cursor-pointer relative">
+                    <div class="w-12 pt-1">
+                        <span class="font-headline font-bold text-outline-variant text-sm">03</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span
+                                class="bg-surface-container-highest text-on-surface-variant text-[10px] font-label font-bold px-2 py-0.5 rounded-sm uppercase tracking-tighter">Cell
+                                Stem Cell</span>
+                            <span
+                                class="text-[10px] font-label text-on-surface-variant tracking-widest uppercase">2022</span>
+                        </div>
+                        <h3
+                            class="text-lg font-headline font-bold text-on-surface leading-snug group-hover:text-primary transition-colors">
+                            Mitochondrial DNA repair mechanisms during cold atmospheric plasma treatment</h3>
+                        <p class="text-xs text-on-surface-variant mt-2 font-body italic">Authors: Dr. Aris Thorne, J.
+                            Miller</p>
+                    </div>
+                    <div class="w-32 flex flex-col items-end gap-2">
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs font-headline font-bold text-secondary">94%</span>
+                            <div class="w-16 h-1 bg-surface-container">
+                                <div class="bg-secondary h-full w-[94%]"></div>
+                            </div>
+                        </div>
+                        <span class="text-[9px] font-label font-bold text-on-surface-variant uppercase">Extracted</span>
+                    </div>
+                </div>
+            </section>
+            <!-- Details Drawer (Static preview in this layout as a side column) -->
+            <section class="col-span-12 lg:col-span-4">
+                <div class="sticky top-20 bg-white shadow-sm border border-outline-variant/10 p-6 flex flex-col h-fit">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <span
+                                class="text-[10px] font-label font-bold text-orange-700 uppercase tracking-widest">Detail
+                                View</span>
+                            <h2 class="text-xl font-headline font-bold text-on-surface mt-1">Source Artifact 01</h2>
+                        </div>
+                        <button class="material-symbols-outlined text-outline">close</button>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <label
+                                class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest block mb-2">Abstract
+                                Snippet</label>
+                            <p class="text-sm text-on-surface leading-relaxed border-l-2 border-secondary pl-4">
+                                "...the application of ultra-rapid cooling protocols demonstrated a 14% increase in
+                                blastocyst formation rates. This provenance suggests a correlation between Vitrification
+                                Layer 4 and subsequent cellular viability..."
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-surface-container-low p-4">
+                                <span
+                                    class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest block mb-1">Linked
+                                    Findings</span>
+                                <span class="text-2xl font-headline font-extrabold text-[#1A2B3C]">12</span>
+                            </div>
+                            <div class="bg-surface-container-low p-4">
+                                <span
+                                    class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest block mb-1">Molecules
+                                    Identified</span>
+                                <span class="text-2xl font-headline font-extrabold text-[#1A2B3C]">07</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-widest block mb-3">Detected
+                                Molecules</label>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    class="px-2 py-1 bg-surface-container-highest text-on-surface-variant text-[9px] font-label font-bold uppercase border border-outline-variant/10">DMSO</span>
+                                <span
+                                    class="px-2 py-1 bg-surface-container-highest text-on-surface-variant text-[9px] font-label font-bold uppercase border border-outline-variant/10">ETHYLENE
+                                    GLYCOL</span>
+                                <span
+                                    class="px-2 py-1 bg-surface-container-highest text-on-surface-variant text-[9px] font-label font-bold uppercase border border-outline-variant/10">TREHALOSE</span>
+                                <span
+                                    class="px-2 py-1 bg-surface-container-highest text-on-surface-variant text-[9px] font-label font-bold uppercase border border-outline-variant/10">PROPANEDIOL</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 border-t border-outline-variant/20">
+                            <div class="flex flex-col gap-2">
+                                <button
+                                    class="w-full bg-primary text-white py-3 rounded-sm font-label text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-primary-dim transition-colors shadow-lg shadow-primary/10">
+                                    <span class="material-symbols-outlined text-sm">visibility</span>
+                                    View Raw Data
+                                </button>
+                                <button
+                                    class="w-full text-on-surface py-3 rounded-sm font-label text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-surface-container-low transition-colors">
+                                    <span class="material-symbols-outlined text-sm">download</span>
+                                    Download Citation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <!-- Pagination/Footer Mock -->
+        <footer
+            class="mt-12 flex justify-between items-center text-on-surface-variant border-t border-outline-variant/10 pt-8">
+            <span class="text-xs font-label uppercase tracking-widest">Showing 1-15 of 248 sources</span>
+            <div class="flex gap-4">
+                <button class="p-2 border border-outline-variant/20 hover:bg-surface-container-low transition-colors">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button
+                    class="p-2 border border-outline-variant/20 bg-primary-container text-on-primary-container font-headline font-bold text-xs px-4">
+                    1
+                </button>
+                <button
+                    class="p-2 border border-outline-variant/20 hover:bg-surface-container-low transition-colors font-headline font-bold text-xs px-4">
+                    2
+                </button>
+                <button class="p-2 border border-outline-variant/20 hover:bg-surface-container-low transition-colors">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
+        </footer>
+    </main>
+</body>
+
+</html>
+
+<!-- Discovery List (Neo-Minimal) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Clinical Intelligence | Discovery List</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#29453c",
+                        "secondary-fixed": "#cae9dd",
+                        "surface-bright": "#f8f9fa",
+                        "primary-dim": "#435467",
+                        "primary": "#4f6073",
+                        "background": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#56656f",
+                        "outline-variant": "#abb3b7",
+                        "on-primary-container": "#425366",
+                        "on-surface": "#2b3437",
+                        "inverse-surface": "#0c0f10",
+                        "outline": "#737c7f",
+                        "secondary": "#49655b",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-container-highest": "#dbe4e7",
+                        "surface-container": "#eaeff1",
+                        "primary-container": "#d2e4fb",
+                        "secondary-dim": "#3d594f",
+                        "on-tertiary": "#f4f9ff",
+                        "on-surface-variant": "#586064",
+                        "on-error-container": "#752121",
+                        "tertiary-dim": "#46555f",
+                        "error": "#9f403d",
+                        "on-background": "#2b3437",
+                        "on-secondary": "#e4fff3",
+                        "secondary-fixed-dim": "#bddbcf",
+                        "surface-tint": "#4f6073",
+                        "inverse-primary": "#d5e7fe",
+                        "surface-variant": "#dbe4e7",
+                        "on-secondary-fixed-variant": "#456157",
+                        "secondary-container": "#cae9dd",
+                        "tertiary-fixed-dim": "#d2e2ee",
+                        "on-tertiary-container": "#4c5a64",
+                        "surface-container-low": "#f1f4f6",
+                        "primary-fixed": "#d2e4fb",
+                        "error-dim": "#4e0309",
+                        "on-primary-fixed-variant": "#4c5d70",
+                        "on-primary-fixed": "#304153",
+                        "on-secondary-container": "#3c574e",
+                        "surface-dim": "#d1dce0",
+                        "surface-container-high": "#e3e9ec",
+                        "on-primary": "#f5f8ff",
+                        "tertiary-container": "#e0f0fc",
+                        "primary-fixed-dim": "#c4d6ed",
+                        "tertiary-fixed": "#e0f0fc",
+                        "error-container": "#fe8983",
+                        "on-tertiary-fixed": "#3a4852",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+            font-size: 1.25rem;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #dbe4e7;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-surface font-body text-on-surface antialiased select-none">
+    <!-- TopNavBar -->
+    <nav
+        class="fixed top-0 w-full z-50 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/20 dark:border-slate-800/20 flex justify-between items-center h-12 px-6 w-full">
+        <div class="text-lg font-bold tracking-tighter text-slate-900 dark:text-white font-headline">
+            Clinical Intelligence
+        </div>
+        <div class="flex items-center gap-8">
+            <div class="flex gap-6">
+                <a class="font-['Manrope'] tracking-[-0.02em] font-semibold text-sm uppercase text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 ease-in-out"
+                    href="#">Dashboard</a>
+                <a class="font-['Manrope'] tracking-[-0.02em] font-semibold text-sm uppercase text-slate-900 dark:text-white border-b border-slate-900 dark:border-white transition-colors duration-200 ease-in-out"
+                    href="#">Analytics</a>
+                <a class="font-['Manrope'] tracking-[-0.02em] font-semibold text-sm uppercase text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-200 ease-in-out"
+                    href="#">Reports</a>
+            </div>
+            <div class="flex items-center gap-4 ml-4">
+                <span class="material-symbols-outlined text-on-surface-variant cursor-pointer">notifications</span>
+                <span class="material-symbols-outlined text-on-surface-variant cursor-pointer">settings</span>
+                <div
+                    class="w-7 h-7 bg-surface-container-highest rounded-full border border-outline-variant/20 overflow-hidden">
+                    <img alt="User profile avatar" data-alt="Professional user profile avatar headshot"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj2QVKO6nKuftVa7y51j9nPJJCGPa1ZvvFi87A2UO0gzaYlQbAmzP1eJcWV1hJeW7iilf-gekINlJ_RzM2HfoE3_HzaHLakyPAZkI9Fx4AAOkBXomM6B80JLoqk-QKyilfos1yIZyW6ltD-QAbzJkxvY9q2TMoEBQv10Bu5xi7W6amUL9imIv1YvxgLLOxSF57WK5s-vUvwP7VduvjedEnNxYy_s89EC1xKwM4YolN1LDzxp326abR55X-9MkuLutfa2e46lvIGiEu" />
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- SideNavBar -->
+    <aside
+        class="fixed left-0 top-12 h-[calc(100vh-3rem)] w-64 bg-slate-100 dark:bg-slate-950 flex flex-col border-r border-slate-200/20 dark:border-slate-800/20">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">biotech</span>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold tracking-tight text-on-surface">Clinical Architect</h2>
+                    <p class="text-[10px] text-on-surface-variant uppercase tracking-widest">V2.04.18</p>
+                </div>
+            </div>
+            <button
+                class="w-full bg-gradient-to-br from-primary to-primary-dim text-white py-2 px-4 rounded-sm text-[11px] font-bold uppercase tracking-widest mb-8 flex items-center justify-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined text-sm">add</span>
+                New Experiment
+            </button>
+            <nav class="space-y-1">
+                <a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-150"
+                    href="#">
+                    <span class="material-symbols-outlined">biotech</span>
+                    Research Engine
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold font-['Inter'] text-[11px] tracking-[0.05rem] uppercase transition-all duration-150 shadow-[2px_2px_0px_rgba(79,96,115,0.1)]"
+                    href="#">
+                    <span class="material-symbols-outlined"
+                        style="font-variation-settings: 'FILL' 1;">troubleshoot</span>
+                    Discovery List
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-150"
+                    href="#">
+                    <span class="material-symbols-outlined">science</span>
+                    Experiments
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-150"
+                    href="#">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    Library
+                </a>
+            </nav>
+        </div>
+        <div class="mt-auto p-6 space-y-1">
+            <a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">help_outline</span>
+                Documentation
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-150"
+                href="#">
+                <span class="material-symbols-outlined">contact_support</span>
+                Support
+            </a>
+        </div>
+    </aside>
+    <!-- Main Canvas -->
+    <main class="ml-64 pt-12 min-h-screen bg-surface">
+        <div class="max-w-[1400px] mx-auto p-8">
+            <!-- Header Section -->
+            <header class="flex justify-between items-end mb-10">
+                <div class="space-y-1">
+                    <h1 class="text-3xl font-bold font-headline tracking-tighter text-on-surface">Discovery List</h1>
+                    <p class="text-on-surface-variant text-sm flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                        Active Intelligence Engine: Molecular Synthesis Pipeline
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    <div
+                        class="bg-surface-container-low px-4 py-2 border-b border-outline-variant/30 flex items-center gap-3">
+                        <span class="material-symbols-outlined text-on-surface-variant text-lg">search</span>
+                        <input
+                            class="bg-transparent border-none focus:ring-0 text-[10px] font-medium tracking-widest p-0 w-48 placeholder:text-outline-variant"
+                            placeholder="FILTER BY AGENT ID..." type="text" />
+                    </div>
+                    <button
+                        class="bg-surface-container-highest px-4 py-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-on-surface transition-colors hover:bg-surface-container-high">
+                        <span class="material-symbols-outlined text-sm">filter_list</span>
+                        Parameters
+                    </button>
+                </div>
+            </header>
+            <!-- Table Bento Grid Content -->
+            <div class="grid grid-cols-12 gap-6">
+                <!-- Main High-Density Table (12 columns) -->
+                <div
+                    class="col-span-12 bg-surface-container-lowest shadow-[0_12px_40px_rgba(43,52,55,0.06)] overflow-hidden border border-outline-variant/5">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-surface-container-low">
+                                <th
+                                    class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant border-b border-outline-variant/10">
+                                    Agent ID</th>
+                                <th
+                                    class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant border-b border-outline-variant/10">
+                                    Structure</th>
+                                <th
+                                    class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant border-b border-outline-variant/10">
+                                    Binding Affinity</th>
+                                <th
+                                    class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant border-b border-outline-variant/10">
+                                    Toxicity Index</th>
+                                <th
+                                    class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant border-b border-outline-variant/10">
+                                    CPA Status</th>
+                                <th
+                                    class="px-6 py-3 text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant border-b border-outline-variant/10 text-right">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/5">
+                            <!-- Row 1 -->
+                            <tr class="hover:bg-surface-container-low/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-1 h-8 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold font-headline text-on-surface">CPA-1049-X</p>
+                                            <p class="text-[10px] text-on-surface-variant uppercase tracking-wider">
+                                                LIGAND SEQUENCE</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div
+                                            class="w-10 h-10 bg-surface-container-high p-1 rounded-sm border border-outline-variant/10">
+                                            <img alt="Molecule visualization"
+                                                data-alt="Schematic of a complex carbon ring molecule"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYc9_Xq-jsNXDHc51Vll4yayJsa8IHJH0cnsNX5NP3GwVfXRbRTVU_xT0TIUlAuRLBTSbFo_3xOFNNKTfBAMaB6LOHXE6N6yTvKGv-HimcfYKD6JkUrVzCuW4AF1WeDDl746PF-hw47PnmG0x6X_N5WZQebLgab_qC08U9n9yyFARWMY_DvTyoFFJao-xQAGCBADlA6Ju4Hd57RgJvuLRHfGHlOlg5w5OtLEDxRlBoW6L8oQtplgDHWQUvjParl824LSCXO6CkLEwH" />
+                                        </div>
+                                        <span class="text-[11px] font-mono text-primary">C₂₀H₂₅N₃O</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div
+                                        class="w-full max-w-[100px] bg-surface-container-high h-1 rounded-full overflow-hidden">
+                                        <div class="bg-secondary h-full" style="width: 88%"></div>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-secondary mt-1 block">8.42 pKi</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="text-[10px] px-2 py-0.5 bg-surface-container-highest text-on-surface-variant font-bold uppercase tracking-widest border border-outline-variant/10">LOW
+                                        RISK</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        <span
+                                            class="text-[10px] font-bold text-on-secondary-fixed-variant uppercase tracking-widest">Optimized</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-on-surface-variant hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined">open_in_new</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr class="hover:bg-surface-container-low/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-1 h-8 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold font-headline text-on-surface">CPA-1102-M</p>
+                                            <p class="text-[10px] text-on-surface-variant uppercase tracking-wider">
+                                                PROTEIN BLOCKER</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div
+                                            class="w-10 h-10 bg-surface-container-high p-1 rounded-sm border border-outline-variant/10">
+                                            <img alt="Molecule visualization"
+                                                data-alt="Visual representation of a peptide chain structure"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaybE3VcJ5MNbq0x9BIb_ONGbf6n9ZdfDFCqhuWAgwk25E-Ydes-s9VUHEl0CKZT-1DoFbxtfZPUTdr-UDTErzk78AL9cq4W8XxUaSaeI00BTu55mDqWO_88wMhVkZdk0RtGvHqTZeth1PqjC0II5usRpCAhWcP4GowQRQ1KrMspg4xmShByqXKGtQ4zsyevDykPjHcVDJTXo0XmpZtGxFPG4hjQ6QbLrELPYdY15CsFvqfJykV4i3Ru8ZrpuZa5MCMxBbKjeSnuBU" />
+                                        </div>
+                                        <span class="text-[11px] font-mono text-primary">C₁₅H₂₂N₄O₂</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div
+                                        class="w-full max-w-[100px] bg-surface-container-high h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 42%"></div>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-primary mt-1 block">4.12 pKi</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="text-[10px] px-2 py-0.5 bg-tertiary-container text-on-tertiary-container font-bold uppercase tracking-widest border border-outline-variant/10">STABLE</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                                        <span
+                                            class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Queued</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-on-surface-variant hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined">open_in_new</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- Row 3 -->
+                            <tr class="hover:bg-surface-container-low/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-1 h-8 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold font-headline text-on-surface">CPA-1258-B</p>
+                                            <p class="text-[10px] text-on-surface-variant uppercase tracking-wider">
+                                                ENZYME INHIBITOR</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div
+                                            class="w-10 h-10 bg-surface-container-high p-1 rounded-sm border border-outline-variant/10">
+                                            <img alt="Molecule visualization"
+                                                data-alt="Crystalline molecular structure model"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBttk-miwqF3tdcLUCaLWVDfd71XInCz9aGFOJxfgxe32jAqAnpeJxp01kcfuBWRJNK7XVqXWATWexz3kvbnTjgB0g-x7MXJfzgFzlutXRCQtBYE8r5gOrHdXpPceT2ho6kiMvhh1fZWWYr0sPhxmWJCaOmOwo8bFAlhmyGPov_UiuwKZ_LrOOQ3YRtZEOAeP-oMJcC3SgP_v4miMda0cF1atPSTEv0be8b9B8Ji-NAkJfwJq0jUWrZm9QtQWYxEdhH-q0PHOXorDlt" />
+                                        </div>
+                                        <span class="text-[11px] font-mono text-primary">C₂₄H₃₀F₂N₂</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div
+                                        class="w-full max-w-[100px] bg-surface-container-high h-1 rounded-full overflow-hidden">
+                                        <div class="bg-secondary h-full" style="width: 72%"></div>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-secondary mt-1 block">7.15 pKi</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="text-[10px] px-2 py-0.5 bg-error-container text-on-error-container font-bold uppercase tracking-widest border border-outline-variant/10">CRITICAL</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                        <span
+                                            class="text-[10px] font-bold text-on-error-container uppercase tracking-widest">Rejected</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-on-surface-variant hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined">open_in_new</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- Row 4 -->
+                            <tr class="hover:bg-surface-container-low/50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-1 h-8 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold font-headline text-on-surface">CPA-1392-L</p>
+                                            <p class="text-[10px] text-on-surface-variant uppercase tracking-wider">
+                                                NEURAL AGENT</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <div
+                                            class="w-10 h-10 bg-surface-container-high p-1 rounded-sm border border-outline-variant/10">
+                                            <img alt="Molecule visualization"
+                                                data-alt="Simplified chemical bond diagram"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcPqS5__0SEpgowHA_V-wSE0KyHhVkg1aP9AhsTc1MtVSxrIW__6yLYUV0pLxJyYcitq0pfwEfTqhGImFYm448hDbXf2GbJDjcFjQJdqRXeCMXfpkhXSlr7phWJZeShNoOfQFiWeOGv6S7K-xYiBLAbNKEr_WWc5CcfBWPc5uc1VSltQQvygV1FfV2xb5CyutlYHCYXfhRlGZcF2sooJRjcGS28eelC9SVxlfLtXeF47pciH4dURfUijL-cRlSnxSuUG4woV9eLXnv" />
+                                        </div>
+                                        <span class="text-[11px] font-mono text-primary">C₁₂H₁₈O₅</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div
+                                        class="w-full max-w-[100px] bg-surface-container-high h-1 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full" style="width: 95%"></div>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-primary mt-1 block">9.80 pKi</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span
+                                        class="text-[10px] px-2 py-0.5 bg-surface-container-highest text-on-surface-variant font-bold uppercase tracking-widest border border-outline-variant/10">NEUTRAL</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                        <span
+                                            class="text-[10px] font-bold text-on-primary-fixed-variant uppercase tracking-widest">In
+                                            Review</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-on-surface-variant hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined">open_in_new</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Secondary Data Tiles -->
+                <div
+                    class="col-span-12 lg:col-span-4 bg-surface-container-low p-6 rounded-sm border-l-4 border-primary">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant mb-4">Pipeline
+                        Velocity</p>
+                    <div class="flex items-end gap-2 h-20">
+                        <div class="w-full bg-primary-dim opacity-20 h-[30%]"></div>
+                        <div class="w-full bg-primary-dim opacity-40 h-[60%]"></div>
+                        <div class="w-full bg-primary-dim opacity-60 h-[45%]"></div>
+                        <div class="w-full bg-primary-dim opacity-80 h-[90%]"></div>
+                        <div class="w-full bg-primary h-[75%]"></div>
+                        <div class="w-full bg-secondary h-[95%]"></div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <span class="text-2xl font-bold font-headline">128.4</span>
+                        <span class="text-[10px] font-bold text-secondary uppercase">+12% VS LAST SESSION</span>
+                    </div>
+                </div>
+                <div
+                    class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-6 rounded-sm shadow-[4px_4px_0px_#eaeff1]">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant mb-4">
+                        Distribution Metric</p>
+                    <div class="relative h-20 flex items-center justify-center">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div
+                                class="w-16 h-16 rounded-full border-[6px] border-surface-container border-t-secondary border-r-primary">
+                            </div>
+                        </div>
+                        <span class="text-xl font-bold font-headline">74%</span>
+                    </div>
+                    <div class="mt-4 flex justify-between text-[10px] font-bold uppercase tracking-widest">
+                        <span class="text-secondary">Synthesis</span>
+                        <span class="text-primary">Analysis</span>
+                    </div>
+                </div>
+                <div
+                    class="col-span-12 lg:col-span-4 bg-primary text-white p-6 rounded-sm shadow-[8px_8px_0px_rgba(79,96,115,0.1)]">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80 mb-4 text-on-secondary">Active
+                        Experiment</p>
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold font-headline leading-tight">G-Protein Coupled Receptor Simulation
+                            Alpha</h3>
+                        <div
+                            class="flex items-center justify-between text-[11px] font-medium tracking-wide border-t border-white/10 pt-4">
+                            <span>ETA: 02h 14m</span>
+                            <span class="flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">cloud_sync</span>
+                                Live Sync
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer Pagination/Status -->
+            <footer class="mt-10 flex justify-between items-center py-4 border-t border-outline-variant/10">
+                <div class="flex gap-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">System
+                            Optimal</span>
+                    </div>
+                    <span class="text-[10px] text-outline-variant">|</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Showing 4 of
+                        2,401 entries</span>
+                </div>
+                <div class="flex gap-1">
+                    <button
+                        class="w-8 h-8 flex items-center justify-center bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-sm">chevron_left</span>
+                    </button>
+                    <button
+                        class="w-8 h-8 flex items-center justify-center bg-surface-container-lowest text-on-surface border border-outline-variant/20 font-bold text-[10px]">1</button>
+                    <button
+                        class="w-8 h-8 flex items-center justify-center bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors font-bold text-[10px]">2</button>
+                    <button
+                        class="w-8 h-8 flex items-center justify-center bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors font-bold text-[10px]">3</button>
+                    <button
+                        class="w-8 h-8 flex items-center justify-center bg-surface-container-low text-on-surface hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-sm">chevron_right</span>
+                    </button>
+                </div>
+            </footer>
+        </div>
+    </main>
+</body>
+
+</html>
+
+<!-- Hypotheses (Neo-Minimal) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed": "#3a4852",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#e0f0fc",
+                        "tertiary-container": "#e0f0fc",
+                        "primary-fixed-dim": "#c4d6ed",
+                        "on-primary": "#f5f8ff",
+                        "error-container": "#fe8983",
+                        "on-secondary-container": "#3c574e",
+                        "surface-container-high": "#e3e9ec",
+                        "surface-dim": "#d1dce0",
+                        "on-primary-fixed": "#304153",
+                        "on-primary-fixed-variant": "#4c5d70",
+                        "surface-container-low": "#f1f4f6",
+                        "primary-fixed": "#d2e4fb",
+                        "on-tertiary-container": "#4c5a64",
+                        "error-dim": "#4e0309",
+                        "secondary-container": "#cae9dd",
+                        "on-secondary-fixed-variant": "#456157",
+                        "tertiary-fixed-dim": "#d2e2ee",
+                        "inverse-primary": "#d5e7fe",
+                        "surface-tint": "#4f6073",
+                        "surface-variant": "#dbe4e7",
+                        "secondary-fixed-dim": "#bddbcf",
+                        "on-error": "#fff7f6",
+                        "tertiary-dim": "#46555f",
+                        "error": "#9f403d",
+                        "surface": "#f8f9fa",
+                        "tertiary": "#52616b",
+                        "on-secondary": "#e4fff3",
+                        "on-background": "#2b3437",
+                        "surface-container": "#eaeff1",
+                        "primary-container": "#d2e4fb",
+                        "on-error-container": "#752121",
+                        "secondary-dim": "#3d594f",
+                        "on-tertiary": "#f4f9ff",
+                        "on-surface-variant": "#586064",
+                        "secondary": "#49655b",
+                        "outline": "#737c7f",
+                        "surface-container-highest": "#dbe4e7",
+                        "inverse-on-surface": "#9b9d9e",
+                        "on-surface": "#2b3437",
+                        "on-primary-container": "#425366",
+                        "inverse-surface": "#0c0f10",
+                        "outline-variant": "#abb3b7",
+                        "primary": "#4f6073",
+                        "on-tertiary-fixed-variant": "#56656f",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#cae9dd",
+                        "primary-dim": "#435467",
+                        "surface-bright": "#f8f9fa",
+                        "on-secondary-fixed": "#29453c",
+                        "terracotta": "#BF5B45",
+                        "terracotta-dim": "#A34A36"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+            font-size: 1.25rem;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface">
+    <!-- TopNavBar -->
+    <header
+        class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl flex items-center justify-between px-8 h-14 w-full bg-slate-100 shadow-[0_1px_0_0_rgba(0,0,0,0.05)]">
+        <div class="flex items-center gap-8">
+            <span class="text-lg font-extrabold tracking-tighter text-[#1A2B3C] uppercase">ARCHITECT</span>
+            <nav class="hidden md:flex items-center gap-6 font-['Manrope'] tracking-[-0.02em] font-medium text-sm">
+                <a class="text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 active:scale-[0.98]"
+                    href="#">Ask</a>
+                <a class="text-[#1A2B3C] border-b border-[#1A2B3C] pb-1 active:scale-[0.98]" href="#">Hypotheses</a>
+                <a class="text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 active:scale-[0.98]"
+                    href="#">Molecules</a>
+                <a class="text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 active:scale-[0.98]"
+                    href="#">Cocktails</a>
+                <a class="text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 active:scale-[0.98]"
+                    href="#">Sources</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative hidden sm:block">
+                <span
+                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+                <input
+                    class="bg-surface-container-low border-0 border-b border-outline-variant/20 focus:border-primary focus:ring-0 text-xs w-64 pl-9 py-2 rounded-sm"
+                    placeholder="Search parameters..." type="text" />
+            </div>
+            <button
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+            <button
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">account_circle</button>
+        </div>
+    </header>
+    <!-- SideNavBar (Right Side Details Drawer - Re-engineered from JSON style) -->
+    <aside
+        class="fixed right-0 top-14 bottom-0 w-80 border-l border-outline-variant/20 bg-surface-container-low overflow-y-auto">
+        <div class="flex flex-col p-6 space-y-6">
+            <header>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[10px] font-bold text-terracotta uppercase tracking-[0.1em]">Selected
+                        Hypothesis</span>
+                    <button class="material-symbols-outlined text-on-surface-variant text-sm">close</button>
+                </div>
+                <h2 class="text-lg font-bold tracking-tight text-on-surface leading-tight">HYP-0422</h2>
+                <p class="text-xs text-on-surface-variant mt-1 font-medium">Reduction of formamide toxicity via
+                    competitive glycerol interaction.</p>
+            </header>
+            <div class="space-y-4">
+                <div class="p-4 bg-surface-container-lowest border border-outline-variant/10 rounded-sm">
+                    <span
+                        class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block mb-2">Parent
+                        Benchmark</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold">VS55 Standard</span>
+                        <span
+                            class="text-xs px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-sm">94%
+                            Stability</span>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest block">Linked
+                        Citations</span>
+                    <div class="space-y-2">
+                        <div
+                            class="p-3 bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer rounded-sm group">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-primary text-sm mt-0.5">menu_book</span>
+                                <div>
+                                    <p class="text-xs font-semibold leading-tight group-hover:text-primary">Kohl et al.
+                                        (2021) Vitrification Dynamics</p>
+                                    <p class="text-[10px] text-on-surface-variant mt-1">Section 4.2: Cryoprotectant
+                                        Balance</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="p-3 bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer rounded-sm group">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-primary text-sm mt-0.5">biotech</span>
+                                <div>
+                                    <p class="text-xs font-semibold leading-tight group-hover:text-primary">Fahy G.M.
+                                        (2019) Formamide Loads</p>
+                                    <p class="text-[10px] text-on-surface-variant mt-1">Experimental results on neuron
+                                        survival</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button
+                class="w-full py-3 bg-gradient-to-br from-primary to-primary-dim text-on-primary text-xs font-bold uppercase tracking-widest rounded-sm active:scale-[0.98] transition-all">
+                Export Analysis
+            </button>
+        </div>
+    </aside>
+    <!-- Main Content Canvas -->
+    <main class="pt-14 pr-80 min-h-screen bg-surface">
+        <div class="max-w-6xl mx-auto p-8">
+            <!-- Context Header -->
+            <div
+                class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 border-b border-outline-variant/10 pb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-terracotta rounded-full"></span>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">Live
+                            Analysis Stream</span>
+                    </div>
+                    <h1 class="text-4xl font-extrabold tracking-tighter text-on-surface">Hypotheses <span
+                            class="text-outline-variant font-light">Tracker</span></h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button
+                        class="flex items-center gap-2 px-4 py-2 bg-surface-container-highest text-on-surface text-[11px] font-bold uppercase tracking-wider rounded-sm hover:bg-surface-container-high transition-colors">
+                        <span class="material-symbols-outlined text-sm">filter_list</span>
+                        Filter Status
+                    </button>
+                    <button
+                        class="flex items-center gap-2 px-6 py-2 bg-terracotta text-white text-[11px] font-bold uppercase tracking-widest rounded-sm hover:bg-terracotta-dim transition-transform active:scale-[0.98] shadow-sm">
+                        <span class="material-symbols-outlined text-sm">add</span>
+                        New Hypothesis
+                    </button>
+                </div>
+            </div>
+            <!-- Bento Grid List -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Card 1 (Running) -->
+                <div
+                    class="group relative bg-surface-container-lowest p-6 border-b-2 border-primary-dim shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <span
+                                class="text-[10px] font-black text-primary tracking-widest uppercase mb-1 block">HYP-0422</span>
+                            <div class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                <span
+                                    class="text-[10px] font-bold text-secondary uppercase tracking-widest">Running</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5 px-2 py-1 bg-surface-container rounded-sm">
+                            <span class="material-symbols-outlined text-xs text-on-surface-variant"
+                                data-weight="fill">verified</span>
+                            <span class="text-[10px] font-bold text-on-surface">12 Citations</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-on-surface mb-4 leading-snug">Reduce formamide burden in VS55 and
+                        increase glycerol support under 4 C loading</h3>
+                    <div class="flex items-center justify-between pt-4 border-t border-outline-variant/5">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] text-on-surface-variant font-bold uppercase">Benchmark</span>
+                            <span class="text-xs font-semibold">VS55 Standard</span>
+                        </div>
+                        <button
+                            class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_forward_ios</button>
+                    </div>
+                </div>
+                <!-- Card 2 (Draft) -->
+                <div
+                    class="group relative bg-surface-container p-6 border-b-2 border-outline-variant/30 transition-all duration-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <span
+                                class="text-[10px] font-black text-on-surface-variant tracking-widest uppercase mb-1 block">HYP-0425</span>
+                            <div class="flex items-center gap-2 text-outline">
+                                <span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                                <span class="text-[10px] font-bold uppercase tracking-widest">Draft</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5 px-2 py-1 bg-surface-container-low rounded-sm">
+                            <span class="material-symbols-outlined text-xs text-outline-variant">menu_book</span>
+                            <span class="text-[10px] font-bold text-on-surface-variant">2 Citations</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-on-surface-variant mb-4 leading-snug">Exogenous protein infusion
+                        for membrane stabilization in neurons</h3>
+                    <div class="flex items-center justify-between pt-4 border-t border-outline-variant/5">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] text-on-surface-variant font-bold uppercase">Benchmark</span>
+                            <span class="text-xs font-semibold">M22 Neuro-Standard</span>
+                        </div>
+                        <button
+                            class="material-symbols-outlined text-outline-variant group-hover:text-on-surface transition-colors">arrow_forward_ios</button>
+                    </div>
+                </div>
+                <!-- Card 3 (Running) -->
+                <div
+                    class="group relative bg-surface-container-lowest p-6 border-b-2 border-primary-dim shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <span
+                                class="text-[10px] font-black text-primary tracking-widest uppercase mb-1 block">HYP-0428</span>
+                            <div class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                <span
+                                    class="text-[10px] font-bold text-secondary uppercase tracking-widest">Running</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1.5 px-2 py-1 bg-surface-container rounded-sm">
+                            <span class="material-symbols-outlined text-xs text-on-surface-variant"
+                                data-weight="fill">verified</span>
+                            <span class="text-[10px] font-bold text-on-surface">8 Citations</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-on-surface mb-4 leading-snug">Gradient loading of high-molarity
+                        vitrification agents at -10 C</h3>
+                    <div class="flex items-center justify-between pt-4 border-t border-outline-variant/5">
+                        <div class="flex flex-col">
+                            <span class="text-[9px] text-on-surface-variant font-bold uppercase">Benchmark</span>
+                            <span class="text-xs font-semibold">VS55 Standard</span>
+                        </div>
+                        <button
+                            class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_forward_ios</button>
+                    </div>
+                </div>
+                <!-- Placeholder / New Card Action -->
+                <div
+                    class="group relative border-2 border-dashed border-outline-variant/20 flex flex-col items-center justify-center p-6 bg-surface-container-low/30 hover:bg-surface-container-low transition-colors cursor-pointer rounded-sm">
+                    <span
+                        class="material-symbols-outlined text-3xl text-outline-variant group-hover:text-terracotta transition-colors mb-2">add_circle</span>
+                    <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Generate New
+                        Hypothesis</span>
+                    <span class="text-[10px] text-outline-variant mt-1">Based on current VS55 data stream</span>
+                </div>
+            </div>
+            <!-- Summary Ticker Section -->
+            <section class="mt-16 bg-surface-container-high/40 p-6 rounded-lg flex flex-wrap gap-12 items-center">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl font-extrabold text-on-surface tracking-tighter">14</span>
+                    <div class="flex flex-col">
+                        <span
+                            class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Active</span>
+                        <span class="text-[10px] text-on-surface font-semibold">Simulations</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl font-extrabold text-on-surface tracking-tighter">88%</span>
+                    <div class="flex flex-col">
+                        <span
+                            class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Average</span>
+                        <span class="text-[10px] text-on-surface font-semibold">Confidence</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl font-extrabold text-terracotta tracking-tighter">3</span>
+                    <div class="flex flex-col">
+                        <span
+                            class="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant">Priority</span>
+                        <span class="text-[10px] text-on-surface font-semibold">Anomalies</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Bottom Data Chip (Custom Component) -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-4">
+        <div
+            class="bg-surface-container-highest/90 backdrop-blur px-4 py-2 border border-outline-variant/20 rounded-full flex items-center gap-3 shadow-lg">
+            <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+            <span class="text-[10px] font-bold text-on-surface uppercase tracking-widest">Engine Live</span>
+            <div class="h-4 w-px bg-outline-variant/30"></div>
+            <span class="text-[10px] font-medium text-on-surface-variant">Modelling: VS55_MOD_7.2</span>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<!-- Research Engine (Neo-Minimal) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Clinical Intelligence | Research Engine</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#29453c",
+                        "secondary-fixed": "#cae9dd",
+                        "surface-bright": "#f8f9fa",
+                        "primary-dim": "#435467",
+                        "primary": "#4f6073",
+                        "background": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#56656f",
+                        "outline-variant": "#abb3b7",
+                        "on-primary-container": "#425366",
+                        "on-surface": "#2b3437",
+                        "inverse-surface": "#0c0f10",
+                        "outline": "#737c7f",
+                        "secondary": "#49655b",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-container-highest": "#dbe4e7",
+                        "surface-container": "#eaeff1",
+                        "primary-container": "#d2e4fb",
+                        "secondary-dim": "#3d594f",
+                        "on-tertiary": "#f4f9ff",
+                        "on-surface-variant": "#586064",
+                        "on-error-container": "#752121",
+                        "tertiary-dim": "#46555f",
+                        "error": "#9f403d",
+                        "on-background": "#2b3437",
+                        "on-secondary": "#e4fff3",
+                        "secondary-fixed-dim": "#bddbcf",
+                        "surface-tint": "#4f6073",
+                        "inverse-primary": "#d5e7fe",
+                        "surface-variant": "#dbe4e7",
+                        "on-secondary-fixed-variant": "#456157",
+                        "secondary-container": "#cae9dd",
+                        "tertiary-fixed-dim": "#d2e2ee",
+                        "on-tertiary-container": "#4c5a64",
+                        "surface-container-low": "#f1f4f6",
+                        "primary-fixed": "#d2e4fb",
+                        "error-dim": "#4e0309",
+                        "on-primary-fixed-variant": "#4c5d70",
+                        "on-primary-fixed": "#304153",
+                        "on-secondary-container": "#3c574e",
+                        "surface-dim": "#d1dce0",
+                        "surface-container-high": "#e3e9ec",
+                        "on-primary": "#f5f8ff",
+                        "tertiary-container": "#e0f0fc",
+                        "primary-fixed-dim": "#c4d6ed",
+                        "tertiary-fixed": "#e0f0fc",
+                        "error-container": "#fe8983",
+                        "on-tertiary-fixed": "#3a4852",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+
+        .glass-panel {
+            background: rgba(234, 239, 241, 0.8);
+            backdrop-filter: blur(20px);
+        }
+
+        .primary-gradient {
+            background: linear-gradient(135deg, #4f6073 0%, #435467 100%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #dbe4e7;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-surface font-body text-on-surface antialiased overflow-hidden">
+    <!-- TopNavBar Shell -->
+    <header
+        class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-md border-b border-slate-200/20 flex justify-between items-center h-12 px-6 w-full">
+        <div class="text-lg font-bold tracking-tighter text-slate-900 font-headline">Clinical Intelligence</div>
+        <nav class="hidden md:flex items-center gap-8 h-full">
+            <a class="font-headline tracking-[-0.02em] font-semibold text-sm uppercase transition-colors duration-200 ease-in-out text-slate-900 border-b border-slate-900 h-full flex items-center"
+                href="#">Dashboard</a>
+            <a class="font-headline tracking-[-0.02em] font-semibold text-sm uppercase transition-colors duration-200 ease-in-out text-slate-500 hover:text-slate-900"
+                href="#">Analytics</a>
+            <a class="font-headline tracking-[-0.02em] font-semibold text-sm uppercase transition-colors duration-200 ease-in-out text-slate-500 hover:text-slate-900"
+                href="#">Reports</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <button class="text-slate-500 hover:text-slate-900 transition-colors">
+                <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+            </button>
+            <button class="text-slate-500 hover:text-slate-900 transition-colors">
+                <span class="material-symbols-outlined" data-icon="settings">settings</span>
+            </button>
+            <div
+                class="w-7 h-7 bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/20">
+                <img alt="User profile avatar" class="w-full h-full object-cover"
+                    data-alt="Minimalist professional user avatar photo"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL2hCRyYU9UcdVd8jEicJtlQPJ6dChpGKSrrSzkmv4pngnQ_zuSY1U08KDqvjom6M86Urc-npvymGcfIuua06yJgiOB787YnQsgbIEb8FV4pdn72QgJMrwiTSqM82q18cYw-4is0Qzlz2dO2JwFfZRmAihYX87nIvT90K3tL2edsfpzXViBI0K_U8FJX-IEyhGL1ZKPopq7fxqxrH7KghhrB3HfG8OqTc678rRCNIiEGAQUmR-9SGVHZftJ5O6_eH-zY_rUrcYPc97" />
+            </div>
+        </div>
+    </header>
+    <div class="flex h-screen pt-12">
+        <!-- SideNavBar Shell -->
+        <aside
+            class="fixed left-0 top-12 h-[calc(100vh-3rem)] w-64 bg-slate-100 flex flex-col border-r border-slate-200/20">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-8 h-8 bg-primary rounded-sm flex items-center justify-center text-on-primary">
+                        <span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+                    </div>
+                    <div>
+                        <div class="text-[11px] font-bold tracking-[0.05rem] uppercase text-slate-900">Clinical
+                            Architect</div>
+                        <div class="text-[9px] text-slate-500 font-medium">V2.04.18</div>
+                    </div>
+                </div>
+                <nav class="space-y-1">
+                    <a class="flex items-center gap-3 px-3 py-2 bg-white text-slate-900 font-bold transition-all duration-150 font-['Inter'] text-[11px] tracking-[0.05rem] uppercase"
+                        href="#">
+                        <span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+                        Research Engine
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-all duration-150 font-['Inter'] text-[11px] tracking-[0.05rem] uppercase"
+                        href="#">
+                        <span class="material-symbols-outlined" data-icon="troubleshoot">troubleshoot</span>
+                        Discovery List
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-all duration-150 font-['Inter'] text-[11px] tracking-[0.05rem] uppercase"
+                        href="#">
+                        <span class="material-symbols-outlined" data-icon="science">science</span>
+                        Experiments
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-all duration-150 font-['Inter'] text-[11px] tracking-[0.05rem] uppercase"
+                        href="#">
+                        <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                        Library
+                    </a>
+                </nav>
+                <div class="mt-10">
+                    <button
+                        class="w-full primary-gradient text-on-primary py-3 rounded-sm text-[11px] font-bold tracking-[0.05rem] uppercase shadow-sm">
+                        New Experiment
+                    </button>
+                </div>
+            </div>
+            <div class="mt-auto p-6 space-y-1">
+                <a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-all duration-150 font-['Inter'] text-[11px] tracking-[0.05rem] uppercase"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+                    Documentation
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:bg-slate-200/50 transition-all duration-150 font-['Inter'] text-[11px] tracking-[0.05rem] uppercase"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+                    Support
+                </a>
+            </div>
+        </aside>
+        <!-- Main Content Canvas -->
+        <main class="ml-64 flex-1 flex flex-col relative bg-surface overflow-y-auto">
+            <!-- Research Header Section -->
+            <div class="p-10 max-w-6xl mx-auto w-full">
+                <div class="mb-12">
+                    <h1 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface mb-2">Research
+                        Engine</h1>
+                    <p class="text-on-surface-variant text-sm font-medium tracking-wide uppercase opacity-70">Unified
+                        Molecular Query Interface</p>
+                </div>
+                <!-- Search Interface -->
+                <div class="relative mb-16">
+                    <div
+                        class="bg-surface-container-lowest border-b border-outline-variant/20 flex items-center px-6 py-5 group transition-all">
+                        <span class="material-symbols-outlined text-primary-dim mr-4" data-icon="search">search</span>
+                        <input
+                            class="flex-1 bg-transparent border-none focus:ring-0 font-headline font-semibold text-lg tracking-tight placeholder:text-outline-variant/50"
+                            placeholder="QUERY MOLECULE, CPA, OR CHEMICAL FORMULA..." type="text" />
+                        <div class="flex items-center gap-3">
+                            <span
+                                class="px-2 py-1 bg-surface-container text-[10px] font-bold text-on-surface-variant rounded-sm border border-outline-variant/10 uppercase tracking-widest">⌘
+                                K</span>
+                            <button
+                                class="primary-gradient text-on-primary px-6 py-2 rounded-sm text-xs font-bold uppercase tracking-widest">Execute</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bento Grid Layout for Research Data -->
+                <div class="grid grid-cols-12 gap-6">
+                    <!-- AI Status Node (Asymmetric High-Density) -->
+                    <div class="col-span-12 lg:col-span-4 space-y-6">
+                        <div class="bg-surface-container-low p-6 rounded-sm border border-outline-variant/10">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="label-sm font-bold tracking-[0.05rem] uppercase text-primary">Agent Status
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                                    <span
+                                        class="text-[10px] font-bold text-secondary uppercase tracking-widest">Active</span>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center py-2 border-b border-outline-variant/5">
+                                    <span
+                                        class="text-[11px] uppercase font-semibold text-on-surface-variant tracking-wider">Compute
+                                        Load</span>
+                                    <span class="text-xs font-headline font-bold">14.2 Gflops</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2 border-b border-outline-variant/5">
+                                    <span
+                                        class="text-[11px] uppercase font-semibold text-on-surface-variant tracking-wider">Latency</span>
+                                    <span class="text-xs font-headline font-bold">24ms</span>
+                                </div>
+                                <div class="flex justify-between items-center py-2">
+                                    <span
+                                        class="text-[11px] uppercase font-semibold text-on-surface-variant tracking-wider">Uptime</span>
+                                    <span class="text-xs font-headline font-bold">99.98%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-primary-dim/5 p-6 rounded-sm border-l-2 border-primary">
+                            <div class="text-[10px] font-bold text-primary-dim uppercase tracking-widest mb-2">Recent
+                                Insights</div>
+                            <p class="text-xs leading-relaxed text-on-surface-variant italic">"Anomalous hydrogen
+                                bonding detected in CPA-402 cluster. Correlation with experimental set 04-B confirmed."
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Main Research Results / Visualization -->
+                    <div class="col-span-12 lg:col-span-8">
+                        <div
+                            class="bg-surface-container-lowest p-8 rounded-sm shadow-sm h-full border border-outline-variant/5">
+                            <div class="flex justify-between items-end mb-8">
+                                <div>
+                                    <div class="text-[10px] font-bold text-primary uppercase tracking-[0.1rem] mb-1">
+                                        Target Identification</div>
+                                    <h3 class="text-2xl font-headline font-extrabold text-on-surface">CPA-1129:
+                                        Molecular Profile</h3>
+                                </div>
+                                <div class="flex gap-2">
+                                    <div
+                                        class="px-3 py-1 bg-secondary/10 text-secondary text-[10px] font-bold rounded-sm uppercase tracking-widest">
+                                        Validated</div>
+                                    <div
+                                        class="px-3 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded-sm uppercase tracking-widest">
+                                        Phase II</div>
+                                </div>
+                            </div>
+                            <!-- Geometric Data Visualization Placeholder -->
+                            <div
+                                class="relative h-64 bg-slate-50 mb-8 border border-outline-variant/10 overflow-hidden flex items-center justify-center">
+                                <div
+                                    class="absolute inset-0 opacity-10 bg-[radial-gradient(#4f6073_1px,transparent_1px)] [background-size:20px_20px]">
+                                </div>
+                                <div
+                                    class="relative w-48 h-48 border border-primary/20 rounded-full flex items-center justify-center">
+                                    <div class="w-32 h-32 border border-secondary/30 rounded-full flex items-center justify-center animate-spin"
+                                        style="animation-duration: 10s;">
+                                        <div class="w-2 h-2 bg-primary rounded-full absolute top-0"></div>
+                                    </div>
+                                    <div
+                                        class="absolute font-headline text-3xl font-black text-primary/40 opacity-20 select-none">
+                                        C16H18N3ClS</div>
+                                    <span class="material-symbols-outlined text-primary text-5xl opacity-40"
+                                        data-icon="molecule">bubble_chart</span>
+                                </div>
+                                <div class="absolute bottom-4 right-4 flex flex-col items-end">
+                                    <span class="text-[9px] font-mono text-slate-400">STRUCTURAL_SCAN_V4</span>
+                                    <span class="text-[9px] font-mono text-slate-400">COORD: 42.122 / -12.001</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-6">
+                                <div class="space-y-1">
+                                    <div
+                                        class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                        Toxicity Index</div>
+                                    <div class="text-xl font-headline font-bold text-secondary">0.024</div>
+                                    <div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+                                        <div class="h-full bg-secondary w-[12%]"></div>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <div
+                                        class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                        Bioavailability</div>
+                                    <div class="text-xl font-headline font-bold text-primary">88.4%</div>
+                                    <div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary w-[88%]"></div>
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <div
+                                        class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                        Binding Affinity</div>
+                                    <div class="text-xl font-headline font-bold text-on-surface">-9.4 <span
+                                            class="text-xs opacity-50">kcal/mol</span></div>
+                                    <div class="w-full h-1 bg-surface-container rounded-full overflow-hidden">
+                                        <div class="h-full bg-on-surface w-[74%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bottom Wide List (Precision Detail) -->
+                    <div class="col-span-12">
+                        <div
+                            class="bg-surface-container-low rounded-sm overflow-hidden border border-outline-variant/10">
+                            <div
+                                class="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container">
+                                <h4 class="text-[11px] font-bold uppercase tracking-[0.15rem] text-primary">Experimental
+                                    Trajectory Log</h4>
+                                <button class="text-primary-dim hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+                                </button>
+                            </div>
+                            <div class="divide-y divide-outline-variant/5">
+                                <div
+                                    class="px-6 py-4 flex items-center justify-between hover:bg-surface-container transition-colors group">
+                                    <div class="flex items-center gap-6">
+                                        <span class="text-[10px] font-mono text-outline-variant">#EXP-882</span>
+                                        <span class="text-xs font-bold text-on-surface">Protein-Ligand Interaction
+                                            Study</span>
+                                    </div>
+                                    <div class="flex items-center gap-10">
+                                        <span
+                                            class="text-[10px] uppercase font-semibold text-on-surface-variant tracking-wider">Oct
+                                            12, 2023</span>
+                                        <span
+                                            class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[9px] font-bold rounded-sm uppercase tracking-widest">Success</span>
+                                        <span
+                                            class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-pointer"
+                                            data-icon="chevron_right">chevron_right</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="px-6 py-4 flex items-center justify-between hover:bg-surface-container transition-colors group">
+                                    <div class="flex items-center gap-6">
+                                        <span class="text-[10px] font-mono text-outline-variant">#EXP-881</span>
+                                        <span class="text-xs font-bold text-on-surface">Solubility Profile
+                                            Adjustment</span>
+                                    </div>
+                                    <div class="flex items-center gap-10">
+                                        <span
+                                            class="text-[10px] uppercase font-semibold text-on-surface-variant tracking-wider">Oct
+                                            11, 2023</span>
+                                        <span
+                                            class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[9px] font-bold rounded-sm uppercase tracking-widest">Success</span>
+                                        <span
+                                            class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-pointer"
+                                            data-icon="chevron_right">chevron_right</span>
+                                    </div>
+                                </div>
+                                <div
+                                    class="px-6 py-4 flex items-center justify-between hover:bg-surface-container transition-colors group border-b-0">
+                                    <div class="flex items-center gap-6">
+                                        <span class="text-[10px] font-mono text-outline-variant">#EXP-879</span>
+                                        <span class="text-xs font-bold text-on-surface">Metabolic Pathway
+                                            Simulation</span>
+                                    </div>
+                                    <div class="flex items-center gap-10">
+                                        <span
+                                            class="text-[10px] uppercase font-semibold text-on-surface-variant tracking-wider">Oct
+                                            09, 2023</span>
+                                        <span
+                                            class="px-2 py-0.5 bg-surface-container-highest text-on-surface-variant text-[9px] font-bold rounded-sm uppercase tracking-widest">Archived</span>
+                                        <span
+                                            class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors cursor-pointer"
+                                            data-icon="chevron_right">chevron_right</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Contextual FAB (Hidden as per requirement for specific pages, but kept for shell completeness in code if requested elsewhere) -->
+        </main>
+    </div>
+    <!-- Data Detail Side Drawer (Glassmorphism) -->
+    <div
+        class="fixed right-0 top-12 bottom-0 w-80 glass-panel border-l border-outline-variant/10 z-40 transform translate-x-full lg:translate-x-0">
+        <div class="p-6 h-full flex flex-col">
+            <div class="flex justify-between items-center mb-10">
+                <span class="text-[11px] font-bold uppercase tracking-[0.2rem] text-primary">System Feed</span>
+                <span class="material-symbols-outlined text-on-surface-variant" data-icon="more_horiz">more_horiz</span>
+            </div>
+            <div class="flex-1 space-y-8 overflow-y-auto pr-2">
+                <div class="relative pl-4 border-l border-primary/20">
+                    <div class="absolute -left-[4.5px] top-0 w-2 h-2 rounded-full bg-primary"></div>
+                    <div class="text-[9px] font-bold text-primary uppercase mb-1">09:42 AM</div>
+                    <div class="text-[11px] font-bold text-on-surface mb-1 uppercase tracking-tight">Sequence Matched
+                    </div>
+                    <p class="text-[10px] text-on-surface-variant leading-relaxed">CPA-1129 matches existing clinical
+                        database for peptide inhibitors.</p>
+                </div>
+                <div class="relative pl-4 border-l border-outline-variant/20">
+                    <div class="absolute -left-[4.5px] top-0 w-2 h-2 rounded-full bg-outline-variant"></div>
+                    <div class="text-[9px] font-bold text-on-surface-variant uppercase mb-1">08:15 AM</div>
+                    <div class="text-[11px] font-bold text-on-surface mb-1 uppercase tracking-tight">Cache Rebuilt</div>
+                    <p class="text-[10px] text-on-surface-variant leading-relaxed">Structural index synchronized with
+                        Node 04.</p>
+                </div>
+                <div class="relative pl-4 border-l border-outline-variant/20">
+                    <div class="absolute -left-[4.5px] top-0 w-2 h-2 rounded-full bg-outline-variant"></div>
+                    <div class="text-[9px] font-bold text-on-surface-variant uppercase mb-1">07:30 AM</div>
+                    <div class="text-[11px] font-bold text-on-surface mb-1 uppercase tracking-tight">Auto-Archive</div>
+                    <p class="text-[10px] text-on-surface-variant leading-relaxed">Completed for experiment series
+                        2023-Q3.</p>
+                </div>
+            </div>
+            <div class="mt-auto pt-6 border-t border-outline-variant/10">
+                <div class="bg-surface-container-highest/50 p-4 rounded-sm">
+                    <div class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Laboratory
+                        Link</div>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-white border border-outline-variant/10 flex items-center justify-center rounded-sm">
+                            <span class="material-symbols-outlined text-secondary"
+                                data-icon="qr_code_2">qr_code_2</span>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-bold text-on-surface uppercase">Local Instance</div>
+                            <div class="text-[9px] font-mono text-on-surface-variant">192.168.1.104</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<!-- Ask CryoSight (Neo-Minimal) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed": "#3a4852",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#e0f0fc",
+                        "tertiary-container": "#e0f0fc",
+                        "primary-fixed-dim": "#c4d6ed",
+                        "on-primary": "#f5f8ff",
+                        "error-container": "#fe8983",
+                        "on-secondary-container": "#3c574e",
+                        "surface-container-high": "#e3e9ec",
+                        "surface-dim": "#d1dce0",
+                        "on-primary-fixed": "#304153",
+                        "on-primary-fixed-variant": "#4c5d70",
+                        "surface-container-low": "#f1f4f6",
+                        "primary-fixed": "#d2e4fb",
+                        "on-tertiary-container": "#4c5a64",
+                        "error-dim": "#4e0309",
+                        "secondary-container": "#cae9dd",
+                        "on-secondary-fixed-variant": "#456157",
+                        "tertiary-fixed-dim": "#d2e2ee",
+                        "inverse-primary": "#d5e7fe",
+                        "surface-tint": "#4f6073",
+                        "surface-variant": "#dbe4e7",
+                        "secondary-fixed-dim": "#bddbcf",
+                        "on-error": "#fff7f6",
+                        "tertiary-dim": "#46555f",
+                        "error": "#9f403d",
+                        "surface": "#f8f9fa",
+                        "tertiary": "#52616b",
+                        "on-secondary": "#e4fff3",
+                        "on-background": "#2b3437",
+                        "surface-container": "#eaeff1",
+                        "primary-container": "#d2e4fb",
+                        "on-error-container": "#752121",
+                        "secondary-dim": "#3d594f",
+                        "on-tertiary": "#f4f9ff",
+                        "on-surface-variant": "#586064",
+                        "secondary": "#49655b",
+                        "outline": "#737c7f",
+                        "surface-container-highest": "#dbe4e7",
+                        "inverse-on-surface": "#9b9d9e",
+                        "on-surface": "#2b3437",
+                        "on-primary-container": "#425366",
+                        "inverse-surface": "#0c0f10",
+                        "outline-variant": "#abb3b7",
+                        "primary": "#4f6073",
+                        "on-tertiary-fixed-variant": "#56656f",
+                        "background": "#f8f9fa",
+                        "secondary-fixed": "#cae9dd",
+                        "primary-dim": "#435467",
+                        "surface-bright": "#f8f9fa",
+                        "on-secondary-fixed": "#29453c",
+                        "brand-terracotta": "#C45B3D"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+            font-size: 20px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #dbe4e7;
+            border-radius: 10px;
+        }
+
+        .terracotta-gradient {
+            background: linear-gradient(135deg, #C45B3D 0%, #A34931 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-container">
+    <!-- TopNavBar -->
+    <header
+        class="fixed top-0 w-full z-50 bg-slate-50/80 backdrop-blur-xl bg-slate-100 shadow-[0_1px_0_0_rgba(0,0,0,0.05)] flex items-center justify-between px-8 h-14 w-full">
+        <div class="flex items-center gap-8">
+            <span
+                class="text-lg font-extrabold tracking-tighter text-[#1A2B3C] uppercase font-headline">ARCHITECT</span>
+            <nav class="hidden md:flex items-center space-x-6">
+                <a class="font-headline tracking-[-0.02em] font-medium text-sm text-[#1A2B3C] border-b border-[#1A2B3C] pb-1 active:scale-[0.98]"
+                    href="#">Ask</a>
+                <a class="font-headline tracking-[-0.02em] font-medium text-sm text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 active:scale-[0.98]"
+                    href="#">Hypotheses</a>
+                <a class="font-headline tracking-[-0.02em] font-medium text-sm text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 active:scale-[0.98]"
+                    href="#">Molecules</a>
+                <a class="font-headline tracking-[-0.02em] font-medium text-sm text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 active:scale-[0.98]"
+                    href="#">Cocktails</a>
+                <a class="font-headline tracking-[-0.02em] font-medium text-sm text-slate-500 hover:text-[#1A2B3C] transition-all duration-200 active:scale-[0.98]"
+                    href="#">Sources</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <button class="p-2 text-slate-500 hover:text-[#1A2B3C] transition-colors"><span
+                    class="material-symbols-outlined">settings</span></button>
+            <button class="p-2 text-slate-500 hover:text-[#1A2B3C] transition-colors"><span
+                    class="material-symbols-outlined">account_circle</span></button>
+        </div>
+    </header>
+    <!-- SideNavBar (Evidence Drawer) -->
+    <aside
+        class="fixed right-0 top-14 bottom-0 w-80 border-l border-outline-variant/20 bg-slate-100 flex flex-col p-6 space-y-6 overflow-y-auto custom-scrollbar">
+        <div class="space-y-1">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold uppercase tracking-widest text-brand-terracotta">Evidence
+                    Explorer</span>
+                <span class="material-symbols-outlined text-brand-terracotta"
+                    style="font-variation-settings: 'FILL' 1;">biotech</span>
+            </div>
+            <p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-medium">Clinical Data Stream</p>
+        </div>
+        <div class="space-y-4">
+            <h3
+                class="text-xs font-bold uppercase tracking-tight text-on-surface border-b border-outline-variant/10 pb-2">
+                Matched Findings</h3>
+            <!-- Finding Item 1 -->
+            <div class="p-3 bg-surface-container-lowest border-b border-outline-variant/20 space-y-2">
+                <div class="flex justify-between items-start">
+                    <span
+                        class="text-[10px] font-bold text-secondary px-1.5 py-0.5 bg-secondary-container rounded-sm uppercase">Viability</span>
+                    <span class="text-[10px] font-medium text-on-surface-variant">ID: FR-204</span>
+                </div>
+                <h4 class="text-xs font-semibold leading-tight text-on-surface">Betaine-mediated suppression of
+                    formamide denaturation.</h4>
+                <div class="flex gap-2">
+                    <div class="flex items-center gap-1 text-[9px] font-bold uppercase text-on-surface-variant"><span
+                            class="material-symbols-outlined !text-[12px]">thermostat</span> 4.1°C</div>
+                    <div class="flex items-center gap-1 text-[9px] font-bold uppercase text-on-surface-variant"><span
+                            class="material-symbols-outlined !text-[12px]">humidity_low</span> 92%</div>
+                </div>
+            </div>
+            <!-- Finding Item 2 -->
+            <div class="p-3 bg-surface-container-low/50 space-y-2">
+                <div class="flex justify-between items-start">
+                    <span
+                        class="text-[10px] font-bold text-primary px-1.5 py-0.5 bg-primary-container rounded-sm uppercase">Folding</span>
+                    <span class="text-[10px] font-medium text-on-surface-variant">ID: FR-119</span>
+                </div>
+                <h4 class="text-xs font-semibold leading-tight text-on-surface">Trehalose stabilization of hydration
+                    shells at low temp.</h4>
+                <div class="flex gap-2">
+                    <div class="flex items-center gap-1 text-[9px] font-bold uppercase text-on-surface-variant"><span
+                            class="material-symbols-outlined !text-[12px]">science</span> pH 7.2</div>
+                </div>
+            </div>
+        </div>
+        <button
+            class="mt-auto w-full py-3 terracotta-gradient text-white text-[10px] font-bold uppercase tracking-widest rounded-sm active:scale-[0.98] transition-transform shadow-lg shadow-brand-terracotta/20">
+            Export Analysis
+        </button>
+    </aside>
+    <!-- Main Content Canvas -->
+    <main class="mt-14 mr-80 min-h-screen p-8 lg:p-12 space-y-12">
+        <!-- Hero Search Section -->
+        <section class="max-w-4xl mx-auto space-y-8">
+            <div class="space-y-2">
+                <div class="flex items-center gap-3 text-on-surface-variant mb-4">
+                    <div
+                        class="flex items-center gap-1.5 px-3 py-1 bg-surface-container-high rounded-full text-[10px] font-bold uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-brand-terracotta animate-pulse"></span> 4 papers
+                    </div>
+                    <span class="text-outline-variant">/</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider">37 findings</span>
+                    <span class="text-outline-variant">/</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider">29 molecules</span>
+                    <span class="text-outline-variant">/</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider">4 structures</span>
+                </div>
+                <h1
+                    class="text-4xl lg:text-5xl font-headline font-extrabold tracking-tight text-on-surface leading-[1.1]">
+                    What rescues <span class="text-brand-terracotta">formamide toxicity</span> at 4°C?
+                </h1>
+            </div>
+            <div class="relative group">
+                <div
+                    class="absolute inset-0 bg-brand-terracotta/5 blur-2xl rounded-full opacity-0 group-focus-within:opacity-100 transition-opacity">
+                </div>
+                <div
+                    class="relative flex items-center bg-surface-container-low rounded-lg p-2 transition-all duration-300 focus-within:bg-white focus-within:shadow-2xl focus-within:shadow-on-surface/5">
+                    <span class="material-symbols-outlined px-4 text-on-surface-variant">search</span>
+                    <input
+                        class="flex-1 bg-transparent border-none focus:ring-0 text-lg font-medium text-on-surface placeholder:text-outline-variant font-headline"
+                        type="text" value="What rescues formamide toxicity at 4 C?" />
+                    <button
+                        class="terracotta-gradient px-8 py-3 rounded-md text-white font-bold text-sm uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all">
+                        Analyze
+                    </button>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button
+                    class="px-4 py-1.5 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-full text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">DMSO
+                    toxicity mitigation</button>
+                <button
+                    class="px-4 py-1.5 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-full text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">L-Proline
+                    cryoprotection</button>
+                <button
+                    class="px-4 py-1.5 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-full text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Vitrification
+                    kinetics</button>
+            </div>
+        </section>
+        <!-- Result Bento Grid -->
+        <section class="max-w-6xl mx-auto grid grid-cols-12 gap-6">
+            <!-- Synthesized Answer Card -->
+            <div
+                class="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant/10 rounded-xl overflow-hidden shadow-sm">
+                <div
+                    class="bg-brand-terracotta/10 px-6 py-4 border-b border-brand-terracotta/5 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-brand-terracotta"
+                        style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-terracotta">Synthesized
+                        Analysis</span>
+                </div>
+                <div class="p-8 space-y-6">
+                    <p class="text-xl lg:text-2xl font-headline font-semibold text-on-surface leading-snug">
+                        Formamide toxicity at sub-zero and near-zero temperatures is primarily mitigated through the
+                        synergistic application of <span
+                            class="underline decoration-brand-terracotta/30 underline-offset-4">Betaine</span> and <span
+                            class="underline decoration-brand-terracotta/30 underline-offset-4">Trehalose</span>.
+                    </p>
+                    <div class="grid grid-cols-2 gap-8 pt-4">
+                        <div class="space-y-2">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Optimal
+                                Mix</h4>
+                            <p class="text-sm font-medium text-on-surface">0.5M Betaine + 0.2M Trehalose</p>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Recovery
+                                Rate</h4>
+                            <p class="text-sm font-medium text-secondary">88% (±3.4%) Cellular Viability</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Citations Card -->
+            <div class="col-span-12 lg:col-span-4 bg-surface-container-low rounded-xl p-6 space-y-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-on-surface">Key Sources</h3>
+                    <span class="text-[10px] font-bold text-on-surface-variant">3 Citations</span>
+                </div>
+                <div class="space-y-4">
+                    <div class="group flex items-start gap-3 cursor-pointer">
+                        <div
+                            class="w-8 h-8 flex-shrink-0 bg-brand-terracotta/10 rounded flex items-center justify-center group-hover:bg-brand-terracotta transition-colors">
+                            <span
+                                class="material-symbols-outlined text-brand-terracotta group-hover:text-white transition-colors">menu_book</span>
+                        </div>
+                        <div>
+                            <p
+                                class="text-xs font-bold leading-tight group-hover:text-brand-terracotta transition-colors">
+                                Chen et al. (2022)</p>
+                            <p class="text-[10px] text-on-surface-variant mt-0.5">Journal of Cryobiology</p>
+                        </div>
+                    </div>
+                    <div class="group flex items-start gap-3 cursor-pointer">
+                        <div
+                            class="w-8 h-8 flex-shrink-0 bg-brand-terracotta/10 rounded flex items-center justify-center group-hover:bg-brand-terracotta transition-colors">
+                            <span
+                                class="material-symbols-outlined text-brand-terracotta group-hover:text-white transition-colors">description</span>
+                        </div>
+                        <div>
+                            <p
+                                class="text-xs font-bold leading-tight group-hover:text-brand-terracotta transition-colors">
+                                Muller &amp; Schanz (2023)</p>
+                            <p class="text-[10px] text-on-surface-variant mt-0.5">Molecular Research</p>
+                        </div>
+                    </div>
+                    <div class="group flex items-start gap-3 cursor-pointer">
+                        <div
+                            class="w-8 h-8 flex-shrink-0 bg-brand-terracotta/10 rounded flex items-center justify-center group-hover:bg-brand-terracotta transition-colors">
+                            <span
+                                class="material-symbols-outlined text-brand-terracotta group-hover:text-white transition-colors">article</span>
+                        </div>
+                        <div>
+                            <p
+                                class="text-xs font-bold leading-tight group-hover:text-brand-terracotta transition-colors">
+                                Arxiv: Cold Physics</p>
+                            <p class="text-[10px] text-on-surface-variant mt-0.5">Computational Bio-Physics</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Why Card (Mechanism) -->
+            <div
+                class="col-span-12 lg:col-span-7 bg-surface-container-lowest border border-outline-variant/10 rounded-xl p-8 space-y-6">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-on-surface-variant">psychology</span>
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-on-surface">Mechanism of Action</h3>
+                </div>
+                <div class="prose prose-sm text-on-surface-variant font-medium leading-relaxed">
+                    Betaine acts as a <span class="text-on-surface font-bold">preferential excluder</span>, increasing
+                    the surface tension of water around proteins, while Trehalose replaces water molecules in the
+                    hydration shell. At 4°C, this prevents formamide from infiltrating the hydrophobic core of sensitive
+                    enzymes, effectively halting denaturation.
+                </div>
+                <div class="p-4 bg-surface rounded flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-white rounded-sm border border-outline-variant/20 flex items-center justify-center overflow-hidden">
+                        <img alt="Molecular structure of formamide interaction" class="opacity-50 grayscale"
+                            data-alt="Microscopic view of molecular structures in blue and red"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQRCkSpSez6RNK_Pw6uCMOieHDhNRo1O8thAzNWyFtj6DIBgb3p5uhxJVYd1W-z3MqAiIOfJbdCFE7jbThY8SF9EYpM9oorMW5FXcYqeaOlK7aXVrE1bQfVoUVknohIoffb1gxp6O3r0hlJhote6Z22rdKbLcMVFNk5kGwCmBRhOvKwuPLloRP8spHa7pk5mhzY0YLMJZYfwNsepNUku4JJ-F7HyAf09F9amqrjmrTxNFTW6Eo2peqwQ2MyivbFUI1Chif1gwSN7xd" />
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-bold uppercase text-on-surface-variant">Structure Observed</p>
+                        <p class="text-xs font-semibold">T4-Lysozyme-Formamide Interface (2.1Å)</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Suggested Next Hypotheses -->
+            <div class="col-span-12 lg:col-span-5 space-y-6">
+                <h3 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant px-1">Suggested Next
+                    Hypotheses</h3>
+                <div class="grid grid-cols-1 gap-3">
+                    <div
+                        class="group p-4 bg-white border border-outline-variant/10 rounded-lg hover:border-brand-terracotta/30 transition-all cursor-pointer">
+                        <div class="flex justify-between items-start mb-2">
+                            <span
+                                class="text-[9px] font-bold uppercase px-2 py-0.5 bg-primary-container text-primary rounded-sm">Synergy</span>
+                            <span
+                                class="material-symbols-outlined text-outline-variant group-hover:text-brand-terracotta">arrow_forward</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-on-surface">L-Proline synergy with Betaine-Trehalose mixtures
+                        </h4>
+                        <p class="text-[11px] text-on-surface-variant mt-1">Investigate if adding proline further lowers
+                            the required concentration of trehalose.</p>
+                    </div>
+                    <div
+                        class="group p-4 bg-white border border-outline-variant/10 rounded-lg hover:border-brand-terracotta/30 transition-all cursor-pointer">
+                        <div class="flex justify-between items-start mb-2">
+                            <span
+                                class="text-[9px] font-bold uppercase px-2 py-0.5 bg-secondary-container text-secondary rounded-sm">Hydration</span>
+                            <span
+                                class="material-symbols-outlined text-outline-variant group-hover:text-brand-terracotta">arrow_forward</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-on-surface">4C vs 0C hydration shell dynamics under toxicity
+                        </h4>
+                        <p class="text-[11px] text-on-surface-variant mt-1">Computational model comparison of shell
+                            density at the critical transition.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
+
+<!-- Experiments (Neo-Minimal) -->
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#29453c",
+                        "secondary-fixed": "#cae9dd",
+                        "surface-bright": "#f8f9fa",
+                        "primary-dim": "#435467",
+                        "primary": "#4f6073",
+                        "background": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#56656f",
+                        "outline-variant": "#abb3b7",
+                        "on-primary-container": "#425366",
+                        "on-surface": "#2b3437",
+                        "inverse-surface": "#0c0f10",
+                        "outline": "#737c7f",
+                        "secondary": "#49655b",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-container-highest": "#dbe4e7",
+                        "surface-container": "#eaeff1",
+                        "primary-container": "#d2e4fb",
+                        "secondary-dim": "#3d594f",
+                        "on-tertiary": "#f4f9ff",
+                        "on-surface-variant": "#586064",
+                        "on-error-container": "#752121",
+                        "tertiary-dim": "#46555f",
+                        "error": "#9f403d",
+                        "on-background": "#2b3437",
+                        "on-secondary": "#e4fff3",
+                        "secondary-fixed-dim": "#bddbcf",
+                        "surface-tint": "#4f6073",
+                        "inverse-primary": "#d5e7fe",
+                        "surface-variant": "#dbe4e7",
+                        "on-secondary-fixed-variant": "#456157",
+                        "secondary-container": "#cae9dd",
+                        "tertiary-fixed-dim": "#d2e2ee",
+                        "on-tertiary-container": "#4c5a64",
+                        "surface-container-low": "#f1f4f6",
+                        "primary-fixed": "#d2e4fb",
+                        "error-dim": "#4e0309",
+                        "on-primary-fixed-variant": "#4c5d70",
+                        "on-primary-fixed": "#304153",
+                        "on-secondary-container": "#3c574e",
+                        "surface-dim": "#d1dce0",
+                        "surface-container-high": "#e3e9ec",
+                        "on-primary": "#f5f8ff",
+                        "tertiary-container": "#e0f0fc",
+                        "primary-fixed-dim": "#c4d6ed",
+                        "tertiary-fixed": "#e0f0fc",
+                        "error-container": "#fe8983",
+                        "on-tertiary-fixed": "#3a4852",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            background: rgba(248, 249, 250, 0.8);
+        }
+
+        .asymmetric-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+        }
+
+        .thin-border {
+            border: 1px solid rgba(171, 179, 183, 0.2);
+        }
+
+        .offset-shadow {
+            box-shadow: 6px 6px 0px 0px rgba(79, 96, 115, 0.05);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+    <!-- TopNavBar -->
+    <nav
+        class="fixed top-0 w-full z-50 flex justify-between items-center h-12 px-6 w-full bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/20 dark:border-slate-800/20">
+        <div class="text-lg font-bold tracking-tighter text-slate-900 dark:text-white font-headline">Clinical
+            Intelligence</div>
+        <div class="hidden md:flex items-center space-x-8">
+            <a class="font-['Manrope'] tracking-[-0.02em] font-semibold text-sm uppercase transition-colors duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-slate-900"
+                href="#">Dashboard</a>
+            <a class="font-['Manrope'] tracking-[-0.02em] font-semibold text-sm uppercase transition-colors duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-slate-900"
+                href="#">Analytics</a>
+            <a class="font-['Manrope'] tracking-[-0.02em] font-semibold text-sm uppercase transition-colors duration-200 ease-in-out text-slate-900 dark:text-white border-b border-slate-900"
+                href="#">Reports</a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button class="text-slate-500 hover:text-slate-900 transition-colors">
+                <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+            </button>
+            <button class="text-slate-500 hover:text-slate-900 transition-colors">
+                <span class="material-symbols-outlined" data-icon="settings">settings</span>
+            </button>
+            <div class="w-7 h-7 bg-surface-container-highest rounded-full overflow-hidden thin-border">
+                <img alt="User profile avatar" class="w-full h-full object-cover"
+                    data-alt="Close up portrait of a clinical researcher"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYv8N3AB5I7mAAekqdZRJWgJYSqyugAQ25e-x4PagU-lvn6pjZuCRDMEPPXiZv8dG01EMEdmJ8h8yHHBrxZSLYlSBBmpHzILZetbzTrKs2MFP6VK0rI8FJxniKRyqYfCBvlL0euZkkYYK1I-XzKHjqyvrcntDcf3Bd_O95DD4e5-GXoMxioi4aei2aTz8mdijIhgqQ2QlVCbBUAHk07Qxf8JufEubrwpeJr0sbFv0A0FPDreRv2J32kmtSBaD0Qcg1O4RPlXWodpnR" />
+            </div>
+        </div>
+    </nav>
+    <!-- SideNavBar -->
+    <aside
+        class="fixed left-0 top-12 h-[calc(100vh-3rem)] w-64 flex flex-col border-r border-slate-200/20 bg-slate-100 hidden lg:flex">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-8 h-8 bg-primary rounded-sm flex items-center justify-center text-on-primary">
+                    <span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+                </div>
+                <div>
+                    <div class="text-xs font-bold font-headline uppercase tracking-wider text-on-surface">Clinical
+                        Architect</div>
+                    <div class="text-[10px] text-on-surface-variant font-medium">V2.04.18</div>
+                </div>
+            </div>
+            <nav class="space-y-1">
+                <a class="flex items-center space-x-3 px-3 py-2 rounded-sm transition-all duration-150 text-slate-500 hover:bg-slate-200/50 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+                    <span>Research Engine</span>
+                </a>
+                <a class="flex items-center space-x-3 px-3 py-2 rounded-sm transition-all duration-150 text-slate-500 hover:bg-slate-200/50 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="troubleshoot">troubleshoot</span>
+                    <span>Discovery List</span>
+                </a>
+                <a class="flex items-center space-x-3 px-3 py-2 rounded-sm transition-all duration-150 bg-white text-slate-900 font-bold font-['Inter'] text-[11px] tracking-[0.05rem] uppercase"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="science">science</span>
+                    <span>Experiments</span>
+                </a>
+                <a class="flex items-center space-x-3 px-3 py-2 rounded-sm transition-all duration-150 text-slate-500 hover:bg-slate-200/50 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                    <span>Library</span>
+                </a>
+            </nav>
+            <button
+                class="mt-8 w-full py-2 bg-gradient-to-br from-primary to-primary-dim text-on-primary text-[11px] font-bold uppercase tracking-widest rounded-sm shadow-sm transition-transform active:scale-95">
+                New Experiment
+            </button>
+        </div>
+        <div class="mt-auto p-6 border-t border-slate-200/20">
+            <a class="flex items-center space-x-3 px-3 py-2 text-slate-500 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase"
+                href="#">
+                <span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+                <span>Documentation</span>
+            </a>
+            <a class="flex items-center space-x-3 px-3 py-2 text-slate-500 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase"
+                href="#">
+                <span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+                <span>Support</span>
+            </a>
+        </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="ml-0 lg:ml-64 pt-20 p-8 min-h-screen">
+        <header class="mb-12">
+            <div class="flex items-baseline justify-between">
+                <div>
+                    <h1 class="text-4xl font-extrabold font-headline tracking-[-0.03em] text-on-surface mb-2">
+                        Experiments &amp; Hypotheses</h1>
+                    <p class="text-on-surface-variant font-body text-sm max-w-2xl">Precision workspace for longitudinal
+                        clinical research flows. Tracking active nodes and experimental outcomes across the
+                        architecture.</p>
+                </div>
+                <div class="hidden md:flex space-x-2">
+                    <div
+                        class="px-3 py-1 bg-surface-container text-[10px] font-bold uppercase tracking-widest text-primary thin-border">
+                        Node: Alpha-7</div>
+                    <div
+                        class="px-3 py-1 bg-surface-container text-[10px] font-bold uppercase tracking-widest text-primary thin-border">
+                        Status: Synchronized</div>
+                </div>
+            </div>
+        </header>
+        <div class="asymmetric-grid">
+            <!-- Left Column: Active Experiments -->
+            <section class="space-y-6">
+                <div class="flex items-center justify-between border-b border-outline-variant/20 pb-4">
+                    <h2 class="text-xs font-extrabold uppercase tracking-[0.15em] text-on-surface">Active Research Flows
+                    </h2>
+                    <span class="text-[10px] font-medium text-on-surface-variant">4 Total Sequences</span>
+                </div>
+                <!-- Experiment Card 1 -->
+                <div
+                    class="group relative bg-surface-container-lowest p-6 rounded-sm thin-border offset-shadow hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="space-y-1">
+                            <span
+                                class="inline-block px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[9px] font-bold uppercase tracking-wider">Successful</span>
+                            <h3 class="text-xl font-bold font-headline tracking-tight text-on-surface mt-2">Neural
+                                Pathway Synthesis #802</h3>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                Efficiency</div>
+                            <div class="text-2xl font-black font-headline text-secondary">98.4%</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 border-t border-outline-variant/10 pt-4">
+                        <div>
+                            <div class="text-[9px] font-bold text-on-surface-variant uppercase mb-1">Duration</div>
+                            <div class="text-xs font-semibold">142 Hours</div>
+                        </div>
+                        <div>
+                            <div class="text-[9px] font-bold text-on-surface-variant uppercase mb-1">Batch ID</div>
+                            <div class="text-xs font-semibold">XP-77-DELTA</div>
+                        </div>
+                        <div>
+                            <div class="text-[9px] font-bold text-on-surface-variant uppercase mb-1">Sample Size</div>
+                            <div class="text-xs font-semibold">2,400 Nodes</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Experiment Card 2 (Ongoing/Amber focus) -->
+                <div
+                    class="group relative bg-surface-container-lowest p-6 rounded-sm thin-border offset-shadow hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="space-y-1">
+                            <span
+                                class="inline-block px-2 py-0.5 bg-tertiary-container text-on-tertiary-container text-[9px] font-bold uppercase tracking-wider">Ongoing
+                                Processing</span>
+                            <h3 class="text-xl font-bold font-headline tracking-tight text-on-surface mt-2">CRISPR
+                                Variant Simulation</h3>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                Progress</div>
+                            <div class="text-2xl font-black font-headline text-tertiary">64.0%</div>
+                        </div>
+                    </div>
+                    <div class="w-full bg-surface-container h-1 rounded-full mb-6 overflow-hidden">
+                        <div class="bg-tertiary h-full w-[64%]"></div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 border-t border-outline-variant/10 pt-4">
+                        <div>
+                            <div class="text-[9px] font-bold text-on-surface-variant uppercase mb-1">ETA</div>
+                            <div class="text-xs font-semibold">18:42:05</div>
+                        </div>
+                        <div>
+                            <div class="text-[9px] font-bold text-on-surface-variant uppercase mb-1">Thread</div>
+                            <div class="text-xs font-semibold">Sequence-B</div>
+                        </div>
+                        <div>
+                            <div class="text-[9px] font-bold text-on-surface-variant uppercase mb-1">Load</div>
+                            <div class="text-xs font-semibold">Critical</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Experiment Card 3 -->
+                <div
+                    class="group relative bg-surface-container-lowest p-6 rounded-sm thin-border offset-shadow hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="space-y-1">
+                            <span
+                                class="inline-block px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[9px] font-bold uppercase tracking-wider">Successful</span>
+                            <h3 class="text-xl font-bold font-headline tracking-tight text-on-surface mt-2">Isotope
+                                Mapping V2</h3>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                Precision</div>
+                            <div class="text-2xl font-black font-headline text-secondary">0.002μ</div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-on-surface-variant italic mb-6 border-l-2 border-secondary/20 pl-4">
+                        "Hypothesis confirmed: Thermal drift within expected architectural bounds."
+                    </div>
+                    <div class="flex justify-end space-x-3">
+                        <button
+                            class="text-[10px] font-bold uppercase tracking-widest text-primary-dim hover:underline">Download
+                            Data</button>
+                        <button
+                            class="text-[10px] font-bold uppercase tracking-widest text-primary-dim hover:underline">Archive
+                            Flow</button>
+                    </div>
+                </div>
+            </section>
+            <!-- Right Column: Hypothesis & System Metrics -->
+            <section class="space-y-6">
+                <!-- Hypothesis Tracking Module -->
+                <div class="bg-surface-container-low p-6 rounded-sm thin-border">
+                    <h2 class="text-xs font-extrabold uppercase tracking-[0.15em] text-on-surface mb-6">Active
+                        Hypotheses</h2>
+                    <div class="space-y-6">
+                        <div
+                            class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-px before:bg-outline-variant/30">
+                            <div class="text-[9px] font-black uppercase text-primary mb-1 tracking-tighter">H-0014</div>
+                            <p class="text-xs font-semibold text-on-surface mb-2">Automated drug discovery pipelines
+                                reduce latency by 40% vs manual entry.</p>
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                                <span
+                                    class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Validating...</span>
+                            </div>
+                        </div>
+                        <div
+                            class="relative pl-6 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-px before:bg-outline-variant/30">
+                            <div class="text-[9px] font-black uppercase text-primary mb-1 tracking-tighter">H-0015</div>
+                            <p class="text-xs font-semibold text-on-surface mb-2">Quantum tunneling simulation reveals
+                                non-linear protein folding pathways.</p>
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                                <span
+                                    class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Pending
+                                    Computation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Lab Image Placeholder -->
+                <div class="relative aspect-video rounded-sm overflow-hidden thin-border bg-surface-container-highest">
+                    <img alt="High precision laboratory equipment"
+                        class="w-full h-full object-cover grayscale opacity-60 mix-blend-multiply"
+                        data-alt="High tech laboratory microscope and sterile clinical equipment"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxA0qhRBoQpnQ2kAwQ-ZNNVpRpGtlP0Fx_6er5QxyNEVEuGqx5h6SXp486aXAWzhLMr4g-bHVcHVBoEBTXn_U43Z0g784-o75lVMPSdi4VP8STOvnbfxb8RjObVeD3XKXEQ2lm2K57cZeLlVYmqyMs6wn3CUjmNDYIwUon-PgZeK_S9SabhLVbuLZa1aTYzCR8DnafbFT3NDLq-XkUb5zXdZaI_znjrwrEcnccyWBwzoohUxkN4fXAbFx5V3TziL7FbqUrFwCPmitz" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4">
+                        <div class="text-[9px] font-bold text-primary uppercase tracking-widest">Lab Station 04</div>
+                        <div class="text-xs font-bold text-on-surface">Precision Optical Sensor Active</div>
+                    </div>
+                </div>
+                <!-- Data Chips Bento -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white p-4 thin-border">
+                        <div class="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">CPU
+                            Load</div>
+                        <div class="text-lg font-black font-headline">24.2%</div>
+                    </div>
+                    <div class="bg-white p-4 thin-border">
+                        <div class="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Storage
+                        </div>
+                        <div class="text-lg font-black font-headline">1.4 PB</div>
+                    </div>
+                    <div class="bg-white p-4 thin-border">
+                        <div class="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Latency
+                        </div>
+                        <div class="text-lg font-black font-headline">4ms</div>
+                    </div>
+                    <div class="bg-white p-4 thin-border">
+                        <div class="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Nodes
+                        </div>
+                        <div class="text-lg font-black font-headline">8,102</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Contextual FAB (Hidden on this view per rules, but shown here as a task-related element) -->
+    <!-- Suppression rule applied: Suppression is based on page intent. This is a Dashboard-style view, keeping FAB active -->
+    <button
+        class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-sm shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-transform z-50">
+        <span class="material-symbols-outlined" data-icon="add">add</span>
+    </button>
+</body>
+
+</html>
+
+<!-- Library (Neo-Minimal) -->
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#29453c",
+                        "secondary-fixed": "#cae9dd",
+                        "surface-bright": "#f8f9fa",
+                        "primary-dim": "#435467",
+                        "primary": "#4f6073",
+                        "background": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#56656f",
+                        "outline-variant": "#abb3b7",
+                        "on-primary-container": "#425366",
+                        "on-surface": "#2b3437",
+                        "inverse-surface": "#0c0f10",
+                        "outline": "#737c7f",
+                        "secondary": "#49655b",
+                        "inverse-on-surface": "#9b9d9e",
+                        "surface-container-highest": "#dbe4e7",
+                        "surface-container": "#eaeff1",
+                        "primary-container": "#d2e4fb",
+                        "secondary-dim": "#3d594f",
+                        "on-tertiary": "#f4f9ff",
+                        "on-surface-variant": "#586064",
+                        "on-error-container": "#752121",
+                        "tertiary-dim": "#46555f",
+                        "error": "#9f403d",
+                        "on-background": "#2b3437",
+                        "on-secondary": "#e4fff3",
+                        "tertiary-fixed-dim": "#d2e2ee",
+                        "on-tertiary-container": "#4c5a64",
+                        "surface-container-low": "#f1f4f6",
+                        "primary-fixed": "#d2e4fb",
+                        "error-dim": "#4e0309",
+                        "on-primary-fixed-variant": "#4c5d70",
+                        "on-primary-fixed": "#304153",
+                        "on-secondary-container": "#3c574e",
+                        "surface-dim": "#d1dce0",
+                        "surface-container-high": "#e3e9ec",
+                        "on-primary": "#f5f8ff",
+                        "tertiary-container": "#e0f0fc",
+                        "primary-fixed-dim": "#c4d6ed",
+                        "tertiary-fixed": "#e0f0fc",
+                        "error-container": "#fe8983",
+                        "on-tertiary-fixed": "#3a4852",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 1.25rem;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .wide-track {
+            letter-spacing: -0.02em;
+        }
+
+        .blueprint-label {
+            letter-spacing: 0.05rem;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface select-none">
+    <!-- Top Navigation Bar -->
+    <nav
+        class="fixed top-0 w-full z-50 flex justify-between items-center h-12 px-6 w-full bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/20 dark:border-slate-800/20">
+        <div class="flex items-center gap-8">
+            <span class="text-lg font-bold tracking-tighter text-slate-900 dark:text-white font-headline">Clinical
+                Intelligence</span>
+            <div class="hidden md:flex gap-6">
+                <a class="font-['Manrope'] tracking-[-0.02em] font-semibold text-sm uppercase transition-colors duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    href="#">Dashboard</a>
+                <a class="font-['Manrope'] tracking-[-0.02em] font-semibold text-sm uppercase transition-colors duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                    href="#">Analytics</a>
+                <a class="font-['Manrope'] tracking-[-0.02em] font-semibold text-sm uppercase transition-colors duration-200 ease-in-out text-slate-900 dark:text-white border-b border-slate-900 dark:border-white"
+                    href="#">Reports</a>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-slate-700 dark:text-slate-300 cursor-pointer"
+                data-icon="notifications">notifications</span>
+            <span class="material-symbols-outlined text-slate-700 dark:text-slate-300 cursor-pointer"
+                data-icon="settings">settings</span>
+            <div
+                class="h-8 w-8 bg-surface-container-highest rounded-sm overflow-hidden border border-outline-variant/20">
+                <img class="w-full h-full object-cover" data-alt="User profile avatar"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUM5Bffwt4VLYYKG5Ol1lI98OObkUjCUHynxZ5-hWwowwYG16Uoni_yfoOlmqKCjQ2emW0S8LwOndundxVj5zfQ8VqS9V3oKZIisZ1aql2isDdZBV8mDXmweDTPc7SYV1TOWZQF8bMhbEhMqOGx9nEOONoub56sLCHN2FQDrZowDaEat9fLO1Z4wfeW4WyPTq--tp3vD5o2H6zUA89R_9TOxCXRrn7XYRnkfaudfv09qBJDPfnhHIZXKuvA8SaH25HJto-2yyqysSa" />
+            </div>
+        </div>
+    </nav>
+    <!-- Sidebar Navigation -->
+    <aside
+        class="fixed left-0 top-12 h-[calc(100vh-3rem)] w-64 flex flex-col bg-slate-100 dark:bg-slate-950 border-r border-slate-200/20 dark:border-slate-800/20">
+        <div class="p-6">
+            <div class="mb-8">
+                <p class="font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase text-[#4f6073]">Clinical
+                    Architect</p>
+                <p class="text-[10px] text-on-surface-variant opacity-60">V2.04.18</p>
+            </div>
+            <nav class="space-y-1">
+                <a class="flex items-center gap-3 px-3 py-2 transition-all duration-150 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="biotech">biotech</span> Research Engine
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 transition-all duration-150 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="troubleshoot">troubleshoot</span> Discovery List
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 transition-all duration-150 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="science">science</span> Experiments
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 transition-all duration-150 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span> Library
+                </a>
+            </nav>
+            <button
+                class="mt-8 w-full py-2 bg-gradient-to-br from-primary to-primary-dim text-on-primary text-[11px] font-bold tracking-[0.05rem] uppercase rounded-sm shadow-sm hover:opacity-90 transition-opacity">
+                New Experiment
+            </button>
+        </div>
+        <div class="mt-auto p-6 border-t border-slate-200/10">
+            <nav class="space-y-1">
+                <a class="flex items-center gap-3 px-3 py-2 transition-all duration-150 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase text-slate-500 dark:text-slate-400 hover:bg-slate-200/50"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="help_outline">help_outline</span> Documentation
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 transition-all duration-150 font-['Inter'] text-[11px] font-medium tracking-[0.05rem] uppercase text-slate-500 dark:text-slate-400 hover:bg-slate-200/50"
+                    href="#">
+                    <span class="material-symbols-outlined" data-icon="contact_support">contact_support</span> Support
+                </a>
+            </nav>
+        </div>
+    </aside>
+    <!-- Main Content Canvas -->
+    <main class="ml-64 mt-12 min-h-[calc(100vh-3rem)] grid grid-cols-12 overflow-hidden">
+        <!-- Left Panel: Chemical Recipes -->
+        <section class="col-span-12 lg:col-span-7 bg-surface p-10 border-r border-outline-variant/10">
+            <header class="mb-10 flex justify-between items-end">
+                <div>
+                    <span class="blueprint-label text-[10px] font-bold text-primary uppercase opacity-70">Repository /
+                        Protocol</span>
+                    <h1 class="font-headline text-3xl font-extrabold wide-track text-on-surface mt-1 uppercase">Chemical
+                        Recipes</h1>
+                </div>
+                <div class="flex gap-2">
+                    <span
+                        class="material-symbols-outlined p-2 bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors"
+                        data-icon="filter_list">filter_list</span>
+                    <span
+                        class="material-symbols-outlined p-2 bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors"
+                        data-icon="sort">sort</span>
+                </div>
+            </header>
+            <div class="space-y-12">
+                <!-- Recipe Item 1 -->
+                <div class="group">
+                    <div class="flex items-baseline justify-between mb-4">
+                        <h2 class="font-headline text-xl font-bold tracking-tight text-on-surface uppercase">R-0419:
+                            Synthetase Alpha-9</h2>
+                        <span class="blueprint-label text-[10px] font-bold text-secondary uppercase">Validated</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-2 space-y-4">
+                            <div class="p-4 bg-surface-container-lowest border-b border-primary/20">
+                                <p class="blueprint-label text-[9px] text-on-surface-variant uppercase mb-2">Primary
+                                    Composition</p>
+                                <p class="font-mono text-sm text-on-surface leading-relaxed">C₂₀H₂₅N₃O + 2.4mL Solute-X
+                                    + (4.0% μL Catalyst)</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-3 bg-surface-container-low">
+                                    <p class="blueprint-label text-[9px] text-on-surface-variant uppercase">Temperature
+                                    </p>
+                                    <p class="font-headline text-lg font-semibold">184.5°K</p>
+                                </div>
+                                <div class="p-3 bg-surface-container-low">
+                                    <p class="blueprint-label text-[9px] text-on-surface-variant uppercase">Pressure</p>
+                                    <p class="font-headline text-lg font-semibold">2.41 ATM</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-span-1 flex flex-col justify-center items-center bg-surface-container-highest/30 p-4">
+                            <div
+                                class="w-full aspect-square bg-white border border-outline-variant/10 flex items-center justify-center p-2">
+                                <img class="w-full h-full object-cover grayscale opacity-80"
+                                    data-alt="Microscopic view of synthesized crystals"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL8bu0UPIe7GWRw6IwP8tqLkmbu6VsglFMp18IBGM_NmSOZG1Olj7nZgkbCk3FWLLdrYS2ZHFHRJP3-jDVLYNNKcr5m85obAIxtFtNGCnArVA3R2Fx-GIBMiLgOD4K8f2aJOrUXp-7g_VNo-Bn3IbxAnEIXZCBhoCoRo6-9z8AGVn1gBarm1Trp7rP9BnE_gz-l52iRSSnA_5-z9ztH5a8xD0LE5FSdlf9LMjgFlz4loHfCHgHCVmwZlQAyu_oda0Z32xe6LKfOs_1" />
+                            </div>
+                            <p class="blueprint-label text-[8px] mt-2 text-center opacity-50 uppercase">Crystal Phase
+                                Visualization</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recipe Item 2 -->
+                <div class="group border-t border-outline-variant/10 pt-12">
+                    <div class="flex items-baseline justify-between mb-4">
+                        <h2 class="font-headline text-xl font-bold tracking-tight text-on-surface uppercase">R-0922:
+                            Lipid-Carrier B</h2>
+                        <span class="blueprint-label text-[10px] font-bold text-tertiary uppercase">In Progress</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="col-span-2 space-y-4">
+                            <div class="p-4 bg-surface-container-lowest border-b border-primary/20">
+                                <p class="blueprint-label text-[9px] text-on-surface-variant uppercase mb-2">Base
+                                    Formulation</p>
+                                <p class="font-mono text-sm text-on-surface leading-relaxed">H₂O + Ethanol (98%) +
+                                    L-Phosphatidylcholine (50mg)</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="p-3 bg-surface-container-low">
+                                    <p class="blueprint-label text-[9px] text-on-surface-variant uppercase">Sonicator Hz
+                                    </p>
+                                    <p class="font-headline text-lg font-semibold">22.4 kHz</p>
+                                </div>
+                                <div class="p-3 bg-surface-container-low">
+                                    <p class="blueprint-label text-[9px] text-on-surface-variant uppercase">Incubation
+                                    </p>
+                                    <p class="font-headline text-lg font-semibold">45.0 MIN</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="col-span-1 flex flex-col justify-center items-center bg-surface-container-highest/30 p-4">
+                            <div
+                                class="w-full aspect-square bg-white border border-outline-variant/10 flex items-center justify-center p-2">
+                                <img class="w-full h-full object-cover grayscale opacity-80"
+                                    data-alt="Laboratory glassware containing blue liquid"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCu7-REp2c7pJBIg7QDV2TQWqcJtH_WKx3g7GWEO878RrSvRzJDPUDy5lT9BUj9Fd8OjvrsBuqSSinxwr2vxrya2QFyGvAjvOI6T_UnAfPq8CwWHDE-SvGRxb82A2Xc1GrHzhuufCSV8IUV2KxG-nYrJkDlZLMXvWSGh5kaPToge-gPErNgPVx2UZU_PSLjbCIJ2nJoHHESMUrQq8nFMnxPNKA2h0WVxsSGAg6jOxUUtqPdrGU0c7j3Mq4iHqTogIQboyijyp3MlkPR" />
+                            </div>
+                            <p class="blueprint-label text-[8px] mt-2 text-center opacity-50 uppercase">Base Emulsion
+                                Refraction</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Right Panel: Research Papers (Bibliographic View) -->
+        <section class="col-span-12 lg:col-span-5 bg-surface-container-low p-10">
+            <header class="mb-10">
+                <span class="blueprint-label text-[10px] font-bold text-primary uppercase opacity-70">External
+                    References / Indexing</span>
+                <h1 class="font-headline text-3xl font-extrabold wide-track text-on-surface mt-1 uppercase">Research
+                    Papers</h1>
+            </header>
+            <div class="space-y-6">
+                <!-- Paper 1 -->
+                <article
+                    class="p-5 bg-surface-container-lowest hover:bg-white transition-all border-l-2 border-primary group cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="blueprint-label text-[9px] text-primary font-bold uppercase">Journal of
+                            Bio-Engineering</span>
+                        <span class="text-[10px] text-on-surface-variant font-mono">2024.11.02</span>
+                    </div>
+                    <h3
+                        class="font-headline text-base font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
+                        Micro-encapsulation techniques for Synthetase variants in zero-gravity environments.</h3>
+                    <p class="text-xs text-on-surface-variant line-clamp-2 mb-4 leading-relaxed italic">"The efficacy of
+                        variant Alpha-9 was tested under varying atmospheric pressures showing a 14% increase in
+                        stability..."</p>
+                    <div class="flex gap-4">
+                        <span
+                            class="flex items-center gap-1 text-[10px] font-bold blueprint-label uppercase text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-sm" data-icon="person">person</span> Dr. Aris
+                            Thorne
+                        </span>
+                        <span
+                            class="flex items-center gap-1 text-[10px] font-bold blueprint-label uppercase text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-sm" data-icon="tag">tag</span>
+                            Molecular-Dynamics
+                        </span>
+                    </div>
+                </article>
+                <!-- Paper 2 -->
+                <article
+                    class="p-5 bg-surface-container-lowest hover:bg-white transition-all border-l-2 border-outline-variant/30 group cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="blueprint-label text-[9px] text-on-surface-variant font-bold uppercase">Clinical
+                            Archives Vol. 12</span>
+                        <span class="text-[10px] text-on-surface-variant font-mono">2023.08.15</span>
+                    </div>
+                    <h3
+                        class="font-headline text-base font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
+                        Comparative analysis of Lipid-Carrier B vs Synthetic Emollients in dermal application.</h3>
+                    <p class="text-xs text-on-surface-variant line-clamp-2 mb-4 leading-relaxed italic">"Observations
+                        suggest that phosphorylation remains a key hurdle for long-term lipid suspension integrity..."
+                    </p>
+                    <div class="flex gap-4">
+                        <span
+                            class="flex items-center gap-1 text-[10px] font-bold blueprint-label uppercase text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-sm" data-icon="person">person</span> Prof. Elena
+                            Rossi
+                        </span>
+                        <span
+                            class="flex items-center gap-1 text-[10px] font-bold blueprint-label uppercase text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-sm" data-icon="tag">tag</span>
+                            Dermal-Pharmacology
+                        </span>
+                    </div>
+                </article>
+                <!-- Paper 3 -->
+                <article
+                    class="p-5 bg-surface-container-lowest hover:bg-white transition-all border-l-2 border-outline-variant/30 group cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="blueprint-label text-[9px] text-on-surface-variant font-bold uppercase">Nanotech
+                            Quarterly</span>
+                        <span class="text-[10px] text-on-surface-variant font-mono">2023.04.22</span>
+                    </div>
+                    <h3
+                        class="font-headline text-base font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
+                        Surface tension anomalies in Solute-X catalyzed reactions.</h3>
+                    <p class="text-xs text-on-surface-variant line-clamp-2 mb-4 leading-relaxed italic">"Analysis of
+                        meniscus curvature indicates a non-linear relationship between temperature and Solute-X
+                        viscosity..."</p>
+                    <div class="flex gap-4">
+                        <span
+                            class="flex items-center gap-1 text-[10px] font-bold blueprint-label uppercase text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-sm" data-icon="person">person</span> Team
+                            Lambda-9
+                        </span>
+                        <span
+                            class="flex items-center gap-1 text-[10px] font-bold blueprint-label uppercase text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-sm" data-icon="tag">tag</span> Physics-Chemistry
+                        </span>
+                    </div>
+                </article>
+                <!-- Paper 4 -->
+                <article
+                    class="p-5 bg-surface-container-lowest hover:bg-white transition-all border-l-2 border-outline-variant/30 group cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="blueprint-label text-[9px] text-on-surface-variant font-bold uppercase">Modern
+                            Catalysis Review</span>
+                        <span class="text-[10px] text-on-surface-variant font-mono">2022.12.01</span>
+                    </div>
+                    <h3
+                        class="font-headline text-base font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">
+                        Catalyst Efficiency: 4.0% μL threshold in Nitrogenous reactions.</h3>
+                    <p class="text-xs text-on-surface-variant line-clamp-2 mb-4 leading-relaxed italic">"A meta-study on
+                        catalyst concentration reveals the 4% marker as a peak for reaction entropy minimization..."</p>
+                    <div class="flex gap-4">
+                        <span
+                            class="flex items-center gap-1 text-[10px] font-bold blueprint-label uppercase text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-sm" data-icon="person">person</span> Dr. Julian
+                            H.
+                        </span>
+                        <span
+                            class="flex items-center gap-1 text-[10px] font-bold blueprint-label uppercase text-on-surface-variant/60">
+                            <span class="material-symbols-outlined text-sm" data-icon="tag">tag</span> Entropy-Control
+                        </span>
+                    </div>
+                </article>
+            </div>
+            <!-- Library Utility Action -->
+            <div
+                class="mt-12 flex flex-col items-center justify-center p-8 border border-dashed border-outline-variant/40 bg-surface-container">
+                <span class="material-symbols-outlined text-primary-dim text-4xl mb-3"
+                    data-icon="upload_file">upload_file</span>
+                <p class="blueprint-label text-[10px] font-bold text-on-surface-variant uppercase mb-4">Ingest New
+                    Dataset</p>
+                <button
+                    class="px-6 py-2 bg-white text-on-surface text-[10px] font-bold blueprint-label uppercase border border-outline-variant/20 hover:bg-surface-container-low transition-colors">Browse
+                    Documents</button>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
