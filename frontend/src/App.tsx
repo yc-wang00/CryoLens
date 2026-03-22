@@ -4,8 +4,8 @@ import { AppShell } from "./components/app-shell";
 import { EvidencePanel, type PanelState } from "./components/evidence-panel";
 import { Dialog, DialogContent } from "./components/ui/dialog";
 import { Card, CardContent } from "./components/ui/card";
-import { type Cocktail, type Hypothesis, type Molecule, type PageKey, type SourceDocument } from "./data/mock-data";
-import { fetchCryoLensDataset, type CryoLensDataset, type ExperimentRecord } from "./data/cryo-lens";
+import type { Cocktail, Molecule, PageKey, SourceDocument } from "./types";
+import { fetchCryoLensDataset, type CryoLensDataset, type ExperimentRecord, type HypothesisCard } from "./data/cryo-lens";
 import { AskPage } from "./pages/ask-page";
 import { CocktailsPage } from "./pages/cocktails-page";
 import { HypothesesPage } from "./pages/hypotheses-page";
@@ -55,7 +55,7 @@ function App() {
     setPanel({ kind: "experiment", experiment });
   }
 
-  function openHypothesis(hypothesis: Hypothesis): void {
+  function openHypothesis(hypothesis: HypothesisCard): void {
     setCurrentPage("hypotheses");
     setPanel({ kind: "hypothesis", hypothesis });
   }

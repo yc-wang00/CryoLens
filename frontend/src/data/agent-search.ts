@@ -1,5 +1,5 @@
-import type { AgentToolCall } from "./mock-data";
-import type { Hypothesis } from "./mock-data";
+import type { AgentToolCall } from "../types";
+import type { HypothesisCard } from "./cryo-lens";
 
 const AGENT_API_BASE_URL = import.meta.env.VITE_AGENT_API_BASE_URL ?? "";
 
@@ -12,7 +12,7 @@ export type AgentSearchStreamEvent =
   | { type: "tool_input_delta"; text: string }
   | { type: "tool_end"; name: string; input: string }
   | { type: "result"; text: string }
-  | { type: "hypothesis_saved"; hypothesis: Hypothesis }
+  | { type: "hypothesis_saved"; hypothesis: HypothesisCard }
   | { type: "error"; message: string };
 
 export interface LiveAgentSearchState {
@@ -21,7 +21,7 @@ export interface LiveAgentSearchState {
   assistantText: string;
   errorMessage: string | null;
   finished: boolean;
-  savedHypothesis: Hypothesis | null;
+  savedHypothesisCard: HypothesisCard | null;
   statusHistory: string[];
   statusMessage: string;
   toolCalls: AgentToolCall[];

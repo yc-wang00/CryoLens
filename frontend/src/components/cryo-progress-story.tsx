@@ -18,7 +18,7 @@
  */
 
 import { Badge } from "./ui/badge";
-import type { CryoLensStoryStats, CryoLensStoryYear } from "../data/cryo-lens-contract";
+import type { CryoLensStoryStats, CryoLensStoryYear } from "../data/cryo-lens";
 
 const CHART_WIDTH = 960;
 const CHART_HEIGHT = 320;

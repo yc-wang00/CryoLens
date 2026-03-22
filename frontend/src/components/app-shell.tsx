@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { useState, type JSX, type ReactNode } from "react";
 
-import type { PageKey } from "../data/mock-data";
+import type { PageKey } from "../types";
 import { cn } from "../lib/utils";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
