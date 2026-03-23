@@ -30,7 +30,6 @@ from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
-from app.core.config import settings
 from app.db.base import Base
 
 
@@ -152,7 +151,7 @@ class DocumentChunk(Base):
     chunk_index: Mapped[int] = mapped_column(Integer, nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     embedding: Mapped[list[float] | None] = mapped_column(
-        Vector(settings.vector_dimensions),
+        Vector(768),
         nullable=True,
     )
     created_at: Mapped[datetime] = mapped_column(
