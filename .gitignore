@@ -33,3 +33,4 @@ docs/
 papers/
 test-results/
 *.pptx
+.claude/
