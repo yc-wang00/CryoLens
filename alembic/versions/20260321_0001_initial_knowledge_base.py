@@ -1,4 +1,4 @@
-"""Create CryoSight knowledge base schema."""
+"""Create CryoLens knowledge base schema."""
 
 import sqlalchemy as sa
 from pgvector.sqlalchemy import Vector
@@ -14,7 +14,7 @@ depends_on = None
 
 
 def upgrade() -> None:
-    """Create the initial CryoSight schema."""
+    """Create the initial CryoLens schema."""
     op.execute("CREATE EXTENSION IF NOT EXISTS vector")
 
     document_source_type = postgresql.ENUM(
@@ -261,7 +261,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    """Drop the initial CryoSight schema."""
+    """Drop the initial CryoLens schema."""
     op.drop_index(op.f("ix_findings_year"), table_name="findings")
     op.drop_index(op.f("ix_findings_tissue"), table_name="findings")
     op.drop_index(op.f("ix_findings_modality"), table_name="findings")

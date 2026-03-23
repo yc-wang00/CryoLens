@@ -1,7 +1,7 @@
 [project]
-name = "cryosight"
+name = "cryolens"
 version = "0.1.0"
-description = "CryoSight knowledge base backend with FastAPI and pgvector"
+description = "CryoLens knowledge base backend with FastAPI and pgvector"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [

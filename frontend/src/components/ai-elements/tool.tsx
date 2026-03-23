@@ -7,7 +7,7 @@
  * KEY CONCEPTS:
  * - collapsible tool cards
  * - explicit pending/running/completed/error states
- * - formatted input/output panels that fit the existing CryoSight design
+ * - formatted input/output panels that fit the existing CryoLens design
  *
  * USAGE:
  * - import into the Ask page and map streamed tool call state into these parts

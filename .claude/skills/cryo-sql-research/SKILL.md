@@ -1,11 +1,11 @@
 ---
 name: cryo-sql-research
-description: Use when answering CryoSight Ask-page research prompts against the live cryoLens Supabase database. Inspect schema first, keep SQL read-only, aggregate before dumping rows, and cite exact tables, filters, and row counts.
+description: Use when answering CryoLens Ask-page research prompts against the live cryoLens Supabase database. Inspect schema first, keep SQL read-only, aggregate before dumping rows, and cite exact tables, filters, and row counts.
 ---
 
-# CryoSight SQL Research
+# CryoLens SQL Research
 
-Use this skill for CryoSight search prompts that need live evidence from the cryoLens Supabase database.
+Use this skill for CryoLens search prompts that need live evidence from the cryoLens Supabase database.
 
 ## Workflow
 

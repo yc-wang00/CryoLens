@@ -1,4 +1,4 @@
-"""Schemas for saved CryoSight hypothesis drafts."""
+"""Schemas for saved CryoLens hypothesis drafts."""
 
 from pydantic import BaseModel, ConfigDict, Field
 

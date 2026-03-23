@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Parallel PDF downloader for CryoSight corpus.
+Parallel PDF downloader for CryoLens corpus.
 Downloads from PMC OA, Europe PMC, Unpaywall, and Semantic Scholar concurrently.
 
 Usage:
@@ -52,7 +52,7 @@ _thread_local = threading.local()
 def get_session():
     if not hasattr(_thread_local, "session"):
         s = requests.Session()
-        s.headers.update({"User-Agent": "CryoSight/2.0 (cryobiology-hackathon)"})
+        s.headers.update({"User-Agent": "CryoLens/2.0 (cryobiology-hackathon)"})
         retry = Retry(total=2, backoff_factor=0.5, status_forcelist=[429, 500, 502, 503, 504])
         adapter = HTTPAdapter(max_retries=retry, pool_connections=10, pool_maxsize=10)
         s.mount("https://", adapter)
@@ -146,7 +146,7 @@ def try_unpaywall(doi, paper_id):
         return str(output_path), "unpaywall"
     try:
         resp = get_session().get(
-            f"https://api.unpaywall.org/v2/{doi}?email=cryosight@hackathon.dev",
+            f"https://api.unpaywall.org/v2/{doi}?email=cryolens@hackathon.dev",
             timeout=15,
         )
         if resp.status_code == 200:
