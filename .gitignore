@@ -1,18 +1,35 @@
+# OS
 .DS_Store
-*.pptx
+
+# Python
 .venv/
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
 .coverage
 htmlcov/
-*.pyc
-*.pyo
-*.pyd
-.env
-docs/
 
-test-results/
+# Node
+node_modules/
+
+# Environment / secrets
+.env
+.env.production
+.env.development
+.env*.local
+.db_password
+
+# Build artifacts
+dist/
+build/
+
+# Project-specific
+docs/
 papers/
-tickets/.db_password
+test-results/
+*.pptx

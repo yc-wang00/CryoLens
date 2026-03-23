@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5433:5432"
+      - "5433:5432"   # 5433 to avoid clashing with local Postgres
     volumes:
       - cryolens_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -19,6 +19,7 @@ services:
   api:
     build:
       context: .
+      dockerfile: Dockerfile.api
     container_name: cryolens-api
     env_file:
       - .env

@@ -1,9 +1,14 @@
 [project]
 name = "cryolens"
 version = "0.1.0"
-description = "CryoLens knowledge base backend with FastAPI and pgvector"
+description = "CryoLens — AI-powered cryobiology knowledge engine"
 readme = "README.md"
-requires-python = ">=3.11"
+license = "MIT"
+requires-python = ">=3.12"
+authors = [
+    { name = "Yicheng Wang" },
+    { name = "Kenji Phang" },
+]
 dependencies = [
     "alembic>=1.14.0",
     "asyncpg>=0.30.0",

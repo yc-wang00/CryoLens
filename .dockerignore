@@ -1,12 +1,30 @@
+# Secrets — never send to Docker daemon
+.env
+.env.*
+.db_password
+
+# Git
+.git/
+
+# Large data
 corpus/
+papers/
+*.pdf
+extracted_data/
+
+# Python
 .venv/
 __pycache__/
 *.pyc
-.git/
-*.pdf
-extracted_data/
+*.egg-info/
+
+# Node
+**/node_modules/
+frontend/dist/
+
+# Build artifacts
 database/seed_*.sql
+test-results/
+
+# OS
 .DS_Store
-*.md
-!README.md
-!pyproject.toml
