@@ -293,7 +293,7 @@ export function SourcesPage() {
                 Connect your agent
               </Button>
               <a
-                href="https://github.com/yc-wang00/CryoSight"
+                href="https://github.com/yc-wang00/CryoLens"
                 target="_blank"
                 rel="noreferrer"
                 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground hover:text-hero transition-colors"

@@ -100,7 +100,7 @@ function SidebarContent({
           </p>
           <a
             className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:text-hero"
-            href="https://github.com/yc-wang00/CryoSight"
+            href="https://github.com/yc-wang00/CryoLens"
             rel="noreferrer"
             target="_blank"
           >

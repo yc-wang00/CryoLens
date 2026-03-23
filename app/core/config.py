@@ -19,9 +19,6 @@ class Settings(BaseSettings):
     app_env: str = "development"
     database_url: str = "postgresql://localhost:5432/cryosight"
     sql_echo: bool = False
-    vector_dimensions: int = 768
-    chunk_size: int = 1200
-    chunk_overlap: int = 200
     cors_origins: list[str] = Field(
         default_factory=lambda: [
             "http://localhost:3000",
@@ -58,22 +55,11 @@ class Settings(BaseSettings):
 
     @cached_property
     def sync_database_url(self) -> str:
-        """Return the sync SQLAlchemy database URL."""
-        if self.database_url.startswith("postgresql+psycopg://"):
-            return self.database_url
-        if self.database_url.startswith("postgresql+asyncpg://"):
-            return self.database_url.replace(
-                "postgresql+asyncpg://",
-                "postgresql+psycopg://",
-                1,
-            )
-        if self.database_url.startswith("postgresql://"):
-            return self.database_url.replace(
-                "postgresql://",
-                "postgresql+psycopg://",
-                1,
-            )
-        return self.database_url
+        """Return the sync SQLAlchemy database URL (used by Alembic)."""
+        url = self.database_url
+        if url.startswith("postgresql+asyncpg://"):
+            url = url.replace("postgresql+asyncpg://", "postgresql://", 1)
+        return url
 
 
 settings = Settings()

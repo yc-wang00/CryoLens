@@ -76,13 +76,3 @@ export interface AgentToolCall {
   outputSummary: string;
 }
 
-export interface ExperimentDraft {
-  id: string;
-  title: string;
-  benchmark: string;
-  objective: string;
-  temperature: string;
-  assay: string;
-  notes: string;
-  nextAction: string;
-}
