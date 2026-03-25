@@ -38,11 +38,11 @@ const navItems: Array<{
   label: string;
   icon: typeof Search;
 }> = [
-  { key: "ask", label: "Research", icon: Search },
+  { key: "sources", label: "Knowledge Base", icon: BookOpenText },
   { key: "hypotheses", label: "Hypotheses", icon: Lightbulb },
   { key: "molecules", label: "Library", icon: FlaskConical },
   { key: "cocktails", label: "Cocktails", icon: TestTubeDiagonal },
-  { key: "sources", label: "Knowledge Base", icon: BookOpenText },
+  { key: "ask", label: "Research", icon: Search },
 ];
 
 function SidebarContent({

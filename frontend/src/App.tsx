@@ -9,7 +9,7 @@ import { MoleculesPage } from "./pages/molecules-page";
 import { SourcesPage } from "./pages/sources-page";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<PageKey>("ask");
+  const [currentPage, setCurrentPage] = useState<PageKey>("sources");
 
   return (
     <AppShell currentPage={currentPage} onPageChange={setCurrentPage}>
